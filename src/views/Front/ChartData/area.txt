@@ -1,0 +1,102 @@
+option = {
+    title: {
+        text: '收盘',
+        show:false,
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 14
+        }
+    },
+    tooltip: {
+        trigger: 'axis',
+                textStyle: {          
+            fontFamily: 'Arial',
+            fontSize: 12     
+        },
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data: ['上证综合指数', '深证成分指数', '创业板指数'],
+        selectedMode: true,
+        top: '1%',        
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12,
+        }        
+    },
+    grid: {
+        left: '5%',
+        right: '5%',
+        bottom: '15%',
+        top: '15%',
+        containLabel: true
+    },
+    dataZoom: [{
+        show:true,
+        start: 80,
+        end: 100,
+        brushSelect: false,
+        bottom: '1%', 
+        left:'15%',
+        right:'15%',
+        height: 20,
+            textStyle: {
+               fontFamily: 'Arial',
+               fontSize: 10
+            }               
+    }],   
+    xAxis: [
+        {
+            type: 'category',
+            boundaryGap: false,
+            data: [ ]
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '点',            
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                formatter: '{value} '
+            }            
+        }
+    ],
+    series: [
+        {
+            name: '上证综合指数',
+            type: 'line',
+            areaStyle: {},
+        itemStyle: {
+            color: '#2dcacf',
+        },    
+            data: [ ]
+        },
+        {
+            name: '深证成分指数',
+            type: 'line',
+            areaStyle: {},
+            z:'1',
+            itemStyle: {
+            color: '#1283D5',
+        },        
+            data: [ ]
+        },
+        {
+            name: '创业板指数',
+            type: 'line',
+            areaStyle: {},
+            itemStyle: {
+            color: '#FFBF00',
+        },        
+            data: [ ]
+        }
+    ]
+};

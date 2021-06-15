@@ -1,0 +1,89 @@
+[{
+                        title: '行业',
+                        key: 'value',
+                        align: 'center',
+                        width: 130
+                    },
+                            {
+                                title: '三月',
+                                align: 'center',
+                                children: [
+                                    {
+                                        title: '行业排名',
+                                        key: 't1rank',
+                                        align: 'center',
+                                        width: 100
+                                    },
+                                    {
+                                        title: '涨幅',
+                                        align: 'center',
+                                        key: 't1r',
+                                        align: 'center',
+                                        width: 100
+                                    }
+                                ]
+                            },
+                            {
+                                title: '四月',
+                                align: 'center',
+                                children: [
+                                    {
+                                        title: '行业排名',
+                                        key: 't2rank',
+                                        align: 'center',
+                                        width: 100
+                                    },
+                                    {
+                                        title: '涨幅',
+                                        align: 'center',
+                                        key: 't2r',
+                                        align: 'center',
+                                        width: 100
+                                    }
+                                ]
+                            },
+                            {
+                                title: '五月',
+                                align: 'center',
+                                children: [
+                                    {
+                                        title: '行业排名',
+                                        key: 't3rank',
+                                        align: 'center',
+                                        width: 100
+                                    },
+                                    {
+                                        title: '涨幅',
+                                        align: 'center',
+                                        key: 't3r',
+                                        align: 'center',
+                                        width: 100
+                                    }
+                                ]
+                    },
+                    {
+                        title: '年初至今累计涨幅',
+                        key: 't4yrange',
+                        align: 'center',
+
+                    },
+                    {
+                        title: '市盈率百分位',
+                        key: 't4peper',
+                        align: 'center',
+
+                    },
+                    {
+                        title: '市净率百分位',
+                        key: 't4pbper',
+                        align: 'center',
+
+                    },
+                    {
+                        title: '2021年第一季度行业归母净利润同比增长',
+                        key: 't41profit',
+                        align: 'center',
+
+                    }
+                ]
+

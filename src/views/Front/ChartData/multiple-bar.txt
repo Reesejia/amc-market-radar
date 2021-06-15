@@ -1,0 +1,121 @@
+option = {
+    title: {
+        text: "市盈率",
+        show:false,
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 14
+        }
+    },    
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+        }
+    },
+    legend: {
+        top: '1%',        
+        data: ['市盈率最高值', '市盈率(TTM)'],
+        selectedMode: false,
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },
+    grid: {
+        left: '0%',
+        right: '0%',
+        bottom: '2%',
+        top: '20%',        
+        containLabel: true
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['上证综指', '深证成指', '创业板指', '科创50'],
+        axisLabel : {
+                formatter : function(params){
+                   var newParamsName = "";
+                            var paramsNameNumber = params.length;
+                            var provideNumber = 4;
+                            var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                            if (paramsNameNumber > provideNumber) {
+                                for (var p = 0; p < rowNumber; p++) {
+                                    var tempStr = "";
+                                    var start = p * provideNumber;
+                                    var end = start + provideNumber;
+                                    if (p == rowNumber - 1) {
+                                        tempStr = params.substring(start, paramsNameNumber);
+                                    } else {
+                                        tempStr = params.substring(start, end) + "\n";
+                                    }
+                                    newParamsName += tempStr;
+                                }
+                            } else {
+                                newParamsName = params;
+                            }
+                            return newParamsName
+                }
+            },
+            axisPointer: {
+                type: 'shadow',
+                label:{
+                    show: true
+                },
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '',
+            min: 0,
+            max: 125,
+            interval: 25,               
+            axisLabel: {
+                formatter: '{value} '
+            },
+            splitLine: {
+                show: false
+            },
+        }
+    ],
+    series: [
+        {
+            name: '市盈率最高值',
+            type: 'bar',
+            itemStyle: {            
+            barBorderRadius: 0, 
+            color: '#1283D5',            
+            },
+            barWidth: '60%',            
+            data: []
+        },
+        {
+            name: '市盈率(TTM)',
+            type: 'bar',
+            barGap: '-100%',
+            itemStyle: {            
+            barBorderRadius: 0, 
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#00FFE6'
+                    }, {
+                        offset: 1,
+                        color: '#1283D5'
+                    }]),            
+            },
+            barWidth: '60%',            
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    textStyle: {
+                        color: '#333'
+                    }
+                }
+            },             
+            data: []
+        }
+    ]
+};

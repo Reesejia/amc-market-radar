@@ -1,0 +1,67 @@
+option = {
+    title: {
+        text: '',
+        show:true,
+        subtext:'数据来源：来自近一月公开发表的机构观点',  
+        bottom:'1%',          
+        subtextStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },  
+    color: ['#F85858','#FFBF00','#1283D5','#50E3C2','#7ED321'],
+    tooltip: {
+        trigger: 'item' ,
+	        formatter: function(params) {
+	        	//return "{a} <br/>{b}: {c} -{d}%"
+	        	return `${params.seriesName}<br/>
+            	${params.marker}
+        		${params.name} ：
+                ${params.value} — ${params.percent}%<br>`
+         },
+            textStyle: {          
+            fontFamily: 'Arial',
+            fontSize: 12
+        },        
+    },
+    legend: {
+        data:['乐观','偏乐观','中性','偏谨慎','谨慎'],
+        selectedMode: false,        
+        top: 'middle',
+        right: '5%',
+        orient: '',
+        itemGap: 20,
+        textStyle:{
+            fontSize: 12,
+            fontFamily: 'Arial'
+        }
+    },
+    series: [
+        {
+            name: '机构数量',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            label: {
+                show: true,
+                position: 'outside',
+                formatter: function(params) {
+	        	//return "{a} <br/>{b}: {c} -{d}%"
+	        	return `${params.name} ： ${params.percent}%`
+                },
+                alignTo:'labelLine',
+            },
+            labelLine: {
+                show: true
+            },
+            data: [
+                {value: '', name: ''},
+                {value: '', name: ''},
+                {value: '', name: ''},
+                {value: '', name: ''},
+                {value: '', name: ''}
+            ],
+            center: ['45%', '50%'], 
+        }
+    ]
+};
