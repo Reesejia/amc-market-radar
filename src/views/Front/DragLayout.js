@@ -110,6 +110,7 @@ export default class DragLayout extends PureComponent {
         <Button type="primary" style={{'marginRight':'7px'}} onClick={this.addChart.bind(this,'bar')}>添加柱状图</Button>
         <Button type="primary" style={{'marginRight':'7px'}} onClick={this.addChart.bind(this,'line')}>添加折线图</Button>
         <Button type="primary" style={{'marginRight':'7px'}} onClick={this.addChart.bind(this,'pie')}>添加饼图</Button>
+        <Button type="primary" style={{'marginRight':'7px'}} onClick={() => console.log('this.state.widgets',  this.state.widgets)}>打印数据</Button>
       </Header>
       <Content style={{ marginTop: 44 }}>
         <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
