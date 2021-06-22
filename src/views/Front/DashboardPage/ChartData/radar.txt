@@ -1,0 +1,128 @@
+option = {
+    title: {
+        text: '',
+        show:true,
+        subtext:'数据来源：NewBanker研究院整理，当期值截至2021年4月',  
+        bottom:'1%',          
+        subtextStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },  
+    tooltip: {
+        trigger: 'item',
+        confine: true,
+        hideDelay: 200,
+        enterable: true
+    },
+    legend: {
+        data: ['当期值','上期值', '上年同期值' ],
+                top: 'middle',
+        right: '0%',
+        orient: '',
+        itemGap: 30,
+        textStyle:{
+            fontSize: 12,
+            fontFamily: 'Arial'
+        }
+    },
+    radar: [
+        {
+            indicator: [
+                { text: '收入(月度)：财政预算收入(亿元)' },
+                { text: '支出(月度)：财政预算支出(亿元)' },
+                { text: '信用(月度)：财政预算赤字(亿元)' },
+            ],
+            center: ['50%', '55%'],
+            shape: 'circle',
+            radius: 110,
+            startAngle: 90,
+            splitNumber: 4,
+            name: {
+                formatter: '{value}',
+                textStyle: {
+                    color: '#333333',
+                    fontFamily: 'Arial',
+                    verticalAlign: 'middle',
+                    Align: 'right',
+                    fontSize: 12,
+                    padding: 0
+                }
+            },
+            splitArea: {
+                areaStyle: {
+                    color: ['#FFFFFF',
+                        '#F2F2F2', '#FFFFFF',
+                        '#F2F2F2', '#FFFFFF'],
+                    shadowColor: 'rgba(0, 0, 0, 0)',
+                    shadowBlur: 0
+                }
+            },
+            axisLine: {
+                lineStyle: {
+                    color: '#AAAAAA'
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.5)'
+                }
+            }
+        }
+    ],
+    series: [
+        {
+            name: '雷达图',
+            type: 'radar',
+            emphasis: {
+                lineStyle: {
+                    width: 4
+                }
+            },
+            data: [
+                {
+                    value: [],
+                    name: '当期值',
+                    symbol: 'rect',
+                    symbolSize: 5,
+                    lineStyle: {
+                        type: 'line',
+                        width: 4    
+                    },
+                    itemStyle: {
+                        color: '#FFBF00',
+                    }, 
+                        emphasis: {
+                            lineStyle: {
+                                 width: 6
+                            }
+                        },                 
+                },
+                {
+                    value: [],
+                    name: '上期值',
+                    symbol: 'rect',
+                    symbolSize: 5,
+                    lineStyle: {
+                        type: 'line'
+                    },
+                    itemStyle: {
+                        color: '#1283D5',
+                    },   
+                },
+                {
+                    value: [],
+                    name: '上年同期值',
+                    symbol: 'rect',
+                    symbolSize: 5,
+                    itemStyle: {
+                        color: '#2dcacf',
+                    },                         
+                    areaStyle: {
+                       color: 'rgba(255, 255, 255, 0.5)'
+                    }
+                }
+            ]
+        }
+    ]
+};

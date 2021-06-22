@@ -1,0 +1,80 @@
+option = {
+    title: {
+        text: '',
+        show:true,
+        subtext:'数据来源：wind',  
+        bottom:'0%',          
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },      
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {            
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    grid: {
+        left: '5%',
+        right: '5%',
+        bottom: '18%',
+        top: '15%',        
+        containLabel: true
+    },
+    legend: {
+        top: '1%',        
+        data: ['当月值'],
+        selectedMode: false,
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },        
+    dataZoom: [{
+        show:true,
+        start: 80,
+        end: 100,
+        brushSelect: false,
+        bottom: '9%', 
+        left:'18%',
+        right:'19%',
+        height: 20,
+            textStyle: {
+               fontFamily: 'Arial',
+               fontSize: 10
+            }               
+    }],   
+    xAxis: [
+        {
+            type: 'category',
+            data: [ ],
+            axisPointer: {
+                type: 'shadow'
+            }            
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '亿美元', 
+            splitLine: {
+                show: false
+            },              
+        }
+    ],
+    series: [
+        {
+            name: '当月值',
+            type: 'bar',
+            barWidth: '60%',
+        itemStyle: {
+            color: '#1283D5',
+        },  
+            data: [ ]
+        }
+    ]
+};

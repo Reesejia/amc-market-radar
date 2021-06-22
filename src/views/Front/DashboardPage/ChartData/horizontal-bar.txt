@@ -1,0 +1,75 @@
+option = {
+    title: {
+        text: '',
+        show:true,
+        subtext:'数据来源：wind，截至2021年4月30日',  
+        bottom:'0%',          
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },    
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {            
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    grid: {
+        left: '5%',
+        right: '5%',
+        bottom: '9%',
+        top: '5%',        
+        containLabel: true
+    }, 
+    legend: {
+        top: '1%',        
+        data: ['2021', '2010'],
+        selectedMode: true,
+        textStyle: {
+            fontFamily: 'Arial',
+            fontSize: 12
+        }
+    },    
+    yAxis: {
+        type: 'category',
+        axisLabel:{
+            interval:0,
+            rotate:0
+        },
+        data: []
+    },
+    xAxis: [
+        {
+            type: 'value',
+            name: '',
+            
+            axisLabel: {
+                formatter: '{value} %'
+            },
+            splitLine: {
+                show: false
+            },           
+        }
+    ],
+    series: [{
+        name:'2021',
+        data: [],
+        type: 'bar',
+        itemStyle: {
+            color: '#FFBF00',
+        },             
+    },
+    {
+        name:'2010',        
+        data: [],
+        type: 'bar',
+            itemStyle: {
+            color: '#1283D5',
+        },  
+    }
+    ]
+};

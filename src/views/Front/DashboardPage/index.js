@@ -4,6 +4,7 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
+import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '../../../api/dashboardPage'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
@@ -59,6 +60,43 @@ export default class DragLayout extends PureComponent {
     });
   };
 
+  generateDOM = () => {
+    return _.map(this.state.widgets, (widget, i) => {
+      console.log('widget', widget)
+      let option;
+      let component;
+      if (widget.type === 'CHART') {
+        option = getBarChart();
+         component = (
+          <ReactEcharts
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            style={{width: '100%',height:'100%'}}
+          />
+        )
+      }else {
+        component = (
+          <div>{widget.i}</div>
+        )
+      }
+      // else if (l.type === 'line') {
+      //   option = getLineChart();
+      // }else if (l.type === 'pie') {
+      //   option = getPieChart();
+      // }
+
+      return (
+        <div key={widget.i} data-grid={widget}>
+          <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
+          {component}
+        </div>
+      );
+    });
+  };
+
+
+
   addChart(type) {
     const addItem = {
       x: (this.state.widgets.length * 3) % (this.state.cols || 12),
@@ -106,9 +144,9 @@ export default class DragLayout extends PureComponent {
     let widgets = new ParseLayout({ parseLayoutJson: this.state.positionInfo.positionData, viewType: [] }).parseLayout()
     widgets = this.formatWidget(widgets)
     console.log('widgets', widgets)
-    this.setState({
-      widgets
-    })
+    // this.setState({
+    //   widgets
+    // })
   }
 
   async onSavePositionGrid() {
@@ -135,7 +173,7 @@ export default class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    // this.fetchPositionData(6)
+    this.fetchPositionData(6)
     this.onGetPositionGrid(6)
   }
 
