@@ -3,15 +3,14 @@ import { Layout,Button } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
 import ReactEcharts from 'echarts-for-react';
-import { getBarChart,getLineChart,getPieChart } from "./Chart";
-
+import ParseLayout from './ParseLayout'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content} = Layout;
 
 export default class DragLayout extends PureComponent {
   static defaultProps = {
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    rowHeight: 100,
+    rowHeight: 8
   };
 
   constructor(props) {
@@ -46,26 +45,13 @@ export default class DragLayout extends PureComponent {
     }
   }
   generateDOM = () => {
-    return _.map(this.state.widgets, (l, i) => {
-      let option;
-      if (l.type === 'bar') {
-        option = getBarChart();
-      }else if (l.type === 'line') {
-        option = getLineChart();
-      }else if (l.type === 'pie') {
-        option = getPieChart();
-      }
+    return _.map(this.state.widgets, (widget) => {
       let component = (
-        <ReactEcharts
-          option={option}
-          notMerge={true}
-          lazyUpdate={true}
-          style={{width: '100%',height:'100%'}}
-        />
+        <div>{widget.i}</div>
       )
       return (
-        <div key={l.i} data-grid={l}>
-          <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
+        <div key={widget.i} data-grid={widget}>
+          <span className='remove' onClick={this.onRemoveItem.bind(this, widget.i)}>x</span>
           {component}
         </div>
       );
@@ -99,10 +85,47 @@ export default class DragLayout extends PureComponent {
   }
 
   onLayoutChange(layout, layouts) {
-    console.log('layout00', layout)
-    console.log('layouts11', layouts)
-    this.saveToLS("layouts", layouts);
-    this.setState({ layouts });
+      console.log('layout00', layout)
+      console.log('layouts11', layouts)
+    // this.saveToLS("layouts", layouts);
+    // this.setState({ layouts });
+  }
+
+  componentDidMount(){
+      console.log('componentDidMount')
+    fetch('http://localhost:5000/api/radar/dashboard/position/6')
+    .then(res => res.json()) // 格式化res data
+    .then(res => {
+        // setData([])
+
+        console.log('data.data.positionData', res.data[0].positionData.parseLayout)
+     let widgets =  new ParseLayout({parseLayoutJson: res.data[0].positionData, viewType: []} ).parseLayout()
+     widgets = this.formatWidget(widgets)
+     console.log('widgets', widgets)
+     this.setState({
+        widgets
+     })
+    })
+  }
+
+  formatWidget(widgets){
+   return widgets.map((widget,index) => {
+        let o = {
+         x: (this.state.widgets.length * 3) % (this.state.cols || 12),
+            y: Infinity, // puts it at the bottom
+            i: widget.id
+        }
+        if(widget.type === 'CHART' || widget.type === 'FEED' ){
+            // Object.assign(o, {x: })
+        } else if (widget.type === 'COLUMN'){
+
+        } else if (widget.type === 'TABS'){
+            // Object.assign(o, {w: 12})
+        } else if (widget.type === 'MARKDOWN'){
+            // Object.assign(o, {w: 12})
+        }
+        return Object.assign(widget, o)
+    });
   }
 
   render() {
@@ -119,7 +142,7 @@ export default class DragLayout extends PureComponent {
           <ResponsiveReactGridLayout
             className="layout"
             {...this.props}
-            layouts={this.state.layouts}
+            layouts={this.state.widgets}
             onLayoutChange={(layout, layouts) =>
               this.onLayoutChange(layout, layouts)
             }
