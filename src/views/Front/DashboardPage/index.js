@@ -19,7 +19,8 @@ export default class DragLayout extends PureComponent {
 
     this.state = {
       layouts: this.getFromLS("layouts") || {},
-      widgets:[]
+      widgets:[],
+      positionInfo: {}
     }
   }
 
@@ -93,8 +94,22 @@ export default class DragLayout extends PureComponent {
   }
 
   async fetchPositionData(id){
-     const postionData = await getPostion(id)
-     console.log('postionData', postionData)
+     const res = await getPostion(id)
+     if(res.statusCode === 0){
+       this.setState({
+        positionInfo: res.data
+       })
+       this.parseRes()
+     }
+  }
+
+  parseRes(){
+    let widgets =  new ParseLayout({parseLayoutJson: this.state.positionInfo.positionData[0], viewType: []} ).parseLayout()
+     widgets = this.formatWidget(widgets)
+     console.log('widgets', widgets)
+     this.setState({
+        widgets
+     })
   }
 
   componentDidMount(){
