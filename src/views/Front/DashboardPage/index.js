@@ -4,6 +4,7 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
+import {getPostion} from '../../../api/dashboardPage'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content} = Layout;
 
@@ -91,21 +92,27 @@ export default class DragLayout extends PureComponent {
     // this.setState({ layouts });
   }
 
-  componentDidMount(){
-      console.log('componentDidMount')
-    fetch('http://localhost:5000/api/radar/dashboard/position/6')
-    .then(res => res.json()) // 格式化res data
-    .then(res => {
-        // setData([])
+  async fetchPositionData(id){
+     const postionData = await getPostion(id)
+     console.log('postionData', postionData)
+  }
 
-        console.log('data.data.positionData', res.data[0].positionData.parseLayout)
-     let widgets =  new ParseLayout({parseLayoutJson: res.data[0].positionData, viewType: []} ).parseLayout()
-     widgets = this.formatWidget(widgets)
-     console.log('widgets', widgets)
-     this.setState({
-        widgets
-     })
-    })
+  componentDidMount(){
+      this.fetchPositionData(6)
+    //   console.log('componentDidMount')
+    // fetch('http://localhost:5000/api/radar/dashboard/position/6')
+    // .then(res => res.json()) // 格式化res data
+    // .then(res => {
+    //     // setData([])
+
+    //     console.log('data.data.positionData', res.data[0].positionData.parseLayout)
+    //  let widgets =  new ParseLayout({parseLayoutJson: res.data[0].positionData, viewType: []} ).parseLayout()
+    //  widgets = this.formatWidget(widgets)
+    //  console.log('widgets', widgets)
+    //  this.setState({
+    //     widgets
+    //  })
+    // })
   }
 
   formatWidget(widgets){

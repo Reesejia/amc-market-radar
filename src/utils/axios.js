@@ -1,7 +1,6 @@
-'use strict'
 import {
   wbsApiNew
-} from '@/utils/api-type'
+} from './api-type'
 import { merge } from 'lodash'
 import axios from 'axios'
 
@@ -11,9 +10,9 @@ import axios from 'axios'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
-  // withCredentials: true, // Check cross-site Access-Control
+  baseURL: '/api/radar',
+  timeout: 60 * 1000, // Timeout
+  withCredentials: true, // Check cross-site Access-Control
 }
 
 const _axios = axios.create(config)
@@ -29,8 +28,8 @@ _axios.interceptors.request.use(
       })
       config = merge(config, configNew)
     }
-    const token = window.sessionStorage.getItem('token')
-    const tenantId = window.sessionStorage.getItem('tenantId')
+    const token = window.sessionStorage.getItem('token') || '5a8389f4-11cd-431e-9863-aeaaeba70fb4'
+    const tenantId = window.sessionStorage.getItem('tenantId') || 1001
     config.headers.tenantId = tenantId
     config.headers.Authorization = 'bearer ' + token
     return config
@@ -53,3 +52,4 @@ _axios.interceptors.response.use(
   }
 )
 
+export default _axios

@@ -1,8 +1,8 @@
-import { SignData } from '@/utils/sign/sign'
+import { SignData } from './sign/sign'
 // import qs from 'qs'
 import {
   timeFormatNow
-} from '@/utils/com-methods'
+} from './com-methods'
 import {
   merge
 } from 'lodash'
