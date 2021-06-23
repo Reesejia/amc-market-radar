@@ -11,6 +11,12 @@ module.exports = function (app) {
         })
     )
     app.use(
+        createProxyMiddleware("/radar", {
+            target: "https://wm2.newbanker.store",
+            changeOrigin: true
+        })
+    )
+    app.use(
         createProxyMiddleware("/api/radar", {
             target: "http://localhost:5000",
             changeOrigin: true

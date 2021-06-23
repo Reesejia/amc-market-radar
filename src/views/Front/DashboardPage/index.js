@@ -7,6 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
+import {getChartBusinessData} from '@/api/radar'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import actions from '@/store/actions/dashboard';
@@ -26,7 +27,8 @@ const { Header, Content } = Layout;
     this.state = {
       layouts: this.getFromLS("layouts") || {},
       widgets: [],
-      positionInfo: {}
+      positionInfo: {},
+      resp: {}
     }
   }
 
@@ -53,13 +55,17 @@ const { Header, Content } = Layout;
     }
   }
   generateDOM = () => {
+    console.log('this.state.widgets', this.state.widgets)
+    // this.setState({
+    //   widgets: [this.state.widgets[0]]
+    // })
     return _.map(this.state.widgets, (widget, i) => {
       let option;
       let component;
       if (widget.type === 'CHART') {
         // if (i === 0) {
          component = (
-          <Chart widget={widget}  style={{width: '100%',height:'100%'}}/>
+          <Chart widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
         )
       }else {
         component = (
@@ -170,6 +176,23 @@ const { Header, Content } = Layout;
       this.setState({
         widgets: res.data.gridPositionData
       })
+      this.onGetChartBusinessData()
+    }
+  }
+
+ async onGetChartBusinessData(){
+    let chartIds = this.state.widgets.map(widget => widget.i)
+    console.log('chartIds', chartIds)
+   const res = await getChartBusinessData({
+      dashboardId: 6,
+      chartIds
+    })
+    console.log('res000', res)
+    if(res.code === "0"){
+      this.setState({
+        resp: res.resp
+      })
+      console.log('000',this.state.resp['CHART-RrQKNVQWbL'])
     }
   }
 

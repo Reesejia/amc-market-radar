@@ -7,3 +7,13 @@ export function getDashboardData(dashboardId){
         method: 'get',
     })
 }
+
+
+export function getChartBusinessData({dashboardId, chartIds}){
+    return _axios({
+        url: `/radar/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,
+        method: 'get',
+    })
+}
+
+
