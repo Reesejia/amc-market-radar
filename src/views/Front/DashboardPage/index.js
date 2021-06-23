@@ -6,6 +6,7 @@ import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '../../../api/dashboardPage'
+import GridView from './component/GridView'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
@@ -231,7 +232,8 @@ export default class DragLayout extends PureComponent {
                 this.onLayoutChange(layout, layouts)
               }
             >
-              {this.generateDOM()}
+              {/* this.generateDOM() */}
+              <GridView widgets={this.state.widgets}/>
             </ResponsiveReactGridLayout>
           </div>
         </Content>
