@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-ro
 const DragLayout = lazy(() => import('../views/Front/GridDemo/DragLayout'))
 const BoardAdmin = lazy(() => import('../views/Admin/BoardAdmin'))
 const DashboardPage = lazy(() => import('../views/Front/DashboardPage/index'))
-
+const FormatData= lazy(() => import('../views/Front/FormatData/index'))
 const routes = () => (
 	<Router>
 		<Suspense fallback={<Spin />}>
@@ -17,12 +17,16 @@ const routes = () => (
 				<Link to="/boardAdmin">BoardAdmin</Link>
 			</li>
 			<li>
+				<Link to="/formatData">format data</Link>
+			</li>
+			<li>
 				<Link to="/dashboardPage">DashboardPage</Link>
 			</li>
             </ul>
 			<Switch>
 				<Route path="/home" component={DragLayout} />
 				<Route path="/boardAdmin" component={BoardAdmin} />
+				<Route path="/formatData" component={FormatData} />
 				<Route path="/dashboardPage" component={DashboardPage} />
 				<Redirect to="/home"/>
 			</Switch>

@@ -10,7 +10,6 @@ import axios from 'axios'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const config = {
-  baseURL: '/api/radar',
   timeout: 60 * 1000, // Timeout
   withCredentials: true, // Check cross-site Access-Control
 }
@@ -28,7 +27,7 @@ _axios.interceptors.request.use(
       })
       config = merge(config, configNew)
     }
-    const token = window.sessionStorage.getItem('token') || '5a8389f4-11cd-431e-9863-aeaaeba70fb4'
+    const token = window.sessionStorage.getItem('token') || '1801d13d-e02f-43a1-a957-a03391a022e7'
     const tenantId = window.sessionStorage.getItem('tenantId') || 1001
     config.headers.tenantId = tenantId
     config.headers.Authorization = 'bearer ' + token

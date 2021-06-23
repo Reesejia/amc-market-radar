@@ -186,8 +186,8 @@ export default class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchPositionData(6)
-    // this.onGetPositionGrid(6)
+    // this.fetchPositionData(6)
+    this.onGetPositionGrid(6)
   }
 
   formatWidget(widgets) {
