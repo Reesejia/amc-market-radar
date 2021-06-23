@@ -161,15 +161,16 @@ const { Header, Content } = Layout;
   }
 
   async onGetPositionGrid(dashboardId) {
-    this.props.getGrids(6)
-    // const res = await getPositionGrid(dashboardId)
-    // console.log('res111', res)
-    // if (res.statusCode === 0) {
-    //   this.setState({
-    //     widgets: res.data.gridPositionData
-    //   })
-    // }
-    console.log('boardOrigin', this.props.boardOrigin)
+    // this.props.getGrids(6)
+    // console.log('boardOrigin', this.props.boardOrigin)
+
+    const res = await getPositionGrid(dashboardId)
+    console.log('res111', res)
+    if (res.statusCode === 0) {
+      this.setState({
+        widgets: res.data.gridPositionData
+      })
+    }
   }
 
   componentDidMount() {
@@ -228,5 +229,6 @@ const { Header, Content } = Layout;
     )
   }
 }
-const mapStateToProps = (state) => state.dashboard
-export default connect(mapStateToProps, actions)(DragLayout)
+export default DragLayout
+// const mapStateToProps = (state) => state.dashboard
+// export default connect(mapStateToProps, actions)(DragLayout)
