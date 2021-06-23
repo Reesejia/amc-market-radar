@@ -5,8 +5,9 @@ import _ from "lodash";
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
-import { getPostion, savePositionGrid, getPositionGrid } from '../../../api/dashboardPage'
-import GridView from './component/GridView'
+import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
+import GridView from '@/views/Front/DashboardPage/component/GridView'
+import Chart from '@/views/Front/DashboardPage/component/Chart'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
@@ -49,32 +50,13 @@ export default class DragLayout extends PureComponent {
     }
   }
   generateDOM = () => {
-    return _.map(this.state.widgets, (widget) => {
-      let component = (
-        <div>{widget.i}</div>
-      )
-      return (
-        <div key={widget.i} data-grid={widget}>
-          <span className='remove' onClick={this.onRemoveItem.bind(this, widget.i)}>x</span>
-          {component}
-        </div>
-      );
-    });
-  };
-
-  generateDOM = () => {
     return _.map(this.state.widgets, (widget, i) => {
       let option;
       let component;
       if (widget.type === 'CHART') {
-        option = getBarChart();
+        // if (i === 0) {
          component = (
-          <ReactEcharts
-            option={option}
-            notMerge={true}
-            lazyUpdate={true}
-            style={{width: '100%',height:'100%'}}
-          />
+          <Chart widget={widget}  style={{width: '100%',height:'100%'}}/>
         )
       }else {
         component = (
@@ -232,9 +214,10 @@ export default class DragLayout extends PureComponent {
                 this.onLayoutChange(layout, layouts)
               }
             >
-              {/* this.generateDOM() */}
-              <GridView widgets={this.state.widgets}/>
+              {this.generateDOM()}
+            {/* <GridView widgets={this.state.widgets}/> */}
             </ResponsiveReactGridLayout>
+
           </div>
         </Content>
       </Layout>
