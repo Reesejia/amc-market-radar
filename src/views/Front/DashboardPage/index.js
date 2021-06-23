@@ -2,16 +2,19 @@ import React, { PureComponent } from 'react';
 import { Layout, Button, message } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
+import {connect} from 'react-redux'
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
+import actions from '@/store/actions/dashboard';
+import { TypeRadar } from '@/store/reducers/dashboard';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
-export default class DragLayout extends PureComponent {
+ class DragLayout extends PureComponent {
   static defaultProps = {
     breakpoints:  {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0},
     cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
@@ -158,14 +161,15 @@ export default class DragLayout extends PureComponent {
   }
 
   async onGetPositionGrid(dashboardId) {
-    const res = await getPositionGrid(dashboardId)
-    console.log('res111', res)
-    if (res.statusCode === 0) {
-      this.setState({
-        widgets: res.data.gridPositionData
-      })
-    }
-    console.log('onGetPositionGrid res', res)
+    this.props.getGrids(6)
+    // const res = await getPositionGrid(dashboardId)
+    // console.log('res111', res)
+    // if (res.statusCode === 0) {
+    //   this.setState({
+    //     widgets: res.data.gridPositionData
+    //   })
+    // }
+    console.log('boardOrigin', this.props.boardOrigin)
   }
 
   componentDidMount() {
@@ -224,3 +228,5 @@ export default class DragLayout extends PureComponent {
     )
   }
 }
+const mapStateToProps = (state) => state.dashboard
+export default connect(mapStateToProps, actions)(DragLayout)
