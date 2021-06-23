@@ -11,8 +11,9 @@ const { Header, Content } = Layout;
 
 export default class DragLayout extends PureComponent {
   static defaultProps = {
-    cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    rowHeight: 8
+    breakpoints:  {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0},
+    cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
+    margin: {lg: [15,15], md: [20,20], sm: [10,10], xs: [5,5]}
   };
 
   constructor(props) {
@@ -62,7 +63,6 @@ export default class DragLayout extends PureComponent {
 
   generateDOM = () => {
     return _.map(this.state.widgets, (widget, i) => {
-      console.log('widget', widget)
       let option;
       let component;
       if (widget.type === 'CHART') {
@@ -127,7 +127,11 @@ export default class DragLayout extends PureComponent {
     console.log('layout00', layout)
     console.log('layouts11', layouts)
     // this.saveToLS("layouts", layouts);
-    this.setState({ widgets: layouts.lg });
+    this.setState({ layouts: layout });
+  }
+
+  ItemCallback(layout, oldItem, newItem){
+    console.log('ItemCallback layout', layout)
   }
 
   async fetchPositionData(id) {
@@ -143,20 +147,28 @@ export default class DragLayout extends PureComponent {
   parseRes() {
     let widgets = new ParseLayout({ parseLayoutJson: this.state.positionInfo.positionData, viewType: [] }).parseLayout()
     widgets = this.formatWidget(widgets)
-    console.log('widgets', widgets)
-    // this.setState({
-    //   widgets
-    // })
+    this.setState({
+      widgets
+    })
+  }
+
+  mergeLayout(){
+    this.setState({
+      widgets:  this.state.widgets.map((widget,index) =>{
+        return Object.assign(widget, this.state.layouts[index])
+      })
+    })
   }
 
   async onSavePositionGrid() {
+    this.mergeLayout()
     const res = await savePositionGrid({
       dashboardId: 6,
       gridPositionData: this.state.widgets
     })
     if (res.statusCode === 0) {
       message.success('保存成功')
-      this.onGetPositionGrid(6)
+      // this.onGetPositionGrid(6)
     }
 
   }
@@ -173,7 +185,7 @@ export default class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchPositionData(6)
+    // this.fetchPositionData(6)
     this.onGetPositionGrid(6)
   }
 
@@ -213,6 +225,7 @@ export default class DragLayout extends PureComponent {
               className="layout"
               {...this.props}
               layouts={this.state.widgets}
+              rowHeight={8}
               onLayoutChange={(layout, layouts) =>
                 this.onLayoutChange(layout, layouts)
               }

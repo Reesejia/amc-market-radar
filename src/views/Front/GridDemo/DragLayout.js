@@ -88,6 +88,7 @@ export default class DragLayout extends PureComponent {
         }),
       },
     );
+    console.log('widgets', this.state.widgets)
   };
 
   onRemoveItem(i) {

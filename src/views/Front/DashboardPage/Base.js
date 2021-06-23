@@ -5,7 +5,7 @@ class Base{
             siblings: null,
             type: node.type,
             w: node.meta  && node.meta.width,
-            h: node.meta  && node.meta.height / 6,
+            h: node.meta  && node.meta.height / 5,
         }
         if (node.children && node.children.length > 0) {
             nodeObj.siblings = node.children.map(child => {
