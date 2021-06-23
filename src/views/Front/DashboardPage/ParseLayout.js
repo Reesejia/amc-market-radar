@@ -8,11 +8,12 @@ class ParseLayout extends Column{
         this.viewType = viewType
     }
     parseLayoutJson = {}
-    unAddType = ['TABS', 'COLUMN']
+    unAddType = ['TABS']
+    // unAddType = ['TABS', 'COLUMN']
     viewArr = []
 
     formatTabsNode(node) {
-        this.viewArr.push(node)
+        // this.viewArr.push(node)
     }
 
     formatNodeObj = {
@@ -30,7 +31,7 @@ class ParseLayout extends Column{
     findChildren(node) {
         if (node.children && node.children.length > 0) {
             if (this.unAddType.includes(node.type)) {
-                // this.formatNodeObj[node.type](node)
+                this.formatNodeObj[node.type](node)
             } else {
                 node.children.forEach(child => {
                     this.findChildren(this.parseLayoutJson[child])

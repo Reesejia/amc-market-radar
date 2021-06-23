@@ -147,6 +147,7 @@ export default class DragLayout extends PureComponent {
   parseRes() {
     let widgets = new ParseLayout({ parseLayoutJson: this.state.positionInfo.positionData, viewType: [] }).parseLayout()
     widgets = this.formatWidget(widgets)
+    console.log('parseRes widgets', widgets)
     this.setState({
       widgets
     })
@@ -185,8 +186,8 @@ export default class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    // this.fetchPositionData(6)
-    this.onGetPositionGrid(6)
+    this.fetchPositionData(6)
+    // this.onGetPositionGrid(6)
   }
 
   formatWidget(widgets) {
