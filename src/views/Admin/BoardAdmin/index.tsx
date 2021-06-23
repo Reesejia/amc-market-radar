@@ -1,5 +1,6 @@
 import './index.scss';
 import { Component } from 'react';
+
 export interface Props {
 	test: string;
 }
