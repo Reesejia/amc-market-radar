@@ -1,10 +1,10 @@
 import {Spin} from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-const DragLayout = lazy(() => import('../views/Front/GridDemo/DragLayout'))
-const BoardAdmin = lazy(() => import('../views/Admin/BoardAdmin'))
-const DashboardPage = lazy(() => import('../views/Front/DashboardPage/index'))
-const FormatData= lazy(() => import('../views/Front/FormatData/index'))
+const DragLayout = lazy(() => import(/* webpackChunkName: "DragLayout" */'../views/Front/GridDemo/DragLayout'))
+const BoardAdmin = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'../views/Admin/BoardAdmin'))
+const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage/index'))
+const FormatData= lazy(() => import(/* webpackChunkName: "FormatData" */'../views/Front/FormatData/index'))
 const routes = () => (
 	<Router>
 		<Suspense fallback={<Spin />}>

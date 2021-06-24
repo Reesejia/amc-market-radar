@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, lazy } from 'react';
 import { Layout, Button, message } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
@@ -8,13 +8,20 @@ import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
 import {getChartBusinessData} from '@/api/radar'
-import GridView from '@/views/Front/DashboardPage/Component/GridView'
-import Chart from '@/views/Front/DashboardPage/Component/Chart'
-import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
-
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
 import Feed from './Component/Feed';
+import GridView from '@/views/Front/DashboardPage/Component/GridView'
+import Chart from '@/views/Front/DashboardPage/Component/Chart'
+import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
+import TableView from '@/views/Front/DashboardPage/Component/TableView'
+// const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
+// // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
+// const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
+// const TableView =  lazy(() => import(/* webpackChunkName: "DragLayout" */'@/views/Front/DashboardPage/Component/TableView'))
+
+
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
@@ -66,10 +73,17 @@ const { Header, Content } = Layout;
       let option;
       let component;
       if (widget.type === 'CHART') {
-        // if (i === 0) {
-         component = (
-          <Chart widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
-        )
+        const {vizType} = widget.chartStyle.chart
+          if(vizType === 'table') {
+            component = (
+              <TableView widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+            )
+          }else {
+            component = (
+              <Chart widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+            )
+          }
+
       } else if(widget.type === 'MARKDOWN'){
         component = (
           <MarkdownView widget={widget} />
