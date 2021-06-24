@@ -1,11 +1,12 @@
 import './index.scss'
 import React, { FC, useState } from 'react';
-import { Drawer, Descriptions, Button } from 'antd';
+import { Drawer, Descriptions, Button, Divider, Modal } from 'antd';
 import EditGroup from "../EditGroup/index"
 interface chidProps {
     isShowItem: boolean
     setval: Function
 }
+const { confirm } = Modal
 
 const ShowItem: FC<chidProps> = (props) => {
     const { isShowItem, setval } = props
@@ -13,16 +14,27 @@ const ShowItem: FC<chidProps> = (props) => {
 
     const onClose = () => {
         setval(false)
+        setIsEditGroup(false)
     }
-
-    const handleEditGroup = ()=>{
-        setIsEditGroup(true)
+    const handleEditGroup = () => {
+        const title = <div style={{ fontSize: 14 }}>该组合当前已启用，修改组合信息将<span style={{ color: "red" }}>重置展示名称及顺序</span>，是否继续修改?</div>
+        confirm({
+            title,
+            okText: '继续',
+            cancelText: '取消',
+            onOk() {
+                setIsEditGroup(true)
+            },
+            onCancel() {
+                console.log('Cancel');
+            }
+        });
     }
     return (
         <div className="showItem">
             <Drawer
                 width="735"
-                title="Basic Drawer"
+                title=""
                 placement="right"
                 closable={false}
                 visible={isShowItem}
@@ -37,7 +49,9 @@ const ShowItem: FC<chidProps> = (props) => {
                     <Descriptions.Item label="创建时间">1810000000</Descriptions.Item>
                     <Descriptions.Item label="最近修改时间">Hangzhou</Descriptions.Item>
                 </Descriptions>
-                <div className="groupInfo">
+                <Divider />
+
+                {!isEditGroup ? (<div className="groupInfo">
                     <div>
                         <span>组合名称：</span>
                         <span>guoji</span>
@@ -54,9 +68,7 @@ const ShowItem: FC<chidProps> = (props) => {
                         <span>组合状态：</span>
                         <span>未启用</span>
                     </div>
-                </div>
-                {isEditGroup}
-                <EditGroup></EditGroup>
+                </div>) : (<EditGroup setIsEditGroupVal={setIsEditGroup}></EditGroup>)}
             </Drawer>
 
         </div>

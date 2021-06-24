@@ -1,8 +1,9 @@
 import './index.scss'
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Button, Table, Space } from 'antd';
 import ShowItem from "./components/ShowItem/index"
-
+import { getGroup } from "../../../api/group"
+// import { getEnvironmentData } from 'worker_threads';
 export interface Props {
     test: string
 }
@@ -48,37 +49,50 @@ const columns = [
 ]
 
 
-interface Item {
-    key: number;
-    name: string;
-    age: number;
-    address: string;
-    tags: string,
-}
+// interface Item {
+//     key: number;
+//     name: string;
+//     age: number;
+//     address: string;
+//     tags: string,
+// }
 
-const data: Item[] = [];;
-for (let i = 0; i < 100; i++) {
-    data.push({
-        key: i,
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: 'nice',
-    });
-}
+// const data: Item[] = [];;
+// for (let i = 0; i < 100; i++) {
+//     data.push({
+//         key: i,
+//         name: 'John Brown',
+//         age: 32,
+//         address: 'New York No. 1 Lake Park',
+//         tags: 'nice',
+//     });
+// }
+
+
 
 const handleChange = (pagination: object, filters: object, sorter: object) => {
     console.log(pagination, filters, sorter)
+
 }
 // const addGroup = () => {
 
 // }
 
+
 const DataPageManage: FC = () => {
     const [isShowItem, setIsShowItem] = useState(false);
+    const [grounpList, setGrounpList] = useState([])
     const showDrawer = () => {
         setIsShowItem(true);
     };
+    useEffect(() => {
+        getAllGroup()
+    })
+    const getAllGroup = async () => {
+        const params = {}
+        const { data } = await getGroup(params)
+        setGrounpList(data && data.content)
+    }
     return (
         <div className="dataPageManage">
             <div className="header">
@@ -91,7 +105,7 @@ const DataPageManage: FC = () => {
                 </div>
             </div>
             <div className="table">
-                <Table columns={columns} dataSource={data} onChange={handleChange} />
+                <Table columns={columns} dataSource={grounpList} onChange={handleChange} />
             </div>
             {/* {
                 isShowItem ? (<ShowItem setIsShowItem={setIsShowItem} />) : ('')

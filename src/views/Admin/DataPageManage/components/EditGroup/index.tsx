@@ -3,21 +3,25 @@ import React, { FC, useState } from 'react';
 import { Form, Input, Button, Transfer } from 'antd';
 
 interface chidProps {
+    setIsEditGroupVal: Function
 }
 const EditGroup: FC<chidProps> = (props) => {
-    const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-    };
+    // const layout = {
+    //     labelCol: { span: 8 },
+    //     wrapperCol: { span: 16 },
+    // };
+    const { setIsEditGroupVal } = props
     const tailLayout = {
         wrapperCol: { offset: 8, span: 16 },
     };
 
     const onFinish = (values: any) => {
+        setIsEditGroupVal(false)
         console.log('Success:', values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
+
         console.log('Failed:', errorInfo);
     };
 
@@ -49,11 +53,17 @@ const EditGroup: FC<chidProps> = (props) => {
         console.log('direction:', direction);
         console.log('target:', e.target);
     };
+    const oncancel = () => {
+        setIsEditGroupVal(false)
+    }
+    const checkBord = (rules:any, value:Array<string>, callback:Function)=>{
+        console.log("value", value)
+    }
 
     return (
-        <div className="showItem">
+        <div className="">
+            {/* {...layout} */}
             <Form
-                {...layout}
                 name="basic"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -70,7 +80,7 @@ const EditGroup: FC<chidProps> = (props) => {
                 <Form.Item
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: 'Please input your password!' }, {validator: checkBord}  ]}
                 >
                     <Transfer
                         dataSource={mockData}
@@ -92,9 +102,14 @@ const EditGroup: FC<chidProps> = (props) => {
                 </Form.Item>
 
                 <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
+                    <div className="footerBtn">
+                        <Button htmlType="button" onClick={oncancel}>
+                            取消
+                        </Button>
+                        <Button type="primary" htmlType="submit" style={{ marginLeft: 20 }}>
+                            确认
+                        </Button>
+                    </div>
                 </Form.Item>
             </Form>
         </div>
