@@ -8,10 +8,13 @@ import ParseLayout from './ParseLayout'
 import { getBarChart,getLineChart,getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
 import {getChartBusinessData} from '@/api/radar'
-import GridView from '@/views/Front/DashboardPage/component/GridView'
-import Chart from '@/views/Front/DashboardPage/component/Chart'
+import GridView from '@/views/Front/DashboardPage/Component/GridView'
+import Chart from '@/views/Front/DashboardPage/Component/Chart'
+import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
+
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
+import Feed from './Component/Feed';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
@@ -56,10 +59,10 @@ const { Header, Content } = Layout;
   }
   generateDOM = () => {
     console.log('this.state.widgets', this.state.widgets)
-    // this.setState({
-    //   widgets: [this.state.widgets[0]]
-    // })
-    return _.map(this.state.widgets, (widget, i) => {
+
+    return this.state.widgets
+    // .filter((item,index) => index< 1)
+    .map((widget, i) => {
       let option;
       let component;
       if (widget.type === 'CHART') {
@@ -67,7 +70,16 @@ const { Header, Content } = Layout;
          component = (
           <Chart widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
         )
-      }else {
+      } else if(widget.type === 'MARKDOWN'){
+        component = (
+          <MarkdownView widget={widget} />
+        )
+      } else if(widget.type === 'FEED'){
+        component = (
+          <Feed widget={widget}/>
+        )
+      }
+      else {
         component = (
           <div>{widget.i}</div>
         )
