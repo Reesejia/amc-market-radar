@@ -91,7 +91,7 @@ const DataPageManage: FC = () => {
     const getAllGroup = async () => {
         const params = {}
         const { data } = await getGroup(params)
-        setGrounpList(data.content)
+        setGrounpList(data && data.content)
     }
     return (
         <div className="dataPageManage">
