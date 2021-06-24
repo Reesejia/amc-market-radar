@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { getBarChart, getLineChart, getPieChart } from "@/views/Front/DashboardPage/Chart";
 import ReactEcharts from 'echarts-for-react';
 export default class ContextPage extends Component {
+  constructor(){
+    super()
+    this.state ={
+      option: {}
+    }
+  }
   chartRef = React.createRef()
   static getDerivedStateFromProps(nextProps, prevState) {
     // console.log('getDerivedStateFromProps nextProps', nextProps)
@@ -37,7 +43,7 @@ export default class ContextPage extends Component {
 
       return { option, id: widget.i, }
     }
-    return null
+    return {option: {}}
   }
 
   // getSnapshotBeforeUpdate(){

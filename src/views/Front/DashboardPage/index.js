@@ -76,21 +76,21 @@ const { Header, Content } = Layout;
         const {vizType} = widget.chartStyle.chart
           if(vizType === 'table') {
             component = (
-              <TableView widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+              <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
             )
           }else {
             component = (
-              <Chart widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+              <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
             )
           }
 
       } else if(widget.type === 'MARKDOWN'){
         component = (
-          <MarkdownView widget={widget} />
+          <MarkdownView key={widget.i} widget={widget} />
         )
       } else if(widget.type === 'FEED'){
         component = (
-          <Feed widget={widget}/>
+          <Feed key={widget.i} widget={widget}/>
         )
       }
       else {

@@ -1,78 +1,45 @@
+import React from 'react'
 import { Table, Tag, Space } from 'antd';
+import "./index.scss"
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-const TableView = (props) =>{
-    return <Table columns={columns} dataSource={data} />
+class TableView extends React.Component {
+  constructor(){
+    super()
+    this.state ={
+      columns: [],
+      data: [],
+      loading: true
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+     if(nextProps){
+      let {vizDataBase} = nextProps.widget.chartStyle.chart
+      vizDataBase = eval(vizDataBase)
+      vizDataBase.map(i => i.dataIndex = i.key)
+      const {businessData} = nextProps
+      if(businessData){
+        businessData.map((i,index) => i.key = index)
+      }
+      return { columns: vizDataBase,data: businessData || [], loading: false }
+     }
+      return { columns: [{key: 'xx'}],data: []}
+  }
+  render(){
+    return (
+      <Table className="table-view-wraper" loading={this.state.loading} columns={this.state.columns} dataIndex="key" dataSource={this.state.data} />
+    )
+  }
 }
 export default TableView
+
+
+// const TableView = (props) =>{
+//   const {vizDataBase} = props.widget.chartStyle.chart
+//   const columns = eval(vizDataBase)
+//   console.log('columns', columns)
+//   const data = props.businessData
+//   console.log('props data', data)
+//     return
+// }
