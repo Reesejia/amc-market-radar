@@ -1,0 +1,22 @@
+.dataPageManage {
+  background-color: #fff;
+  padding: 30px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 800;
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .btn {
+      .add-btn{
+        margin-left: 30px;
+      }
+    }
+  }
+  .table {
+
+  }
+}
