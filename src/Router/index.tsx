@@ -2,8 +2,7 @@ import {Spin} from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 const DragLayout = lazy(() => import('../views/Front/DragLayout'))
-const DataPageManage = lazy(() => import('../views/Admin/DataPageManage'))
-
+const DataPageManage = lazy(() => import('../views/Admin/DataPageManage/index'))
 const routes = () => (
 	<Router>
 		<Suspense fallback={<Spin />}>
@@ -13,7 +12,7 @@ const routes = () => (
 				<Link to="/"></Link>
 			</li>
 			<li>
-				<Link to="/dataPageManage"></Link>
+				<Link to="/dataPageManage">dataPageManage</Link>
 			</li>
             </ul>
 			<Switch>

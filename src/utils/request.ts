@@ -1,38 +1,41 @@
-import axios from 'axios'
+import { message } from 'antd';
+import axios from 'axios';
 
 const service = axios.create({
-  baseURL: '/aap/api/v1',
-  timeout: 150000
-})
+	baseURL: '/aap/api/v1',
+	timeout: 150000
+});
 
 // Request interceptors
 service.interceptors.request.use(
-  (config) => {
-    const token = window.sessionStorage.getItem('token')
-    const tenantId = window.sessionStorage.getItem('tenantId')
-    config.headers.tenantId = tenantId
-    config.headers.Authorization = 'bearer ' + token
-    return config
-  },
-  (error) => {
-    Promise.reject(error)
-  }
-)
+	(config) => {
+		const token = window.sessionStorage.getItem('token') || '5e2cf9d7-26fa-460a-96c2-58709f109c8c'
+		const tenantId = window.sessionStorage.getItem('tenantId') || 1001
+		config.headers.tenantId = tenantId;
+		config.headers.Authorization = 'bearer ' + token;
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
 
 // Response interceptors
 service.interceptors.response.use(
-  (response) => {
-    const resData = response.data
-    const { statusCode } = resData
-    if (statusCode !== 0) {
-      Promise.reject((new Error(resData.errorMsg || 'Error')))
+	(response) => {
+		const resData = response.data;
+		const { statusCode } = resData;
+		if (statusCode !== 0) {
+      message.error(resData.errorMsg || 'Error')
+      Promise.reject(resData.errorMsg || 'Error');
     }
-    return resData
-  },
-  (error) => {
 
-    return Promise.reject(error)
-  }
-)
+		return resData;
+	},
+	(error) => {
+    message.error(error.message || 'Error')
+		return Promise.reject(error);
+	}
+);
 
-export default service
+export default service;
