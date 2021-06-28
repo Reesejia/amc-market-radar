@@ -1,10 +1,24 @@
 import './index.scss'
 import React, { FC, useState } from 'react';
 import { Form, Input, Button, Transfer } from 'antd';
+import {saveGroup} from '@/api/group'
 
 interface chidProps {
     setIsEditGroupVal: Function
 }
+
+const onSaveGroup = async() =>{
+    const res = await saveGroup({
+          comment: 'xxx',
+          dashboardGroupName: '看板1'
+      })
+      console.log('saveGroup res', res)
+      if(res.statusCode === 0 && res.data){
+
+      }
+
+  }
+
 const EditGroup: FC<chidProps> = (props) => {
     // const layout = {
     //     labelCol: { span: 8 },
@@ -65,6 +79,7 @@ const EditGroup: FC<chidProps> = (props) => {
             {/* {...layout} */}
             <Form
                 name="basic"
+                layout="vertical"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
@@ -78,13 +93,13 @@ const EditGroup: FC<chidProps> = (props) => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Password"
+                    label="选择看板"
                     name="password"
                     rules={[{ required: true, message: 'Please input your password!' }, {validator: checkBord}  ]}
                 >
                     <Transfer
                         dataSource={mockData}
-                        titles={['Source', 'Target']}
+                        titles={['源列表', '目标列表']}
                         targetKeys={targetKeys}
                         selectedKeys={selectedKeys}
                         onChange={onChange}

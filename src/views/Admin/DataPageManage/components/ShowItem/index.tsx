@@ -2,20 +2,23 @@ import './index.scss'
 import React, { FC, useState } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal } from 'antd';
 import EditGroup from "../EditGroup/index"
-interface chidProps {
+interface ChidProps {
     isShowItem: boolean
     setval: Function
 }
 const { confirm } = Modal
 
-const ShowItem: FC<chidProps> = (props) => {
+const ShowItem: FC<ChidProps> = (props) => {
     const { isShowItem, setval } = props
-    const [isEditGroup, setIsEditGroup] = useState(false);
+    const [isEditGroup, setIsEditGroup] = useState(true);
 
     const onClose = () => {
         setval(false)
         setIsEditGroup(false)
     }
+
+
+
     const handleEditGroup = () => {
         const title = <div style={{ fontSize: 14 }}>该组合当前已启用，修改组合信息将<span style={{ color: "red" }}>重置展示名称及顺序</span>，是否继续修改?</div>
         confirm({

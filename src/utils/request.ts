@@ -23,28 +23,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const resData = response.data
-    // const { statusCode } = resData
-    // AppModule.COMMIT_LOADING(false)
-    // if (router.currentRoute.path === '/economyIndex') {
-    //   return resData
-    // }
-    // if (statusCode !== 0) {
-    //   if (String(statusCode).startsWith('9'))  return resData
-    //   if (document.getElementsByClassName('el-message').length < 1) {
-    //     Message({
-    //       message: resData.errorMsg,
-    //       type: 'error',
-    //       duration: 5 * 1000
-    //     })
-    //   }
-    //   if (statusCode === 3) {
-    //     UserModule.ResetToken()
-    //     router.replace({
-    //       path: '/login'
-    //     })
-    //   }
-    //   Promise.reject((new Error(resData.errorMsg || 'Error')))
-    // }
+    const { statusCode } = resData
+    if (statusCode !== 0) {
+      Promise.reject((new Error(resData.errorMsg || 'Error')))
+    }
     return resData
   },
   (error) => {
