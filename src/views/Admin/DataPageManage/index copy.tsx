@@ -1,10 +1,10 @@
 import './index.scss'
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig } from 'antd';
 import { getGroup, dashboardList } from '@/api/group';
 import ShowItem from './components/ShowItem'
 import { DashItem } from '@/typing/Admin/goups';
-import { PagationParams } from '@/typing/pagation'
+import {PagationParams} from '@/typing/pagation'
 export interface Props {
   test: string
 }
@@ -12,16 +12,15 @@ export interface Props {
 
 const DataPageManage: FC = () => {
   const [status, changeStatus] = useState(false);
-  const [grounpListInfo, setGrounpListInfo] = useState(() => { return { content: [], totalElements: 0 } })
-  const PagationRef = useRef({ page: 1, size: 20 })
-  const [pagation, setPagation] = useState(PagationRef.current)
+  const [grounpListInfo, setGrounpListInfo] = useState(() =>{return  {content: [], totalElements: 0} })
+  const [pagation, setPagation] = useState({ page: 1, size: 20 })
   const [isCreate, setCreate] = useState(false)
   const [GroupId, setGroupId] = useState("")
   const [dashList, setDashList] = useState([]);
   const [isEditGroup, setIsEditGroup] = useState(false);
 
   useEffect(() => {
-    getAllGroup()
+    getAllGroup(pagation.page, pagation.size)
     getDashboardList();
   }, [])
 
@@ -32,17 +31,15 @@ const DataPageManage: FC = () => {
     setIsEditGroup(true)
   };
 
-  const getAllGroup = async () => {
-    console.log('pagation.page', pagation.page)
+  const getAllGroup = async (page: number, size: number) => {
     const params = {
-      size: PagationRef.current.size,
-      page: PagationRef.current.page - 1
+      size: size,
+      page: page - 1
     }
     const res = await getGroup(params)
     if (res.statusCode === 0 && res.success) {
       setGrounpListInfo(res.data)
     }
-
   }
 
   const getDashboardList = async () => {
@@ -122,17 +119,29 @@ const DataPageManage: FC = () => {
     showSizeChanger: true,//设置每页显示数据条数
     showQuickJumper: false,
     showTotal: () => `共${grounpListInfo.totalElements}条`,
-    pageSize: pagation.size,
+    pageSize: 20,
     total: grounpListInfo.totalElements,  //数据的总的条数
+    // onChange: (current: number) => changePage(current),
+    onShowSizeChange: (current: number, pageSize: number) => {//设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
+      getAllGroup(current as number, pageSize as number)
+    }
+
   }
 
-  const handleChange = (pagination: TablePaginationConfig, filters: object, sorter: object) => {
-    const { current, pageSize } = pagination
-    PagationRef.current = { size: pageSize as number, page: current as number }
-    setPagation(PagationRef.current);
-    getAllGroup()
-    console.log(pagination, filters, sorter)
+  const changePage = (current: number) => {
+    console.log('current', current)
+    setPagation({ ...pagation,page: current});
+    // getAllGroup()
   }
+
+const handleChange = (pagination: TablePaginationConfig, filters: object, sorter: object) => {
+  console.log('pagination', pagination)
+  const {current, pageSize} = pagination
+  console.log('current', pageSize)
+  setPagation( {size: pageSize as number, page: current as number});
+  getAllGroup(current as number, pageSize as number)
+  console.log(pagination, filters, sorter)
+}
 
   return (
     <div className="dataPageManage">
@@ -153,8 +162,6 @@ const DataPageManage: FC = () => {
           onChange={handleChange}
           pagination={paginationProps}
         />
-        page: {pagation.page}
-        size: {pagation.size}
       </div>
       {/* "defaultCurrent","disabled","current","defaultPageSize" */}
       <div>
