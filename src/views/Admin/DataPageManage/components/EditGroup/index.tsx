@@ -85,7 +85,7 @@ const EditGroup: FC<chidProps> = (props) => {
     return Promise.resolve(targetKeys.length > 0);
   };
 
-  const checkBoardName = (rules: Array<[]>, value: string) => {
+  const checkBoardName = (rules: object, value: string) => {
     if (value.length > 10) {
       return Promise.reject();
     }
