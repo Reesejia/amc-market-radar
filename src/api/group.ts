@@ -2,7 +2,7 @@ import {CreateGroup} from '@/typing/Admin/goups'
 import request from "../utils/request"
 
 // 获取组合列表
-export const getGroup = (params:any) => request({
+export const getGroup = (params: unknown) => request({
   url: '/blackcat/dashboard/group/search',
   method: 'get',
   params
@@ -29,9 +29,8 @@ export const getBoardDetail = (dashboardGroupId: string) => request({
 
 
 // 组合删除
-export const deleteGroup = (data:CreateGroup) => request({
-  url: '/blackcat/dashboard/group/delete',
-  method: 'post',
-  data
+export const deleteGroup = (groupId: string) => request({
+  url: `/blackcat/dashboard/group/delete?dashboardGroupId=${groupId}`,
+  method: 'post'
 })
 

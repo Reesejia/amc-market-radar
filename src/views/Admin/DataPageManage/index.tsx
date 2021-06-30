@@ -1,14 +1,13 @@
-import './index.scss'
 import React, { FC, useEffect, useState, useRef } from 'react';
-import { Button, Table, Space, Tag, TablePaginationConfig } from 'antd';
-import { getGroup, dashboardList } from '@/api/group';
+import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
+import { getGroup, dashboardList, deleteGroup } from '@/api/group';
 import ShowItem from './components/ShowItem'
-import { DashItem } from '@/typing/Admin/goups';
-import { PagationParams } from '@/typing/pagation'
+import { DashItem, BoardDetail } from '@/typing/Admin/goups';
+import './index.scss'
+
 export interface Props {
   test: string
 }
-
 
 const DataPageManage: FC = () => {
   const [status, changeStatus] = useState(false);
@@ -61,8 +60,8 @@ const DataPageManage: FC = () => {
       title: '组合名称',
       dataIndex: 'dashboardGroupName',
       key: 'dashboardGroupName',
-      sorter: (a: any, b: any) => a.name - b.name,
-      render: (text: string, record: any) => {
+      // sorter: (a: any, b: any) => a.name - b.name,
+      render: (text: string, record: BoardDetail) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
           changeStatus(true)
           setGroupId(record.id)
@@ -75,13 +74,13 @@ const DataPageManage: FC = () => {
       title: '修改人',
       dataIndex: 'updateByName',
       key: 'updateByName',
-      sorter: (a: any, b: any) => a.name - b.name,
+      // sorter: (a: BoardDetail, b: BoardDetail) => a.updateByName - b.name,
     },
     {
       title: '修改时间',
       dataIndex: 'lastModifiedTime',
       key: 'lastModifiedTime',
-      sorter: (a: any, b: any) => a.name - b.name,
+      // sorter: (a: any, b: any) => a.name - b.name,
     },
     {
       title: '备注',
@@ -105,18 +104,30 @@ const DataPageManage: FC = () => {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      render: (text: any, record: any) => {
+      render: (text: string, record: BoardDetail) => {
         const { used } = record
         return (
           <Space size="middle">
             {
-              used ? '-' : <div>删除</div>
+              used ? '-' :
+              <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
+              <a  style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
+            </Popconfirm>
+
             }
           </Space>
         )
       }
     }
   ]
+
+  const onDeleteGroup = async(groupId: string) => {
+    const res = await deleteGroup(groupId)
+    if(res.statusCode === 0 && res.success){
+      message.success('删除成功')
+      getAllGroup()
+    }
+  }
 
   const paginationProps = {
     showSizeChanger: true,//设置每页显示数据条数
@@ -153,10 +164,7 @@ const DataPageManage: FC = () => {
           onChange={handleChange}
           pagination={paginationProps}
         />
-        page: {pagation.page}
-        size: {pagation.size}
       </div>
-      {/* "defaultCurrent","disabled","current","defaultPageSize" */}
       <div>
         <ShowItem
           GroupId={GroupId}

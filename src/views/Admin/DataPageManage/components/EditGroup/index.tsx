@@ -61,7 +61,7 @@ const EditGroup: FC<chidProps> = (props) => {
     }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: object) => {
     console.log('Failed:', errorInfo);
   };
 
@@ -85,7 +85,7 @@ const EditGroup: FC<chidProps> = (props) => {
     return Promise.resolve(targetKeys.length > 0);
   };
 
-  const checkBoardName = (rules: any, value: string) => {
+  const checkBoardName = (rules: Array<[]>, value: string) => {
     if (value.length > 10) {
       return Promise.reject();
     }
