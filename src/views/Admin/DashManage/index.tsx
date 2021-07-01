@@ -11,12 +11,17 @@ export interface Props {
 }
 
 const DataPageManage: FC = () => {
-  const initState = {status: false}
-  const [state, dispatch]= useReducer(dashReducer, initState)
-
+  const initState = {
+    status: false,
+    grounpListInfo: { content: [], totalElements: 0 }
+  }
+  // const [state, dispatch]= useReducer(dashReducer, initState)
+  const reduderObj = useDashApi(getGroup)
+  const {status, grounpListInfo, dispatch} = reduderObj
+  // const {grounpListInfo} = state
 
   // const [status, changeStatus] = useState(false);
-  const [grounpListInfo, setGrounpListInfo] = useState(() => { return { content: [], totalElements: 0 } })
+  // const [grounpListInfo, setGrounpListInfo] = useState(() => { return })
   const PagationRef = useRef({ page: 1, size: 20 })
   const [pagation, setPagation] = useState(PagationRef.current)
   const [isCreate, setCreate] = useState(false)
@@ -25,7 +30,7 @@ const DataPageManage: FC = () => {
   const [isEditGroup, setIsEditGroup] = useState(false);
 
   useEffect(() => {
-    getAllGroup()
+    // getAllGroup()
     getDashboardList();
   }, [])
 
@@ -45,9 +50,8 @@ const DataPageManage: FC = () => {
     }
     const res = await getGroup(params)
     if (res.statusCode === 0 && res.success) {
-      setGrounpListInfo(res.data)
+      // setGrounpListInfo(res.data)
     }
-
   }
 
   const getDashboardList = async () => {
@@ -132,7 +136,7 @@ const DataPageManage: FC = () => {
     const res = await deleteGroup(groupId)
     if (res.statusCode === 0 && res.success) {
       message.success('删除成功')
-      getAllGroup()
+      // getAllGroup()
     }
   }
 
@@ -175,7 +179,7 @@ const DataPageManage: FC = () => {
         />
       </div>
       <div>
-        <DashContext.Provider value={{state, dispatch}}>
+        <DashContext.Provider value={reduderObj}>
         <ShowItem
           GroupId={GroupId}
           getAllGroup={getAllGroup}

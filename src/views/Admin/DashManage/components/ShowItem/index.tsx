@@ -21,8 +21,7 @@ interface ChidProps {
 }
 const ShowItem: FC<ChidProps> = (props: ChidProps) => {
   const { GroupId, getAllGroup, isCreate, dashList, isEditGroup, setIsEditGroup } = props;
-  const {state, dispatch} = useContext(DashContext)
-  const {status} = state
+  const {status, dispatch} = useContext(DashContext)
   const initalBoard = {
     allDashboardGroupMappings: [],
     dashboardGroupMappings: [],
