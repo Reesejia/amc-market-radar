@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState, useRef, useReducer } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
 import ShowItem from './components/ShowItem'
 import { DashItem, BoardDetail } from '@/typing/Admin/goups';
+import {useDashApi, DashContext, dashReducer} from './utils'
 import './index.scss'
 
 export interface Props {
@@ -10,7 +11,11 @@ export interface Props {
 }
 
 const DataPageManage: FC = () => {
-  const [status, changeStatus] = useState(false);
+  const initState = {status: false}
+  const [state, dispatch]= useReducer(dashReducer, initState)
+
+
+  // const [status, changeStatus] = useState(false);
   const [grounpListInfo, setGrounpListInfo] = useState(() => { return { content: [], totalElements: 0 } })
   const PagationRef = useRef({ page: 1, size: 20 })
   const [pagation, setPagation] = useState(PagationRef.current)
@@ -26,7 +31,8 @@ const DataPageManage: FC = () => {
 
   const showDrawer = () => {
     setGroupId("")
-    changeStatus(true);
+    dispatch({type: 'CHANGE_STATUS', payload: true})
+    // changeStatus(true);
     setCreate(true)
     setIsEditGroup(true)
   };
@@ -63,7 +69,8 @@ const DataPageManage: FC = () => {
       // sorter: (a: any, b: any) => a.name - b.name,
       render: (text: string, record: BoardDetail) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
-          changeStatus(true)
+          // changeStatus(true)
+          dispatch({type: 'CHANGE_STATUS', payload: true})
           setGroupId(record.id)
           setIsEditGroup(false)
           setCreate(false)
@@ -168,16 +175,17 @@ const DataPageManage: FC = () => {
         />
       </div>
       <div>
+        <DashContext.Provider value={{state, dispatch}}>
         <ShowItem
           GroupId={GroupId}
-          status={status}
-          changeStatus={changeStatus}
           getAllGroup={getAllGroup}
           isCreate={isCreate}
           dashList={dashList}
           isEditGroup={isEditGroup}
           setIsEditGroup={setIsEditGroup}
         />
+        </DashContext.Provider>
+
       </div>
     </div>
   )

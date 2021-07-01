@@ -1,8 +1,9 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
 import EditGroup from '../EditGroup/index';
 import { getBoardDetail } from '@/api/group';
 import { BoardDetail, DashItem } from '@/typing/Admin/goups';
+import {useDashApi, DashContext} from '../../utils'
 import './index.scss';
 
 const { confirm } = Modal;
@@ -12,8 +13,6 @@ const infoLabelStyle = { color: '#000', fontSize: '14px', fontWeight: 500 };
 const infoContentStyle = { color: '#000', fontSize: '14px' };
 interface ChidProps {
   GroupId: string;
-  status: boolean;
-  changeStatus: Function
   getAllGroup: Function
   isCreate: boolean
   dashList: Array<DashItem>
@@ -21,7 +20,9 @@ interface ChidProps {
   setIsEditGroup: Function
 }
 const ShowItem: FC<ChidProps> = (props: ChidProps) => {
-  const { GroupId, status, changeStatus, getAllGroup, isCreate, dashList, isEditGroup, setIsEditGroup } = props;
+  const { GroupId, getAllGroup, isCreate, dashList, isEditGroup, setIsEditGroup } = props;
+  const {state, dispatch} = useContext(DashContext)
+  const {status} = state
   const initalBoard = {
     allDashboardGroupMappings: [],
     dashboardGroupMappings: [],
@@ -37,9 +38,9 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
 
   useEffect(
     () => {
-      onBoardDetail();
+      // onBoardDetail();
+      console.log('status333', status)
     },
-    [GroupId]
   );
 
   const onBoardDetail = async () => {
@@ -73,6 +74,7 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
       setIsEditGroup(true);
     }
   };
+  console.log('status22', status)
   return (
     <div className="showItem">
       <Drawer
@@ -81,7 +83,7 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
         placement="right"
         closable={false}
         visible={status}
-        onClose={() => changeStatus(false)}
+        onClose={() => dispatch({type: 'CHANGE_STATUS', payload: false})}
       >
         <Descriptions
           title={boardDetail.dashboardGroupName}
@@ -110,7 +112,6 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
             dashList={dashList}
             isCreate={isCreate}
             onBoardDetail={onBoardDetail}
-            changeStatus={changeStatus}
           />
         ) : (
             <div className="groupInfo">
