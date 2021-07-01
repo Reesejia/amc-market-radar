@@ -110,9 +110,9 @@ const DataPageManage: FC = () => {
           <Space size="middle">
             {
               used ? '-' :
-              <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
-              <a  style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
-            </Popconfirm>
+                <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
+                  <a style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
+                </Popconfirm>
 
             }
           </Space>
@@ -121,9 +121,9 @@ const DataPageManage: FC = () => {
     }
   ]
 
-  const onDeleteGroup = async(groupId: string) => {
+  const onDeleteGroup = async (groupId: string) => {
     const res = await deleteGroup(groupId)
-    if(res.statusCode === 0 && res.success){
+    if (res.statusCode === 0 && res.success) {
       message.success('删除成功')
       getAllGroup()
     }
@@ -147,10 +147,10 @@ const DataPageManage: FC = () => {
 
   return (
     <div className="dataPageManage">
-      <div className="header">
+      <div className="dash-header">
         <div className="title">
           数据页面管理
-                </div>
+         </div>
         <div className="btn">
           <Button type="primary">组合展示</Button>
           <Button type="primary" className="add-btn" onClick={showDrawer}>新增组合</Button>
@@ -158,11 +158,13 @@ const DataPageManage: FC = () => {
       </div>
       <div className="table">
         <Table
+          bordered
           rowKey="id"
           columns={columns}
           dataSource={grounpListInfo.content}
           onChange={handleChange}
           pagination={paginationProps}
+          scroll={{ y: 'calc(100vh - 230px)' }}
         />
       </div>
       <div>
