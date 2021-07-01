@@ -9,30 +9,11 @@ import './index.scss'
 export interface Props {
   test: string
 }
-
 const DataPageManage: FC = () => {
-  const initState = {
-    status: false,
-    grounpListInfo: { content: [], totalElements: 0 }
-  }
-  // const [state, dispatch]= useReducer(dashReducer, initState)
   const reduderObj = useDashApi(getGroup)
-  const {status, grounpListInfo, dispatch} = reduderObj
-  // const {grounpListInfo} = state
-
-  // const [status, changeStatus] = useState(false);
-  // const [grounpListInfo, setGrounpListInfo] = useState(() => { return })
+  const {grounpListInfo, dispatch, fetchData} = reduderObj
   const PagationRef = useRef({ page: 1, size: 20 })
   const [pagation, setPagation] = useState(PagationRef.current)
-  const [isCreate, setCreate] = useState(false)
-  const [GroupId, setGroupId] = useState("")
-  const [dashList, setDashList] = useState([]);
-  const [isEditGroup, setIsEditGroup] = useState(false);
-
-  useEffect(() => {
-    // getAllGroup()
-    getDashboardList();
-  }, [])
 
   const showDrawer = () => {
     dispatch({type: 'CHANGE_STATUS', payload: true})
@@ -41,29 +22,6 @@ const DataPageManage: FC = () => {
     dispatch({type: 'CHANGE_GROUPID', payload: ""})
   };
 
-  const getAllGroup = async () => {
-    console.log('pagation.page', pagation.page)
-    const params = {
-      size: PagationRef.current.size,
-      page: PagationRef.current.page - 1
-    }
-    const res = await getGroup(params)
-    if (res.statusCode === 0 && res.success) {
-      // setGrounpListInfo(res.data)
-    }
-  }
-
-  const getDashboardList = async () => {
-    const res = await dashboardList();
-    if (res.statusCode === 0 && res.success) {
-      setDashList(
-        res.data.map((item: DashItem) => {
-          item.key = item.id;
-          return item;
-        })
-      );
-    }
-  };
   const columns = [
     {
       title: '组合名称',
@@ -101,12 +59,7 @@ const DataPageManage: FC = () => {
       key: 'used',
       dataIndex: 'used',
       render: (val: boolean) => (
-        <>
-          {
-
-            val ? <Tag color="blue">已启用</Tag> : <Tag color="volcano">未启用</Tag>
-          }
-        </>
+        <>{ val ? <Tag color="blue">已启用</Tag> : <Tag color="volcano">未启用</Tag>} </>
       )
     },
     {
@@ -134,7 +87,7 @@ const DataPageManage: FC = () => {
     const res = await deleteGroup(groupId)
     if (res.statusCode === 0 && res.success) {
       message.success('删除成功')
-      // getAllGroup()
+      fetchData()
     }
   }
 
@@ -150,7 +103,7 @@ const DataPageManage: FC = () => {
     const { current, pageSize } = pagination
     PagationRef.current = { size: pageSize as number, page: current as number }
     setPagation(PagationRef.current);
-    getAllGroup()
+    fetchData()
     console.log(pagination, filters, sorter)
   }
 
@@ -178,12 +131,8 @@ const DataPageManage: FC = () => {
       </div>
       <div>
         <DashContext.Provider value={reduderObj}>
-        <ShowItem
-          getAllGroup={getAllGroup}
-          dashList={dashList}
-        />
+          <ShowItem/>
         </DashContext.Provider>
-
       </div>
     </div>
   )

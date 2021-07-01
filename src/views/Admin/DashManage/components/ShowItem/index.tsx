@@ -3,20 +3,14 @@ import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
 import EditGroup from '../EditGroup/index';
 import { getBoardDetail } from '@/api/group';
 import { BoardDetail, DashItem } from '@/typing/Admin/goups';
-import {useDashApi, DashContext} from '../../utils'
+import {useDashApi, DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '../../utils'
 import './index.scss';
 
 const { confirm } = Modal;
-const labelStyle = { color: '#999', fontSize: '14px' };
-const contentStyle = { color: '#000', fontSize: '18px' };
-const infoLabelStyle = { color: '#000', fontSize: '14px', fontWeight: 500 };
-const infoContentStyle = { color: '#000', fontSize: '14px' };
+
 interface ChidProps {
-  getAllGroup: Function
-  dashList: Array<DashItem>
 }
 const ShowItem: FC<ChidProps> = (props: ChidProps) => {
-  const { getAllGroup, dashList } = props;
   const {status, groupId, dispatch, isCreate, isEditGroup } = useContext(DashContext)
   const initalBoard = {
     allDashboardGroupMappings: [],
@@ -99,9 +93,6 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
         {isEditGroup ? (
           <EditGroup
             boardDetail={boardDetail}
-            getAllGroup={getAllGroup}
-            dashList={dashList}
-            isCreate={isCreate}
             onBoardDetail={onBoardDetail}
           />
         ) : (

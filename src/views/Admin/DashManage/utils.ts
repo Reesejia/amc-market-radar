@@ -1,11 +1,14 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
+import { getGroup, dashboardList, deleteGroup } from '@/api/group';
+import { DashItem, BoardDetail } from '@/typing/Admin/goups';
 
 const initialState = {
 	status: false,
 	grounpListInfo: { content: [], totalElements: 0 },
 	groupId: '',
-  isCreate: false,
-	isEditGroup: false
+	isCreate: false,
+	isEditGroup: false,
+	dashList: []
 };
 
 type ACTION_TYPE = {
@@ -27,6 +30,11 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 			return {
 				...state,
 				grounpListInfo: action.payload
+			};
+		case 'FETCH_DASH_LIST':
+			return {
+				...state,
+				dashList: action.payload
 			};
 		case 'CHANGE_GROUPID':
 			return {
@@ -51,7 +59,6 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 
 export const useDashApi = (fetchApi?: Function) => {
 	const [ state, dispatch ] = useReducer(dashReducer, initialState);
-
 	const fetchData = async () => {
 		if (fetchApi) {
 			const res = await fetchApi();
@@ -61,12 +68,25 @@ export const useDashApi = (fetchApi?: Function) => {
 		}
 	};
 
+	const getDashboardList = async () => {
+		const res = await dashboardList();
+		if (res.statusCode === 0 && res.success) {
+			dispatch({ type: 'FETCH_DASH_LIST', payload: res.data });
+		}
+	};
+
 	useEffect(() => {
 		fetchData();
+		getDashboardList();
 	}, []);
 	return { ...state, dispatch, fetchData };
 };
 
 const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => {};
+const fetchData = () => {};
+export const DashContext = createContext({ ...initialState, dispatch, fetchData });
 
-export const DashContext = createContext({ ...initialState, dispatch });
+export const labelStyle = { color: '#999', fontSize: '14px' };
+export const contentStyle = { color: '#000', fontSize: '18px' };
+export const infoLabelStyle = { color: '#000', fontSize: '14px', fontWeight: 500 };
+export const infoContentStyle = { color: '#000', fontSize: '14px' };

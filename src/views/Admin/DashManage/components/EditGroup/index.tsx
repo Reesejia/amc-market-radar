@@ -4,18 +4,14 @@ import { Form, Input, Button, Transfer, message } from 'antd';
 import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/goups';
 import {useDashApi, DashContext} from '../../utils'
 import './index.scss';
-import { type } from 'os';
 interface chidProps {
   boardDetail: BoardDetail
-  isCreate: boolean
   onBoardDetail: Function
-  getAllGroup: Function
-  dashList: Array<DashItem>
 }
 const { TextArea } = Input;
 const EditGroup: FC<chidProps> = (props) => {
-  const { boardDetail, isCreate, onBoardDetail, getAllGroup, dashList } = props;
-  const {dispatch} = useContext(DashContext)
+  const { boardDetail, onBoardDetail } = props;
+  const {dispatch, fetchData, dashList, isCreate} = useContext(DashContext)
   const initialForm = {
     dashboardGroupName: '',
     allDashboardGroupMappings: [],
@@ -55,11 +51,10 @@ const EditGroup: FC<chidProps> = (props) => {
       dispatch({type: 'SET_EDIT_GROUP', payload: false})
       if (isCreate) {
         dispatch({type: 'CHANGE_STATUS', payload: false})
-        // changeStatus(false)
       } else {
         onBoardDetail()
       }
-      getAllGroup()
+      fetchData()
     }
   };
 
@@ -78,7 +73,6 @@ const EditGroup: FC<chidProps> = (props) => {
 
   const oncancel = () => {
     if (isCreate) {
-      // changeStatus(false)
       dispatch({type: 'CHANGE_STATUS', payload: false})
     } else {
       dispatch({type: 'SET_EDIT_GROUP', payload: false})
