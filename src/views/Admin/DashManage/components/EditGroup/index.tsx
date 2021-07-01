@@ -6,7 +6,6 @@ import {useDashApi, DashContext} from '../../utils'
 import './index.scss';
 import { type } from 'os';
 interface chidProps {
-  setIsEditGroupVal: Function;
   boardDetail: BoardDetail
   isCreate: boolean
   onBoardDetail: Function
@@ -15,8 +14,8 @@ interface chidProps {
 }
 const { TextArea } = Input;
 const EditGroup: FC<chidProps> = (props) => {
-  const { setIsEditGroupVal, boardDetail, isCreate, onBoardDetail, getAllGroup, dashList } = props;
-  const {status, dispatch} = useContext(DashContext)
+  const { boardDetail, isCreate, onBoardDetail, getAllGroup, dashList } = props;
+  const {dispatch} = useContext(DashContext)
   const initialForm = {
     dashboardGroupName: '',
     allDashboardGroupMappings: [],
@@ -53,7 +52,7 @@ const EditGroup: FC<chidProps> = (props) => {
     console.log('saveGroup res', res);
     if (res.statusCode === 0 && res.data) {
       message.success('操作成功');
-      setIsEditGroupVal(false);
+      dispatch({type: 'SET_EDIT_GROUP', payload: false})
       if (isCreate) {
         dispatch({type: 'CHANGE_STATUS', payload: false})
         // changeStatus(false)
@@ -82,7 +81,7 @@ const EditGroup: FC<chidProps> = (props) => {
       // changeStatus(false)
       dispatch({type: 'CHANGE_STATUS', payload: false})
     } else {
-      setIsEditGroupVal(false);
+      dispatch({type: 'SET_EDIT_GROUP', payload: false})
     }
   };
   const checkBord = () => {

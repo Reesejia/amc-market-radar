@@ -2,13 +2,16 @@ import { useEffect, useReducer, createContext, Dispatch } from 'react';
 
 const initialState = {
 	status: false,
-	grounpListInfo: { content: [], totalElements: 0 }
+	grounpListInfo: { content: [], totalElements: 0 },
+	groupId: '',
+  isCreate: false,
+	isEditGroup: false
 };
 
 type ACTION_TYPE = {
-  type: string;
-   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-	payload: any
+	type: string;
+	// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+	payload: any;
 };
 
 export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => {
@@ -22,37 +25,48 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 			};
 		case 'FETCH_API':
 			return {
-        ...state,
-        grounpListInfo: action.payload
+				...state,
+				grounpListInfo: action.payload
 			};
-		case 'FETCH_FAILURE':
+		case 'CHANGE_GROUPID':
 			return {
-				...state
+				...state,
+				groupId: action.payload
 			};
+		case 'CHANGE_ISCREATE':
+			return {
+				...state,
+				isCreate: action.payload
+			};
+		case 'SET_EDIT_GROUP':
+			return {
+				...state,
+				isEditGroup: action.payload
+			};
+
 		default:
 			throw new Error();
 	}
 };
 
-
 export const useDashApi = (fetchApi?: Function) => {
-  const [ state, dispatch ] = useReducer(dashReducer, initialState);
+	const [ state, dispatch ] = useReducer(dashReducer, initialState);
 
-  const fetchData = async () => {
-    if(fetchApi){
-      const res = await fetchApi();
-      if(res.statusCode === 0 && res.success){
-        dispatch({type: 'FETCH_API', payload: res.data})
-      }
-    }
-  };
+	const fetchData = async () => {
+		if (fetchApi) {
+			const res = await fetchApi();
+			if (res.statusCode === 0 && res.success) {
+				dispatch({ type: 'FETCH_API', payload: res.data });
+			}
+		}
+	};
 
 	useEffect(() => {
-
-    fetchData()
-	},[]);
+		fetchData();
+	}, []);
 	return { ...state, dispatch, fetchData };
 };
 
 const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => {};
+
 export const DashContext = createContext({ ...initialState, dispatch });

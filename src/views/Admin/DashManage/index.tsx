@@ -35,11 +35,10 @@ const DataPageManage: FC = () => {
   }, [])
 
   const showDrawer = () => {
-    setGroupId("")
     dispatch({type: 'CHANGE_STATUS', payload: true})
-    // changeStatus(true);
-    setCreate(true)
-    setIsEditGroup(true)
+    dispatch({type: 'SET_EDIT_GROUP', payload: true})
+    dispatch({type: 'CHANGE_ISCREATE', payload: true})
+    dispatch({type: 'CHANGE_GROUPID', payload: ""})
   };
 
   const getAllGroup = async () => {
@@ -73,11 +72,10 @@ const DataPageManage: FC = () => {
       // sorter: (a: any, b: any) => a.name - b.name,
       render: (text: string, record: BoardDetail) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
-          // changeStatus(true)
           dispatch({type: 'CHANGE_STATUS', payload: true})
-          setGroupId(record.id)
-          setIsEditGroup(false)
-          setCreate(false)
+          dispatch({type: 'CHANGE_GROUPID', payload: record.id})
+          dispatch({type: 'SET_EDIT_GROUP', payload: false})
+          dispatch({type: 'CHANGE_ISCREATE', payload: false})
         }}>{text}</a>)
       }
     },
@@ -181,12 +179,8 @@ const DataPageManage: FC = () => {
       <div>
         <DashContext.Provider value={reduderObj}>
         <ShowItem
-          GroupId={GroupId}
           getAllGroup={getAllGroup}
-          isCreate={isCreate}
           dashList={dashList}
-          isEditGroup={isEditGroup}
-          setIsEditGroup={setIsEditGroup}
         />
         </DashContext.Provider>
 

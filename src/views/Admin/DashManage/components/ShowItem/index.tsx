@@ -12,16 +12,12 @@ const contentStyle = { color: '#000', fontSize: '18px' };
 const infoLabelStyle = { color: '#000', fontSize: '14px', fontWeight: 500 };
 const infoContentStyle = { color: '#000', fontSize: '14px' };
 interface ChidProps {
-  GroupId: string;
   getAllGroup: Function
-  isCreate: boolean
   dashList: Array<DashItem>
-  isEditGroup: boolean
-  setIsEditGroup: Function
 }
 const ShowItem: FC<ChidProps> = (props: ChidProps) => {
-  const { GroupId, getAllGroup, isCreate, dashList, isEditGroup, setIsEditGroup } = props;
-  const {status, dispatch} = useContext(DashContext)
+  const { getAllGroup, dashList } = props;
+  const {status, groupId, dispatch, isCreate, isEditGroup } = useContext(DashContext)
   const initalBoard = {
     allDashboardGroupMappings: [],
     dashboardGroupMappings: [],
@@ -35,16 +31,13 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
   }
   const [boardDetail, setBoardDetail] = useState<BoardDetail>(initalBoard);
 
-  useEffect(
-    () => {
-      // onBoardDetail();
-      console.log('status333', status)
-    },
-  );
+  useEffect(() => {
+      onBoardDetail();
+    },[groupId]);
 
   const onBoardDetail = async () => {
-    if (GroupId) {
-      const res = await getBoardDetail(GroupId);
+    if (groupId) {
+      const res = await getBoardDetail(groupId);
       if (res.statusCode === 0 && res.success) {
         setBoardDetail(res.data);
       }
@@ -63,14 +56,14 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
         okText: '继续',
         cancelText: '取消',
         onOk() {
-          setIsEditGroup(true);
+          dispatch({type: 'SET_EDIT_GROUP', payload: true})
         },
         onCancel() {
           console.log('Cancel');
         }
       });
     } else {
-      setIsEditGroup(true);
+      dispatch({type: 'SET_EDIT_GROUP', payload: true})
     }
   };
   console.log('status22', status)
@@ -106,7 +99,6 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
         {isEditGroup ? (
           <EditGroup
             boardDetail={boardDetail}
-            setIsEditGroupVal={setIsEditGroup}
             getAllGroup={getAllGroup}
             dashList={dashList}
             isCreate={isCreate}
