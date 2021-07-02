@@ -57,7 +57,7 @@ const GroupShow: FC = () => {
       >
         {
           navList.map((nav) => {
-            return <GroupItem groupData={nav}/>
+            return <GroupItem key={nav.id} groupData={nav}/>
           })
         }
       </Modal>

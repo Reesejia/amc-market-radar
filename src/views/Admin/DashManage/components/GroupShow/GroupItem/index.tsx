@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useContext, useState, useEffect } from 'react'
 import { Button, Form, Input, Select, Row, Col } from 'antd';
 import { NavListInfo, NavListData, CreateGroup } from '@/typing/Admin/goups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
@@ -9,13 +9,14 @@ interface GroupProps {
 }
 
 const GroupItem: FC<GroupProps> = (props: GroupProps) => {
+  const { groupData } = props
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
   const { grounpListInfo } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
-    labelCol: { span: 3 },
-    wrapperCol: { span: 10 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
   };
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
@@ -23,6 +24,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { Option } = Select;
 
   const onGenderChange = (value: string) => {
+    console.log('onGenderChange', value)
     switch (value) {
       case 'male':
         form.setFieldsValue({ note: 'Hi, man!' });
@@ -44,43 +46,58 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
   const onFill = () => {
+    console.log('111', groupData.navigationName)
     form.setFieldsValue({
-      navigationName: 'Hello world!',
-      gender: 'male',
+      navigationName: groupData.navigationName,
+      gender: groupData.navigationName
     });
   };
+
+  useEffect(() => {
+    onFill()
+  }, [])
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
     <>
-      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-        <Form.Item name="navigationName" label="导航栏名称" rules={[{ required: true }]}>
-          <Row justify="center" align="middle">
-            <Col span={18}> <Input /> </Col>
-            {!editStatus ?
-              <Col span={6}> <a onClick={() => changeEditStatus(true)} style={{ paddingLeft: '5px' }}>修改</a></Col>
-              : null
-            }
-          </Row>
-        </Form.Item>
+      <Form {...layout} form={form} onFinish={onFinish}>
 
-        <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-          {
-            editStatus ?
-              <Select
-                placeholder="Select a option and change input text above"
-                onChange={onGenderChange}
-                allowClear
-              >
-                {
-                  grounpListInfo.content.map((group: CreateGroup) => {
-                    return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
-                  })
-                }
-              </Select>
-              :
-              <Col span={18}> <Input /> </Col>
+        <Row justify="center" align="middle">
+          <Col span={12}>
+            <Form.Item label="导航栏名称" name="navigationName" rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          {!editStatus ?
+            <Col span={12}>
+              <Form.Item >
+                <a onClick={() => changeEditStatus(true)} style={{ paddingLeft: '5px' }}>修改</a>
+              </Form.Item>
+            </Col>
+            : null
           }
-        </Form.Item>
+        </Row>
+
+        {
+          editStatus ?
+            <Select
+              placeholder="Select a option and change input text above"
+              onChange={onGenderChange}
+              allowClear
+            >
+              {
+                grounpListInfo.content.map((group: CreateGroup) => {
+                  return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
+                })
+              }
+            </Select>
+            :
+
+            <Col span={12}>
+              <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+            </Col>
+        }
 
         <Form.Item
           noStyle

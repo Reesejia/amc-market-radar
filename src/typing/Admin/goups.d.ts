@@ -40,6 +40,7 @@ export interface NavGroupItem {
 	id: string;
 }
 export interface NavListInfo {
+  id: string;
 	navigationName: string;
 	navigationGroups: Array<NavGroupItem>;
 }
