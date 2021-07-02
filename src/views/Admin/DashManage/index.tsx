@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useState, useRef, useReducer } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-import ShowItem from './components/ShowItem'
+import ShowItem from './components/DashDetail'
+import GroupShow from './components/GroupShow'
 import { DashItem, BoardDetail } from '@/typing/Admin/goups';
-import {useDashApi, DashContext, dashReducer} from './utils'
+import {useDashApi, DashContext, dashReducer} from '@/views/Admin/DashManage/utils';
 import './index.scss'
 
 export interface Props {
@@ -108,13 +109,13 @@ const DataPageManage: FC = () => {
   }
 
   return (
-    <div className="dataPageManage">
+    <div className="data-page-manage">
       <div className="dash-header">
         <div className="title">
           数据页面管理
          </div>
         <div className="btn">
-          <Button type="primary">组合展示</Button>
+          <Button type="primary" onClick={() => dispatch({type: 'SHOW_GROUP', payload: true})}>组合展示</Button>
           <Button type="primary" className="add-btn" onClick={showDrawer}>新增组合</Button>
         </div>
       </div>
@@ -132,6 +133,7 @@ const DataPageManage: FC = () => {
       <div>
         <DashContext.Provider value={reduderObj}>
           <ShowItem/>
+          <GroupShow/>
         </DashContext.Provider>
       </div>
     </div>

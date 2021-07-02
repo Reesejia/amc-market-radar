@@ -1,16 +1,16 @@
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
-import EditGroup from '../EditGroup/index';
+import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
 import { getBoardDetail } from '@/api/group';
 import { BoardDetail, DashItem } from '@/typing/Admin/goups';
-import {useDashApi, DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '../../utils'
+import {useDashApi, DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '@/views/Admin/DashManage/utils';
 import './index.scss';
 
 const { confirm } = Modal;
 
 interface ChidProps {
 }
-const ShowItem: FC<ChidProps> = (props: ChidProps) => {
+const DashDetail: FC<ChidProps> = (props: ChidProps) => {
   const {status, groupId, dispatch, isCreate, isEditGroup } = useContext(DashContext)
   const initalBoard = {
     allDashboardGroupMappings: [],
@@ -60,9 +60,8 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
       dispatch({type: 'SET_EDIT_GROUP', payload: true})
     }
   };
-  console.log('status22', status)
   return (
-    <div className="showItem">
+    <div className="dash-detail">
       <Drawer
         width="70%"
         title=""
@@ -131,4 +130,4 @@ const ShowItem: FC<ChidProps> = (props: ChidProps) => {
   );
 };
 
-export default ShowItem;
+export default DashDetail;

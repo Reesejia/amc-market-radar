@@ -8,7 +8,8 @@ const initialState = {
 	groupId: '',
 	isCreate: false,
 	isEditGroup: false,
-	dashList: []
+	dashList: [],
+	showGroup: false
 };
 
 type ACTION_TYPE = {
@@ -51,7 +52,11 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 				...state,
 				isEditGroup: action.payload
 			};
-
+		case 'SHOW_GROUP':
+			return {
+				...state,
+				showGroup: action.payload
+			};
 		default:
 			throw new Error();
 	}
