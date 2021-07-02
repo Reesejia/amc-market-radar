@@ -5,7 +5,8 @@ import { DashContext } from '@/views/Admin/DashManage/utils';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
-import "./index.scss"
+// import './index.scss'
+
 interface GroupProps {
   groupData: NavListInfo
 }
@@ -147,7 +148,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
-    <div className="edit-group-form">
+    <>
       <Form {...layout} form={form} onFinish={onFinish}>
         <Row justify="center" align="middle">
           <Col span={12}>
@@ -219,7 +220,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
         </Button>
         </Form.Item>
       </Form>
-    </div>
+    </>
   )
 }
 export default GroupItem

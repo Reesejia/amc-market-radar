@@ -41,7 +41,8 @@ export interface NavGroupItem {
 }
 export interface NavListInfo {
   id: string;
-	navigationName: string;
+  navigationName: string;
+  dashboardGroupName: string;
 	navigationGroups: Array<NavGroupItem>;
 }
 
