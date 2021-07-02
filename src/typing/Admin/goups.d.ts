@@ -1,3 +1,12 @@
+export interface GroupItem {
+	id: string;
+	comment: string;
+	dashboardGroupName: string;
+  lastModifiedTime: number
+  used: boolean
+}
+
+
 export interface CreateGroup {
 	id?: string;
 	comment: string;
@@ -11,7 +20,7 @@ export interface DashItem {
 	title: string;
 	positionJson: null;
 	key: string;
-	dashboardName: string;
+  dashboardName: string;
 	dashboardId: string;
 }
 

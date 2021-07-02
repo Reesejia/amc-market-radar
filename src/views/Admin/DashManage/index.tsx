@@ -3,7 +3,7 @@ import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm }
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
-import { DashItem, BoardDetail } from '@/typing/Admin/goups';
+import { DashItem, BoardDetail, GroupItem } from '@/typing/Admin/goups';
 import {useDashApi, DashContext, dashReducer} from '@/views/Admin/DashManage/utils';
 import './index.scss'
 
@@ -29,7 +29,7 @@ const DataPageManage: FC = () => {
       dataIndex: 'dashboardGroupName',
       key: 'dashboardGroupName',
       // sorter: (a: any, b: any) => a.name - b.name,
-      render: (text: string, record: BoardDetail) => {
+      render: (text: string, record: GroupItem) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
           dispatch({type: 'CHANGE_STATUS', payload: true})
           dispatch({type: 'CHANGE_GROUPID', payload: record.id})
@@ -42,13 +42,13 @@ const DataPageManage: FC = () => {
       title: '修改人',
       dataIndex: 'updateByName',
       key: 'updateByName',
-      // sorter: (a: BoardDetail, b: BoardDetail) => a.updateByName - b.name,
+      // sorter: (a: GroupItem, b: GroupItem) => a.updateByName - b.name,
     },
     {
       title: '修改时间',
       dataIndex: 'lastModifiedTime',
       key: 'lastModifiedTime',
-      // sorter: (a: any, b: any) => a.name - b.name,
+      sorter: (a: GroupItem, b: GroupItem) => a.lastModifiedTime - b.lastModifiedTime,
     },
     {
       title: '备注',
@@ -67,7 +67,7 @@ const DataPageManage: FC = () => {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      render: (text: string, record: BoardDetail) => {
+      render: (text: string, record: GroupItem) => {
         const { used } = record
         return (
           <Space size="middle">
@@ -105,7 +105,7 @@ const DataPageManage: FC = () => {
     PagationRef.current = { size: pageSize as number, page: current as number }
     setPagation(PagationRef.current);
     fetchData()
-    console.log(pagination, filters, sorter)
+    console.log('sorter',pagination, filters, sorter)
   }
 
   return (
