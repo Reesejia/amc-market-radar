@@ -1,17 +1,17 @@
-import React, { FC, useContext } from 'react'
-import { Modal, Button, Form, Input, Select, Row, Col } from 'antd';
-import { DashContext }  from '@/views/Admin/DashManage/utils';
+import React, { FC, useContext, useEffect } from 'react'
+import { Modal, Button } from 'antd';
+import { DashContext } from '@/views/Admin/DashManage/utils';
+import { navigationList } from '@/api/group'
+import { NavListInfo, NavListData } from '@/typing/Admin/goups'
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
 import './index.scss'
 
 const GroupShow: FC = () => {
   const { showGroup, dispatch } = useContext(DashContext)
-  const [visible, setVisible] = React.useState(false);
+  const [navList, setNavList] = React.useState<NavListData>([]);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const [modalText, setModalText] = React.useState('Content of the modal');
-  const showModal = () => {
-    setVisible(true);
-  };
+
 
   const handleOk = () => {
     // setModalText('The modal will be closed after two seconds');
@@ -27,6 +27,17 @@ const GroupShow: FC = () => {
     console.log('Clicked cancel button');
     dispatch({ type: 'SHOW_GROUP', payload: false })
   };
+
+  const getNavigationList = async () => {
+    const res = await navigationList()
+    if (res.statusCode === 0 && res.success) {
+      setNavList(res.data)
+    }
+  }
+
+  useEffect(() => {
+    getNavigationList()
+  }, [])
 
   return (
     <>
@@ -44,7 +55,11 @@ const GroupShow: FC = () => {
           </Button>
         ]}
       >
-        <GroupItem/>
+        {
+          navList.map((nav) => {
+            return <GroupItem groupData={nav}/>
+          })
+        }
       </Modal>
     </>
   )

@@ -1,13 +1,21 @@
-import React, { FC, useContext } from 'react'
-import {  Button, Form, Input, Select, Row, Col } from 'antd';
+import React, { FC, useContext, useState } from 'react'
+import { Button, Form, Input, Select, Row, Col } from 'antd';
+import { NavListInfo, NavListData, CreateGroup } from '@/typing/Admin/goups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
 // import './index.scss'
 
-const GroupItem: FC = () => {
+interface GroupProps {
+  groupData: NavListInfo
+}
+
+const GroupItem: FC<GroupProps> = (props: GroupProps) => {
+  console.log('GroupProps props', props)
+  const [editStatus, changeEditStatus] = useState(false)
+  const { grounpListInfo } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 7 },
+    wrapperCol: { span: 10 },
   };
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
@@ -37,55 +45,68 @@ const GroupItem: FC = () => {
 
   const onFill = () => {
     form.setFieldsValue({
-      note: 'Hello world!',
+      navigationName: 'Hello world!',
       gender: 'male',
     });
   };
-
+  console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
     <>
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-          <Form.Item name="note" label="Note" rules={[{ required: true }]}>
-            <Row justify="center" align="middle">
-              <Col span={18}> <Input /> </Col>
-              <Col span={6}> <div style={{paddingLeft: '5px'}}>修改</div></Col>
-            </Row>
-          </Form.Item>
-          <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-            <Select
-              placeholder="Select a option and change input text above"
-              onChange={onGenderChange}
-              allowClear
-            >
-              <Option value="male">male</Option>
-              <Option value="female">female</Option>
-              <Option value="other">other</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            noStyle
-            shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-          >
-            {({ getFieldValue }) =>
-              getFieldValue('gender') === 'other' ? (
-                <Form.Item name="customizeGender" label="Customize Gender" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-              ) : null
+      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form.Item name="navigationName" label="导航栏名称" rules={[{ required: true }]}>
+          <Row justify="center" align="middle">
+            <Col span={18}> <Input /> </Col>
+            {!editStatus ?
+              <Col span={6}> <a onClick={() => changeEditStatus(true)} style={{ paddingLeft: '5px' }}>修改</a></Col>
+              : null
             }
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
+          </Row>
+        </Form.Item>
+
+        <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+          {
+            editStatus ?
+              <Select
+                placeholder="Select a option and change input text above"
+                onChange={onGenderChange}
+                allowClear
+              >
+                {
+                  grounpListInfo.content.map((group: CreateGroup) => {
+                    return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
+                  })
+                }
+              </Select>
+              :
+              <Col span={18}> <Input /> </Col>
+          }
+        </Form.Item>
+
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+        >
+          {({ getFieldValue }) =>
+            getFieldValue('gender') === 'other' ? (
+              <Form.Item name="customizeGender" label="Customize Gender" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+            ) : null
+          }
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type="primary" htmlType="submit">
+            Submit
         </Button>
-            <Button htmlType="button" onClick={onReset}>
-              Reset
+          <Button htmlType="button" onClick={onReset}>
+            Reset
         </Button>
-            <Button type="link" htmlType="button" onClick={onFill}>
-              Fill form
+          <Button type="link" htmlType="button" onClick={onFill}>
+            Fill form
         </Button>
-          </Form.Item>
-        </Form>
+        </Form.Item>
+      </Form>
     </>
   )
 }

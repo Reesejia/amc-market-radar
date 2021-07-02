@@ -27,10 +27,15 @@ export const getBoardDetail = (dashboardGroupId: string) => request({
   method: 'get'
 })
 
-
 // 组合删除
 export const deleteGroup = (groupId: string) => request({
   url: `/blackcat/dashboard/group/delete?dashboardGroupId=${groupId}`,
   method: 'post'
+})
+
+// 导航栏组合
+export const navigationList = () => request({
+  url: `/blackcat/dashboard/navigation/list`,
+  method: 'get'
 })
 
