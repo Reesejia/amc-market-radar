@@ -1,3 +1,10 @@
+
+export interface GroupItemParams {
+  page: number;
+  size: number;
+  sortField?: string
+  direction?: string
+}
 export interface GroupItem {
 	id: string;
 	comment: string;
