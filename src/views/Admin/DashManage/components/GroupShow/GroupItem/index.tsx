@@ -2,6 +2,7 @@ import React, { FC, useContext, useState, useEffect } from 'react'
 import { Button, Form, Input, Select, Row, Col, Table } from 'antd';
 import { NavListInfo, NavListData, CreateGroup } from '@/typing/Admin/goups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
+import {updateNavigation} from '@/api/group'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
@@ -63,7 +64,8 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
   const onFinish = (values: object) => {
-    console.log(values);
+    // updateNavigation()
+    console.log('onFinish', values);
   };
 
   const onReset = () => {
@@ -106,8 +108,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     },
   ];
 
-
-
   const SortableItem = SortableElement((props: object) => {
     console.log('SortableItem props', props)
 
@@ -136,9 +136,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     />
     )
   }
-
-    //
-
 
   const DraggableBodyRow = ({ className, ...restProps }: { className: string, 'data-row-key': number }) => {
     console.log('restProps', restProps)

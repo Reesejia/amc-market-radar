@@ -1,4 +1,4 @@
-import {CreateGroup} from '@/typing/Admin/goups'
+import {CreateGroup, NavListInfo} from '@/typing/Admin/goups'
 import request from "../utils/request"
 
 // 获取组合列表
@@ -37,5 +37,13 @@ export const deleteGroup = (groupId: string) => request({
 export const navigationList = () => request({
   url: `/blackcat/dashboard/navigation/list`,
   method: 'get'
+})
+
+
+// 更新导航栏组合映射数据
+export const updateNavigation = (data: NavListInfo) => request({
+  url: `/blackcat/dashboard/navigation/update`,
+  method: 'post',
+  data
 })
 
