@@ -64,36 +64,42 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
         <Row justify="center" align="middle">
           <Col span={12}>
             <Form.Item label="导航栏名称" name="navigationName" rules={[{ required: true }]}>
-              <Input />
+              <Input disabled/>
             </Form.Item>
           </Col>
-          {!editStatus ?
+
             <Col span={12}>
               <Form.Item >
-                <a onClick={() => changeEditStatus(true)} style={{ paddingLeft: '5px' }}>修改</a>
+              {
+                !editStatus ? <a onClick={() => changeEditStatus(true)} style={{ paddingLeft: '5px' }}>修改</a>
+                : null
+              }
               </Form.Item>
             </Col>
-            : null
-          }
+
         </Row>
 
         {
           editStatus ?
-            <Select
-              placeholder="Select a option and change input text above"
-              onChange={onGenderChange}
-              allowClear
-            >
-              {
-                grounpListInfo.content.map((group: CreateGroup) => {
-                  return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
-                })
-              }
-            </Select>
+
+            <Col span={12}>
+              <Form.Item name="gender" label="选择组合" rules={[{ required: true, message: "选择组合是必选项" }]}>
+                <Select
+                  placeholder="Select a option and change input text above"
+                  onChange={onGenderChange}
+                >
+                  {
+                    grounpListInfo.content.map((group: CreateGroup) => {
+                      return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
+                    })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
             :
 
             <Col span={12}>
-              <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+              <Form.Item name="gender" label="选择组合" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
             </Col>
@@ -112,13 +118,17 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           }
         </Form.Item>
 
+
+
+
         <Form.Item {...tailLayout}>
+        <Button  onClick={() => changeEditStatus(false)}>
+            取消
+        </Button>
           <Button type="primary" htmlType="submit">
             Submit
         </Button>
-          <Button htmlType="button" onClick={onReset}>
-            Reset
-        </Button>
+
           <Button type="link" htmlType="button" onClick={onFill}>
             Fill form
         </Button>
