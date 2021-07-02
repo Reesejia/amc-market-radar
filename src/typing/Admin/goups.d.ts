@@ -37,7 +37,10 @@ export interface NavGroupItem {
 	dashboardName: string;
 	deleted: string;
 	displayName: string;
-	id: string;
+  id: string;
+  key: string;
+  index: number;
+
 }
 export interface NavListInfo {
   id: string;

@@ -1,43 +1,38 @@
 import React, { FC, useContext, useState, useEffect } from 'react'
-import { Button, Form, Input, Select, Row, Col, Table } from 'antd';
-import { NavListInfo, NavListData, CreateGroup } from '@/typing/Admin/goups'
+import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
+import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/goups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
-import {updateNavigation} from '@/api/group'
+import { updateNavigation } from '@/api/group'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import "./index.scss"
 interface GroupProps {
-  groupData: NavListInfo
+  groupData: NavListInfo;
 }
-const initialData = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    index: 0,
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    index: 1,
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    index: 2,
-  },
-];
+
+
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: string;
+  inputType: 'number' | 'text';
+  record: NavGroupItem;
+  index: number;
+  children: React.ReactNode;
+}
+
+const initialData = {
+  navigationGroups: [],
+  id: "",
+  navigationName: "",
+  dashboardGroupName: ""
+};
 const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { groupData } = props
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState<NavListInfo>(initialData)
   const { grounpListInfo } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
@@ -63,8 +58,11 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     }
   };
 
-  const onFinish = (values: object) => {
-    // updateNavigation()
+  const onFinish = async(values: object) => {
+    const res = await updateNavigation(data)
+    if(res.statusCode === 0 && res.success){
+      message.success('修改成功')
+    }
     console.log('onFinish', values);
   };
 
@@ -80,33 +78,72 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     });
   };
 
+  const fillTable = () => {
+    groupData.navigationGroups = groupData.navigationGroups.map((navGroup: NavGroupItem) => {
+      navGroup.key = navGroup.id
+      navGroup.displayName = "更改后的看板名称"
+      return navGroup
+    })
+    console.log('groupData data', data)
+    setData(groupData)
+  }
+
   useEffect(() => {
     onFill()
+    fillTable()
   }, [])
 
   const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
   const columns = [
     {
-      title: 'Sort',
-      dataIndex: 'sort',
-      width: 30,
-      className: 'drag-visible',
-      render: () => <DragHandle />,
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
+      title: '排序',
+      dataIndex: 'xx',
+      width: 60,
       className: 'drag-visible',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
+      title: '看板默认名称',
+      dataIndex: 'dashboardName',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-    },
+      title: '看板展示名称',
+      dataIndex: 'displayName',
+      editable: true,
+    }
   ];
+
+  const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+  }) => {
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={dataIndex}
+            style={{ margin: 0 }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        ) : (
+            children
+          )}
+      </td>
+    );
+  };
+
 
   const SortableItem = SortableElement((props: object) => {
     console.log('SortableItem props', props)
@@ -117,9 +154,9 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
 
   const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMove([...data], oldIndex, newIndex).filter(el => !!el);
+      const newData = arrayMove([...data.navigationGroups], oldIndex, newIndex).filter(el => !!el);
       console.log('Sorted items: ', newData);
-      setData(newData)
+      // setData(newData)
     }
   };
 
@@ -127,20 +164,20 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     console.log('DraggableContainer props', props)
     return (
       <SortableContainerBox
-      useDragHandle
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={onSortEnd}
-      hideSortableGhost={true}
-      {...props}
-    />
+        useDragHandle
+        disableAutoscroll
+        helperClass="row-dragging"
+        onSortEnd={onSortEnd}
+        hideSortableGhost={true}
+        {...props}
+      />
     )
   }
 
   const DraggableBodyRow = ({ className, ...restProps }: { className: string, 'data-row-key': number }) => {
     console.log('restProps', restProps)
-    const index = data.findIndex(x => x.index === restProps['data-row-key']);
-    return <SortableItem  index={index} {...restProps}/>;
+    const index = data.navigationGroups.findIndex(x => x.index === restProps['data-row-key']);
+    return <SortableItem index={index} {...restProps} />;
   };
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
@@ -189,18 +226,30 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
               </Form.Item>
             </Col>
         }
-
+        {/*
         <Table
           pagination={false}
-          dataSource={data}
+          dataSource={data.navigationGroups}
           columns={columns}
-          rowKey="index"
+          rowKey="id"
           components={{
             body: {
               wrapper: DraggableContainer,
               row: DraggableBodyRow,
             },
           }}
+        /> */}
+
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          pagination={false}
+          dataSource={props.groupData.navigationGroups}
+          columns={columns}
+          rowKey="id"
         />
 
         <Form.Item {...tailLayout}>
