@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-ro
 const DragLayout = lazy(() => import('../views/Front/DragLayout'))
 const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
 const routes = () => (
-	<Router>
+	<Router basename="/amc/amc-dashbi">
 		<Suspense fallback={<Spin />}>
 		<div>
             <ul style={{position: 'fixed', right: '10px', top: '100px', zIndex: 1000}}>
