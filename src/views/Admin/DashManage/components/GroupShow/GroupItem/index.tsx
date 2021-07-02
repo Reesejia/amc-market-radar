@@ -1,6 +1,6 @@
 import React, { FC, useContext, useState, useEffect } from 'react'
 import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
-import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/goups'
+import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { updateNavigation } from '@/api/group'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';

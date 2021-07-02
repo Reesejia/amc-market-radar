@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { Modal, Button } from 'antd';
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { navigationList } from '@/api/group'
-import { NavListInfo, NavListData } from '@/typing/Admin/goups'
+import { NavListInfo, NavListData } from '@/typing/Admin/groups'
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
 import './index.scss'
 

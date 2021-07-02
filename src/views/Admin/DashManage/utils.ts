@@ -1,6 +1,6 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-import { DashItem, BoardDetail } from '@/typing/Admin/goups';
+import { DashItem, BoardDetail } from '@/typing/Admin/groups';
 
 const initialState = {
 	status: false,
@@ -9,7 +9,14 @@ const initialState = {
 	isCreate: false,
 	isEditGroup: false,
 	dashList: [],
-	showGroup: false
+  showGroup: false,
+  groupParams: {
+    page: 1,
+    size: 20,
+    sortField: '',
+    direction: ''
+  }
+
 };
 
 type ACTION_TYPE = {
@@ -22,6 +29,11 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 	console.log('dashReducer state', state);
 	console.log('dashReducer action', action);
 	switch (action.type) {
+    case 'CHAGE_GROUP_PARAMS':
+			return {
+				...state,
+				groupParams: action.payload
+			};
 		case 'CHANGE_STATUS':
 			return {
 				...state,
@@ -63,10 +75,12 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 };
 
 export const useDashApi = (fetchApi?: Function) => {
-	const [ state, dispatch ] = useReducer(dashReducer, initialState);
+  const [ state, dispatch ] = useReducer(dashReducer, initialState);
+  const {groupParams} = state
 	const fetchData = async () => {
 		if (fetchApi) {
-			const res = await fetchApi();
+      const params = {...groupParams, page: groupParams.page - 1}
+			const res = await fetchApi(params);
 			if (res.statusCode === 0 && res.success) {
 				dispatch({ type: 'FETCH_API', payload: res.data });
 			}

@@ -6,3 +6,9 @@ declare module "axios" {
         success: boolean
       }
   }
+
+  declare module "antd" {
+       interface FilterValue {
+      [propName: string]: string
+    }
+  }

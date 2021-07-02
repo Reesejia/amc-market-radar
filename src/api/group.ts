@@ -1,4 +1,4 @@
-import {CreateGroup, NavListInfo} from '@/typing/Admin/goups'
+import {CreateGroup, NavListInfo} from '@/typing/Admin/groups'
 import request from "../utils/request"
 
 // 获取组合列表

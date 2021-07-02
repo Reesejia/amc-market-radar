@@ -4,6 +4,7 @@ export interface GroupItemParams {
   size: number;
   sortField?: string
   direction?: string
+  [propName: string]: string
 }
 export interface GroupItem {
 	id: string;
@@ -66,3 +67,10 @@ export interface NavListInfo {
 }
 
 export type NavListData = Array<NavListInfo>
+
+export interface SorterResult<RecordType> {
+  column?: ColumnType<RecordType>;
+  order?: SortOrder;
+  field?: Key | readonly Key[];
+  columnKey?: Key;
+}
