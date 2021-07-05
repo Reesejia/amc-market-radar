@@ -1,10 +1,13 @@
-import React, { FC, useContext, useState, useEffect } from 'react'
+import React, { FC, useContext, useState, useEffect, useRef, useCallback } from 'react'
 import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
 import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { updateNavigation } from '@/api/group'
 import { MenuOutlined } from '@ant-design/icons';
-import "./index.css"
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
+import "./index.scss"
 interface GroupProps {
   groupData: NavListInfo;
 }
@@ -30,7 +33,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { groupData } = props
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
-  const [data, setData] = useState<NavListInfo>(initialData)
+  const [data, setData] = useState<NavListInfo>(() => initialData)
   const { grounpListInfo } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
@@ -38,7 +41,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     wrapperCol: { span: 16 },
   };
   const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+    wrapperCol: { span: 24 },
   };
   const { Option } = Select;
 
@@ -89,15 +92,15 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   useEffect(() => {
     onFill()
     fillTable()
-  }, [])
+  }, [editStatus])
 
   const columns = [
     {
       title: '排序',
       key: "id",
       width: 60,
-      render: (text: string, record: NavGroupItem, index: number) =>{
-        return   editStatus ? <span>{index + 1}</span> :  <span>{index + 1}</span>
+      render: (text: string, record: NavGroupItem, index: number) => {
+        return editStatus ? <span>{index + 1}</span> : <span>{index + 1}</span>
       }
     },
     {
@@ -109,7 +112,20 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       title: '看板展示名称',
       dataIndex: 'displayName',
       key: 'displayName',
-      editable: true,
+      render: (text: string, record: NavGroupItem) => {
+        return editStatus ? <Form.Item
+          style={{ margin: 0 }}
+          name="displayName"
+          rules={[
+            {
+              required: true,
+              message: `看板展示名称 is required.`,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item> : <span>{record. displayName || '-'}</span>
+      }
     }
   ];
 
@@ -140,6 +156,73 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     //   </td>
     // );
   };
+
+  const type = 'DragableBodyRow';
+
+  const DragableBodyRow = ({ index, moveRow, className, style, ...restProps }: {
+    index: number,
+    className: string,
+    style: object,
+    moveRow: Function
+  }) => {
+    const ref = useRef<HTMLTableRowElement>(null);
+    const [{ isOver, dropClassName }, drop] = useDrop({
+      accept: type,
+      collect: monitor => {
+        const { index: dragIndex }: NavGroupItem = monitor.getItem() || {};
+        if (dragIndex === index) {
+          return {};
+        }
+        return {
+          isOver: monitor.isOver(),
+          dropClassName: dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
+        };
+      },
+      drop: (item: NavGroupItem) => {
+        moveRow(item.index, index);
+      },
+    });
+    const [, drag] = useDrag({
+      type,
+      item: { index },
+      collect: monitor => ({
+        isDragging: monitor.isDragging(),
+      }),
+    });
+    drop(drag(ref));
+
+    return (
+      <tr
+        ref={ref}
+        className={`${className}${isOver ? dropClassName : ''}`}
+        style={{ cursor: 'move', ...style }}
+        {...restProps}
+      />
+    );
+  };
+
+  const components = {
+    body: {
+      row: DragableBodyRow,
+    },
+  };
+
+  const moveRow = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragRow = data.navigationGroups[dragIndex];
+      console.log('dragRow', dragRow)
+      const row = update(data.navigationGroups, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragRow],
+        ],
+      })
+      console.log('row', row)
+      data.navigationGroups = row
+      setData(() => Object.assign({}, data));
+    },
+    [data],
+  );
 
 
   console.log('grounpListInfo.content11', grounpListInfo.content)
@@ -192,12 +275,20 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
 
         {
           editStatus ?
-            <Table
-              pagination={false}
-              dataSource={data.navigationGroups}
-              columns={columns}
-              rowKey={(record) => record.dashboardId}
-            />
+            <DndProvider backend={HTML5Backend}>
+              <Table
+                pagination={false}
+                dataSource={data.navigationGroups}
+                columns={columns}
+                rowKey={(record) => record.dashboardId}
+                rowClassName={() => 'editable-row'}
+                components={components}
+                onRow={(record, index) => ({
+                  index,
+                  moveRow,
+                } as unknown as NavGroupItem)}
+              />
+            </DndProvider>
             :
             <Table
               pagination={false}
@@ -207,18 +298,18 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
             />
         }
 
-        <Form.Item {...tailLayout}>
-          <Button onClick={() => changeEditStatus(false)}>
-            取消
-        </Button>
-          <Button type="primary" htmlType="submit">
-            Submit
-        </Button>
+        {
+          editStatus ?
+            <Row justify="center" align="middle">
+              <Form.Item {...tailLayout}>
+                <Button onClick={() => changeEditStatus(false)} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
+                <Button type="primary" htmlType="submit">确认</Button>
+              </Form.Item>
+            </Row>
+            :
+            null
+        }
 
-          <Button type="link" htmlType="button" onClick={onFill}>
-            Fill form
-        </Button>
-        </Form.Item>
       </Form>
     </div>
   )

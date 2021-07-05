@@ -46,6 +46,7 @@ const GroupShow: FC = () => {
         title="组合展示"
         visible={showGroup}
         confirmLoading={confirmLoading}
+        destroyOnClose={true}
         maskClosable={false}
         keyboard={false}
         width="50%"
@@ -55,15 +56,15 @@ const GroupShow: FC = () => {
           </Button>
         ]}
       >
-         <GroupItem groupData={navList[0]}/>
+         {/* <GroupItem groupData={navList[0]}/> */}
          {
           console.log('groupData navList', navList)
          }
-        {/* {
+        {
           navList.map((nav) => {
             return <GroupItem key={nav.id} groupData={nav}/>
           })
-        } */}
+        }
       </Modal>
     </>
   )
