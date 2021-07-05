@@ -1,4 +1,4 @@
-import {Spin} from 'antd';
+import { Spin } from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 const DragLayout = lazy(() => import('../views/Front/DragLayout'))

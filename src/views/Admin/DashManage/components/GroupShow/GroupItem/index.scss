@@ -1,19 +1,27 @@
-.edit-group-form{
+  .edit-group-form:nth-child(n+1) {
+    margin-bottom: 40px;
+  }
   .row-dragging {
-    position: absolute;
+    /* position: absolute; */
     border: 1px solid #ccc;
     z-index: 99999;
-    .td {
-      padding: 16px;
-    }
 
-    .tr {
-      padding: 16px;
-
-    }
-    .drag-visible {
-      visibility: visible;
-    }
   }
-}
+
+  .row-dragging .td {
+    padding: 16px;
+  }
+
+  .row-dragging .tr {
+    padding: 16px;
+
+  }
+  .row-dragging .drag-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  .ant-table-tbody tr{
+    visibility: visible;
+    opacity: 1;
+  }
 

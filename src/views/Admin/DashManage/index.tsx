@@ -3,24 +3,24 @@ import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm }
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
-import { DashItem, BoardDetail, GroupItem } from '@/typing/Admin/goups';
-import {useDashApi, DashContext, dashReducer} from '@/views/Admin/DashManage/utils';
+import { DashItem, BoardDetail, GroupItem, GroupItemParams, SorterResult } from '@/typing/Admin/groups';
+import { useDashApi, DashContext, dashReducer } from '@/views/Admin/DashManage/utils';
 import './index.scss'
 
 export interface Props {
   test: string
 }
+
 const DataPageManage: FC = () => {
   const reduderObj = useDashApi(getGroup)
-  const {grounpListInfo, dispatch, fetchData} = reduderObj
-  const PagationRef = useRef({ page: 1, size: 20 })
-  const [pagation, setPagation] = useState(PagationRef.current)
+  const { grounpListInfo, dispatch, fetchData, groupParams } = reduderObj
+
 
   const showDrawer = () => {
-    dispatch({type: 'CHANGE_STATUS', payload: true})
-    dispatch({type: 'SET_EDIT_GROUP', payload: true})
-    dispatch({type: 'CHANGE_ISCREATE', payload: true})
-    dispatch({type: 'CHANGE_GROUPID', payload: ""})
+    dispatch({ type: 'CHANGE_STATUS', payload: true })
+    dispatch({ type: 'SET_EDIT_GROUP', payload: true })
+    dispatch({ type: 'CHANGE_ISCREATE', payload: true })
+    dispatch({ type: 'CHANGE_GROUPID', payload: "" })
   };
 
   const columns = [
@@ -31,10 +31,10 @@ const DataPageManage: FC = () => {
       // sorter: (a: any, b: any) => a.name - b.name,
       render: (text: string, record: GroupItem) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
-          dispatch({type: 'CHANGE_STATUS', payload: true})
-          dispatch({type: 'CHANGE_GROUPID', payload: record.id})
-          dispatch({type: 'SET_EDIT_GROUP', payload: false})
-          dispatch({type: 'CHANGE_ISCREATE', payload: false})
+          dispatch({ type: 'CHANGE_STATUS', payload: true })
+          dispatch({ type: 'CHANGE_GROUPID', payload: record.id })
+          dispatch({ type: 'SET_EDIT_GROUP', payload: false })
+          dispatch({ type: 'CHANGE_ISCREATE', payload: false })
         }}>{text}</a>)
       }
     },
@@ -60,7 +60,7 @@ const DataPageManage: FC = () => {
       key: 'used',
       dataIndex: 'used',
       render: (val: boolean) => (
-        <>{ val ? <Tag color="blue">已启用</Tag> : <Tag color="volcano">未启用</Tag>} </>
+        <>{val ? <Tag color="blue">已启用</Tag> : <Tag color="volcano">未启用</Tag>} </>
       )
     },
     {
@@ -96,16 +96,36 @@ const DataPageManage: FC = () => {
     showSizeChanger: true,//设置每页显示数据条数
     showQuickJumper: false,
     showTotal: () => `共${grounpListInfo.totalElements}条`,
-    pageSize: pagation.size,
+    pageSize: groupParams.size,
     total: grounpListInfo.totalElements,  //数据的总的条数
   }
 
-  const handleChange = (pagination: TablePaginationConfig, filters: object, sorter: object) => {
+  const handleChange = async(pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[] ) => {
     const { current, pageSize } = pagination
-    PagationRef.current = { size: pageSize as number, page: current as number }
-    setPagation(PagationRef.current);
-    fetchData()
-    console.log('sorter',pagination, filters, sorter)
+    // PagationRef.current = { size: pageSize as number, page: current as number }
+    console.log('pagination', pagination)
+    // setPagation(PagationRef.current);
+    let parmas = {
+      page: current,
+      size: pageSize,
+      sortField: '',
+      direction: ''
+    }
+    const {field, order} = sorter as SorterResult<GroupItem>
+    const sortFieldObj: {[PropName:string]: string} = {
+      descend:  "desc", // 降序
+      ascend: "asc", // 升序
+    }
+    if(field){
+      parmas.sortField = field as string
+    }
+    if(order){
+      parmas.direction = sortFieldObj[order as string]
+    }
+    console.log('parmas', parmas)
+    await dispatch({type: 'CHAGE_GROUP_PARAMS', payload: parmas})
+    await fetchData()
+    console.log('sorter filters',filters, sorter)
   }
 
   return (
@@ -115,7 +135,7 @@ const DataPageManage: FC = () => {
           数据页面管理
          </div>
         <div className="btn">
-          <Button type="primary" onClick={() => dispatch({type: 'SHOW_GROUP', payload: true})}>组合展示</Button>
+          <Button type="primary" onClick={() => dispatch({ type: 'SHOW_GROUP', payload: true })}>组合展示</Button>
           <Button type="primary" className="add-btn" onClick={showDrawer}>新增组合</Button>
         </div>
       </div>
@@ -132,8 +152,8 @@ const DataPageManage: FC = () => {
       </div>
       <div>
         <DashContext.Provider value={reduderObj}>
-          <ShowItem/>
-          <GroupShow/>
+          <ShowItem />
+          <GroupShow />
         </DashContext.Provider>
       </div>
     </div>

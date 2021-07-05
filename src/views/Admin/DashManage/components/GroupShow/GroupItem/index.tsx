@@ -1,11 +1,12 @@
-import React, { FC, useContext, useState, useEffect } from 'react'
+import React, { FC, useContext, useState, useEffect, useRef, useCallback } from 'react'
 import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
-import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/goups'
+import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { updateNavigation } from '@/api/group'
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
-import arrayMove from 'array-move';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
 import "./index.scss"
 interface GroupProps {
   groupData: NavListInfo;
@@ -32,7 +33,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { groupData } = props
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
-  const [data, setData] = useState<NavListInfo>(initialData)
+  const [data, setData] = useState<NavListInfo>(() => initialData)
   const { grounpListInfo } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
@@ -40,7 +41,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     wrapperCol: { span: 16 },
   };
   const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+    wrapperCol: { span: 24 },
   };
   const { Option } = Select;
 
@@ -58,9 +59,19 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     }
   };
 
-  const onFinish = async(values: object) => {
+  const onFinish = async (values: { [x: string]: string; }) => {
+    const keys = Object.keys(values)
+    const newData = data.navigationGroups
+    newData.forEach((e)=>{
+      const id = e.id
+      if(keys.includes(id)){
+        e.displayName = values[id]
+      }
+    })
+    const params = data
+    params.navigationGroups = newData
     const res = await updateNavigation(data)
-    if(res.statusCode === 0 && res.success){
+    if (res.statusCode === 0 && res.success) {
       message.success('修改成功')
     }
     console.log('onFinish', values);
@@ -81,7 +92,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const fillTable = () => {
     groupData.navigationGroups = groupData.navigationGroups.map((navGroup: NavGroupItem) => {
       navGroup.key = navGroup.id
-      navGroup.displayName = "更改后的看板名称"
       return navGroup
     })
     console.log('groupData data', data)
@@ -91,94 +101,139 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   useEffect(() => {
     onFill()
     fillTable()
-  }, [])
+  }, [editStatus])
 
-  const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
   const columns = [
     {
       title: '排序',
-      dataIndex: 'xx',
+      key: "id",
       width: 60,
-      className: 'drag-visible',
+      render: (text: string, record: NavGroupItem, index: number) => {
+        return editStatus ? <span>{index + 1}</span> : <span>{index + 1}</span>
+      }
     },
     {
       title: '看板默认名称',
       dataIndex: 'dashboardName',
+      key: 'dashboardName',
     },
     {
       title: '看板展示名称',
       dataIndex: 'displayName',
-      editable: true,
+      key: 'displayName',
+      render: (text: string, record: NavGroupItem) => {
+        return editStatus ? <Form.Item
+          style={{ margin: 0 }}
+          name={record.id}
+          rules={[
+            {
+              required: true,
+              message: `看板展示名称 is required.`,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item> : <span>{record.displayName || '-'}</span>
+      }
     }
   ];
 
-  const EditableCell: React.FC<EditableCellProps> = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-  }) => {
+
+  const EditableCell: React.FC<EditableCellProps> = (record) => {
+    console.log('record', record)
     return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={dataIndex}
-            style={{ margin: 0 }}
-            rules={[
-              {
-                required: true,
-                message: `Please Input ${title}!`,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        ) : (
-            children
-          )}
-      </td>
+      <div>sss</div>
+    )
+    // return (
+    //   <td {...restProps}>
+    //     {editing ? (
+    //       <Form.Item
+    //         name={dataIndex}
+    //         style={{ margin: 0 }}
+    //         rules={[
+    //           {
+    //             required: true,
+    //             message: `Please Input ${title}!`,
+    //           },
+    //         ]}
+    //       >
+    //         <Input />
+    //       </Form.Item>
+    //     ) : (
+    //         children
+    //       )}
+    //   </td>
+    // );
+  };
+
+  const type = 'DragableBodyRow';
+
+  const DragableBodyRow = ({ index, moveRow, className, style, ...restProps }: {
+    index: number,
+    className: string,
+    style: object,
+    moveRow: Function
+  }) => {
+    const ref = useRef<HTMLTableRowElement>(null);
+    const [{ isOver, dropClassName }, drop] = useDrop({
+      accept: type,
+      collect: monitor => {
+        const { index: dragIndex }: NavGroupItem = monitor.getItem() || {};
+        if (dragIndex === index) {
+          return {};
+        }
+        return {
+          isOver: monitor.isOver(),
+          dropClassName: dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
+        };
+      },
+      drop: (item: NavGroupItem) => {
+        moveRow(item.index, index);
+      },
+    });
+    const [, drag] = useDrag({
+      type,
+      item: { index },
+      collect: monitor => ({
+        isDragging: monitor.isDragging(),
+      }),
+    });
+    drop(drag(ref));
+
+    return (
+      <tr
+        ref={ref}
+        className={`${className}${isOver ? dropClassName : ''}`}
+        style={{ cursor: 'move', ...style }}
+        {...restProps}
+      />
     );
   };
 
-
-  const SortableItem = SortableElement((props: object) => {
-    console.log('SortableItem props', props)
-
-    return <tr {...props} />
-  });
-  const SortableContainerBox = SortableContainer((props: object) => <tbody {...props} />);
-
-  const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
-    if (oldIndex !== newIndex) {
-      const newData = arrayMove([...data.navigationGroups], oldIndex, newIndex).filter(el => !!el);
-      console.log('Sorted items: ', newData);
-      // setData(newData)
-    }
+  const components = {
+    body: {
+      row: DragableBodyRow,
+    },
   };
 
-  const DraggableContainer = (props: object) => {
-    console.log('DraggableContainer props', props)
-    return (
-      <SortableContainerBox
-        useDragHandle
-        disableAutoscroll
-        helperClass="row-dragging"
-        onSortEnd={onSortEnd}
-        hideSortableGhost={true}
-        {...props}
-      />
-    )
-  }
+  const moveRow = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragRow = data.navigationGroups[dragIndex];
+      console.log('dragRow', dragRow)
+      const row = update(data.navigationGroups, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragRow],
+        ],
+      })
+      console.log('row', row)
+      data.navigationGroups = row
+      setData(() => Object.assign({}, data));
+    },
+    [data],
+  );
 
-  const DraggableBodyRow = ({ className, ...restProps }: { className: string, 'data-row-key': number }) => {
-    console.log('restProps', restProps)
-    const index = data.navigationGroups.findIndex(x => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
     <div className="edit-group-form">
@@ -226,44 +281,44 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
               </Form.Item>
             </Col>
         }
-        {/*
-        <Table
-          pagination={false}
-          dataSource={data.navigationGroups}
-          columns={columns}
-          rowKey="id"
-          components={{
-            body: {
-              wrapper: DraggableContainer,
-              row: DraggableBodyRow,
-            },
-          }}
-        /> */}
 
-        <Table
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          pagination={false}
-          dataSource={props.groupData.navigationGroups}
-          columns={columns}
-          rowKey="id"
-        />
+        {
+          editStatus ?
+            <DndProvider backend={HTML5Backend}>
+              <Table
+                pagination={false}
+                dataSource={data.navigationGroups}
+                columns={columns}
+                rowKey={(record) => record.dashboardId}
+                rowClassName={() => 'editable-row'}
+                components={components}
+                onRow={(record, index) => ({
+                  index,
+                  moveRow,
+                } as unknown as NavGroupItem)}
+              />
+            </DndProvider>
+            :
+            <Table
+              pagination={false}
+              dataSource={props.groupData.navigationGroups}
+              columns={columns}
+              rowKey={(record) => record.dashboardId}
+            />
+        }
 
-        <Form.Item {...tailLayout}>
-          <Button onClick={() => changeEditStatus(false)}>
-            取消
-        </Button>
-          <Button type="primary" htmlType="submit">
-            Submit
-        </Button>
+        {
+          editStatus ?
+            <Row justify="center" align="middle">
+              <Form.Item {...tailLayout}>
+                <Button onClick={() => changeEditStatus(false)} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
+                <Button type="primary" htmlType="submit">确认</Button>
+              </Form.Item>
+            </Row>
+            :
+            null
+        }
 
-          <Button type="link" htmlType="button" onClick={onFill}>
-            Fill form
-        </Button>
-        </Form.Item>
       </Form>
     </div>
   )

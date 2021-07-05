@@ -15,3 +15,8 @@ declare global {
 export interface QianKunProps {
   container: HTMLDivElement,
 }
+  declare module "antd" {
+       interface FilterValue {
+      [propName: string]: string
+    }
+  }

@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { Modal, Button } from 'antd';
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { navigationList } from '@/api/group'
-import { NavListInfo, NavListData } from '@/typing/Admin/goups'
+import { NavListInfo, NavListData } from '@/typing/Admin/groups'
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
 import './index.scss'
 
@@ -46,6 +46,7 @@ const GroupShow: FC = () => {
         title="组合展示"
         visible={showGroup}
         confirmLoading={confirmLoading}
+        destroyOnClose={true}
         maskClosable={false}
         keyboard={false}
         width="50%"
@@ -55,6 +56,10 @@ const GroupShow: FC = () => {
           </Button>
         ]}
       >
+         {/* <GroupItem groupData={navList[0]}/> */}
+         {
+          console.log('groupData navList', navList)
+         }
         {
           navList.map((nav) => {
             return <GroupItem key={nav.id} groupData={nav}/>

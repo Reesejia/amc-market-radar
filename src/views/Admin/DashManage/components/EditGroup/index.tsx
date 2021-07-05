@@ -1,7 +1,7 @@
 import { saveGroup } from '@/api/group';
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { Form, Input, Button, Transfer, message } from 'antd';
-import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/goups';
+import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/groups';
 import {useDashApi, DashContext} from '@/views/Admin/DashManage/utils'
 import './index.scss';
 interface chidProps {

@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, useContext } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
 import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
 import { getBoardDetail } from '@/api/group';
-import { BoardDetail, DashItem } from '@/typing/Admin/goups';
+import { BoardDetail, DashItem } from '@/typing/Admin/groups';
 import {useDashApi, DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '@/views/Admin/DashManage/utils';
 import './index.scss';
 
