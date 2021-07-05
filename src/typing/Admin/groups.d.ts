@@ -2,6 +2,7 @@
 export interface GroupItemParams {
   page: number;
   size: number;
+  name?: string
   sortField?: string
   direction?: string
   [propName: string]: string

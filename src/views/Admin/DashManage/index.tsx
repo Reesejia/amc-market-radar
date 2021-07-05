@@ -1,11 +1,16 @@
-import React, { FC, useEffect, useState, useRef, useReducer } from 'react';
-import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
+import React, { FC, useEffect, useState, useRef, useReducer, ReactNode } from 'react';
+import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm, Input } from 'antd';
+import { FilterDropdownProps } from 'antd/lib/table/interface'
+import { ColumnsType } from 'antd/lib/table'
+
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
 import { DashItem, BoardDetail, GroupItem, GroupItemParams, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext, dashReducer } from '@/views/Admin/DashManage/utils';
 import './index.scss'
+// import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 export interface Props {
   test: string
@@ -23,7 +28,73 @@ const DataPageManage: FC = () => {
     dispatch({ type: 'CHANGE_GROUPID', payload: "" })
   };
 
-  const columns = [
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps): ReactNode => (
+      <div style={{ padding: 8 }}>
+        <Input
+          // ref={node => {
+          //   this.searchInput = node;
+          // }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          {/* <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button> */}
+          <Button
+            type="link"
+            size="small"
+          // onClick={() => {
+          //   confirm({ closeDropdown: false });
+          //   this.setState({
+          //     searchText: selectedKeys[0],
+          //     searchedColumn: dataIndex,
+          //   });
+          // }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: unknown) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value: string, record: { [x: string]: { toString: () => string; }; }) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
+    onFilterDropdownVisibleChange: (visible: unknown) => {
+      if (visible) {
+        // setTimeout(() => this.searchInput.select(), 100);
+      }
+    },
+    // render: text =>
+    //   this.state.searchedColumn === dataIndex ? (
+    //     <Highlighter
+    //       highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+    //       searchWords={[this.state.searchText]}
+    //       autoEscape
+    //       textToHighlight={text ? text.toString() : ''}
+    //     />
+    //   ) : (
+    //     text
+    //   ),
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const columns:any = [
     {
       title: '组合名称',
       dataIndex: 'dashboardGroupName',
@@ -36,11 +107,13 @@ const DataPageManage: FC = () => {
           dispatch({ type: 'SET_EDIT_GROUP', payload: false })
           dispatch({ type: 'CHANGE_ISCREATE', payload: false })
         }}>{text}</a>)
-      }
+      },
+      ...getColumnSearchProps('name'),
     },
     {
       title: '修改人',
       dataIndex: 'updateByName',
+
       key: 'updateByName',
       // sorter: (a: GroupItem, b: GroupItem) => a.updateByName - b.name,
     },
@@ -100,10 +173,11 @@ const DataPageManage: FC = () => {
     total: grounpListInfo.totalElements,  //数据的总的条数
   }
 
-  const handleChange = async(pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[] ) => {
+  const handleChange = async (pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[]) => {
     const { current, pageSize } = pagination
+    debugger
     // PagationRef.current = { size: pageSize as number, page: current as number }
-    console.log('pagination', pagination)
+    console.log('111pagination', pagination)
     // setPagation(PagationRef.current);
     let parmas = {
       page: current,
@@ -111,29 +185,60 @@ const DataPageManage: FC = () => {
       sortField: '',
       direction: ''
     }
-    const {field, order} = sorter as SorterResult<GroupItem>
-    const sortFieldObj: {[PropName:string]: string} = {
-      descend:  "desc", // 降序
+    const { field, order } = sorter as SorterResult<GroupItem>
+    const sortFieldObj: { [PropName: string]: string } = {
+      descend: "desc", // 降序
       ascend: "asc", // 升序
     }
-    if(field){
+    if (field) {
       parmas.sortField = field as string
     }
-    if(order){
+    if (order) {
       parmas.direction = sortFieldObj[order as string]
     }
     console.log('parmas', parmas)
-    await dispatch({type: 'CHAGE_GROUP_PARAMS', payload: parmas})
+    await dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: parmas })
     await fetchData()
-    console.log('sorter filters',filters, sorter)
+    console.log('sorter filters', filters, sorter)
   }
+
+
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSearch = async (selectedKeys: Array<any>, confirm: () => void, dataIndex: string) => {
+    console.log("zy", selectedKeys[0], dataIndex)
+    let parmas = {
+      // page: current,
+      // size: pageSize,
+      name: selectedKeys[0]
+      // sortField: '',
+      // direction: ''
+    }
+    console.log('parmas', parmas)
+    await dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: parmas })
+    await fetchData()
+    // confirm();
+
+    // this.setState({
+    //   searchText: selectedKeys[0],
+    //   searchedColumn: dataIndex,
+    // });
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    // this.setState({ searchText: '' });
+  };
+
+
 
   return (
     <div className="data-page-manage">
       <div className="dash-header">
         <div className="title">
           数据页面管理
-         </div>
+        </div>
         <div className="btn">
           <Button type="primary" onClick={() => dispatch({ type: 'SHOW_GROUP', payload: true })}>组合展示</Button>
           <Button type="primary" className="add-btn" onClick={showDrawer}>新增组合</Button>
@@ -151,10 +256,10 @@ const DataPageManage: FC = () => {
         />
       </div>
       <div>
-        <DashContext.Provider value={reduderObj}>
+        {/* <DashContext.Provider value={reduderObj}>
           <ShowItem />
           <GroupShow />
-        </DashContext.Provider>
+        </DashContext.Provider> */}
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ const initialState = {
   groupParams: {
     page: 1,
     size: 20,
+	name: '',
     sortField: '',
     direction: ''
   }
@@ -74,17 +75,22 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 	}
 };
 
-export const useDashApi = (fetchApi?: Function) => {
+export const useDashApi = (fetchApi: Function) => {
   const [ state, dispatch ] = useReducer(dashReducer, initialState);
+//   debugger
   const {groupParams} = state
+  console.log("zyy", groupParams, state)
 	const fetchData = async () => {
-		if (fetchApi) {
+		console.log("fetchApi", fetchApi)
+		console.log("zyy23", groupParams)
+		// if (fetchApi) {
       const params = {...groupParams, page: groupParams.page - 1}
+	  console.log("zyy2", params)
 			const res = await fetchApi(params);
 			if (res.statusCode === 0 && res.success) {
 				dispatch({ type: 'FETCH_API', payload: res.data });
 			}
-		}
+		// }
 	};
 
 	const getDashboardList = async () => {
