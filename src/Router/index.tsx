@@ -1,8 +1,10 @@
 import { Spin } from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-const DragLayout = lazy(() => import('../views/Front/DragLayout'))
-const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
+import DragLayout from '../views/Front/DragLayout'
+import DataPageManage from '../views/Admin/DashManage'
+// const DragLayout = lazy(() => import('../views/Front/DragLayout'))
+// const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
 const routes = () => (
 	<Router basename="/amc/manage/amc-dashbi">
 		<Suspense fallback={<Spin />}>
