@@ -57,7 +57,7 @@ export interface NavGroupItem {
   id: string;
   key: string;
   index: number;
-
+  [propName: string]: number
 }
 export interface NavListInfo {
   id: string;
