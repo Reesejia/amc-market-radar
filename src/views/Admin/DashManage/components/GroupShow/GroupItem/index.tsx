@@ -59,7 +59,17 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     }
   };
 
-  const onFinish = async (values: object) => {
+  const onFinish = async (values: { [x: string]: string; }) => {
+    const keys = Object.keys(values)
+    const newData = data.navigationGroups
+    newData.forEach((e)=>{
+      const id = e.id
+      if(keys.includes(id)){
+        e.displayName = values[id]
+      }
+    })
+    const params = data
+    params.navigationGroups = newData
     const res = await updateNavigation(data)
     if (res.statusCode === 0 && res.success) {
       message.success('修改成功')
@@ -82,7 +92,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const fillTable = () => {
     groupData.navigationGroups = groupData.navigationGroups.map((navGroup: NavGroupItem) => {
       navGroup.key = navGroup.id
-      navGroup.displayName = "更改后的看板名称"
       return navGroup
     })
     console.log('groupData data', data)
@@ -115,7 +124,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       render: (text: string, record: NavGroupItem) => {
         return editStatus ? <Form.Item
           style={{ margin: 0 }}
-          name="displayName"
+          name={record.id}
           rules={[
             {
               required: true,
@@ -124,7 +133,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           ]}
         >
           <Input />
-        </Form.Item> : <span>{record. displayName || '-'}</span>
+        </Form.Item> : <span>{record.displayName || '-'}</span>
       }
     }
   ];
