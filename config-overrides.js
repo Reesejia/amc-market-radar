@@ -5,12 +5,13 @@ module.exports = {
     webpack: (config) =>{
         config.output.library = 'amc-dashbi';
         config.output.libraryTarget = 'umd';
-        config.output.jsonpFunction = `webpackJsonp_amc-dashbi`;
+        config.output.jsonpFunction = `webpackJsonp_sub_app_amc-dashbi`;
         config.output.globalObject = 'window';
         config.resolve.alias = {
           '@': path.resolve(__dirname,'./src')
         }
-        // config.output.publicPath =
+        config.output.publicPath = '/amc/amc-dashbi/'
+        config.output.path = resove('/dist/amc/amc-dashbi/')
         return config
     },
    devServer: (configFunction) =>{

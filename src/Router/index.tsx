@@ -8,21 +8,12 @@ import DataPageManage from '../views/Admin/DashManage'
 const routes = () => (
 	<Router basename="/amc/manage/amc-dashbi">
 		<Suspense fallback={<Spin />}>
-		<div>
-            <ul style={{position: 'fixed', right: '10px', top: '100px', zIndex: 1000}}>
-			<li>
-				<Link to="/"></Link>
-			</li>
-			<li>
-				<Link to="/dataPageManage">dataPageManage</Link>
-			</li>
-            </ul>
 			<Switch>
+				{/* <Redirect to="/dataPageManage"  /> */}
+        <Route path="/" component={DataPageManage} />
+        <Route path="/dataPageManage" component={DataPageManage} />
 				<Route path="/home" component={DragLayout} />
-				<Route path="/dataPageManage" component={DataPageManage} />
-				<Redirect to="/dataPageManage"/>
 			</Switch>
-		</div>
 		</Suspense>
 	</Router>
 );
