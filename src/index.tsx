@@ -8,6 +8,8 @@ import './index.css';
 
 function render(props: any) {
   const { container } = props;
+  const ret =container && container.querySelector('#root')
+  console.log('ret33',ret)
   ReactDOM.render(<Router />, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 
