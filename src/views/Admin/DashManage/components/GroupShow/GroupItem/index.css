@@ -1,17 +1,24 @@
-
   .row-dragging {
-    position: relative;
+    /* position: absolute; */
     border: 1px solid #ccc;
     z-index: 99999;
-  }
-    .row-dragging .td {
-      padding: 16px;
-    }
 
-    .row-dragging  .tr {
-      padding: 16px;
-    }
-    .row-dragging .drag-visible {
-      visibility: visible;
-    }
+  }
+
+  .row-dragging .td {
+    padding: 16px;
+  }
+
+  .row-dragging .tr {
+    padding: 16px;
+
+  }
+  .row-dragging .drag-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  .ant-table-tbody tr{
+    visibility: visible;
+    opacity: 1;
+  }
 

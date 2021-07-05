@@ -3,7 +3,9 @@ import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
 import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { updateNavigation } from '@/api/group'
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
+import arrayMove from 'array-move';
 import "./index.css"
 interface GroupProps {
   groupData: NavListInfo;
@@ -91,13 +93,14 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     fillTable()
   }, [])
 
+  const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
   const columns = [
     {
       title: '排序',
       key: "id",
       width: 60,
       render: (text: string, record: NavGroupItem, index: number) =>{
-        return   editStatus ? <span>{index + 1}</span> :  <span>{index + 1}</span>
+        return   editStatus ? <DragHandle /> :  <span>{index + 1}</span>
       }
     },
     {
@@ -142,6 +145,41 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
 
+  const SortableItem = SortableElement((props: object) => {
+    console.log('SortableItem props', props)
+
+    return <tr {...props} />
+  });
+  const SortableContainerBox = SortableContainer((props: object) => <tbody {...props} />);
+
+  const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
+      const newData = arrayMove([...data.navigationGroups], oldIndex, newIndex).filter(el => !!el);
+      console.log('Sorted items: ', newData);
+      setData({
+        ...data,
+        navigationGroups: newData
+      })
+  };
+
+  const DraggableContainer = (props: object) => {
+    console.log('DraggableContainer props', props)
+    return (
+      <SortableContainerBox
+        useDragHandle
+        disableAutoscroll
+        helperClass="row-dragging"
+        onSortEnd={onSortEnd}
+        hideSortableGhost={true}
+        {...props}
+      />
+    )
+  }
+
+  const DraggableBodyRow = ({ className, ...restProps }: { className: string, 'data-row-key': number }) => {
+    console.log('restProps', restProps)
+    const index = data.navigationGroups.findIndex(x => x.index === restProps['data-row-key']);
+    return <SortableItem index={index} {...restProps} />;
+  };
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
     <div className="edit-group-form">
@@ -197,6 +235,12 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
               dataSource={data.navigationGroups}
               columns={columns}
               rowKey={(record) => record.dashboardId}
+              components={{
+                body: {
+                  wrapper: DraggableContainer,
+                  row: DraggableBodyRow,
+                },
+              }}
             />
             :
             <Table
