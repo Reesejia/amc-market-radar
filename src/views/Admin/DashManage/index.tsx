@@ -1,12 +1,14 @@
+
 import React, { FC, useEffect, useState, useRef, useReducer, ReactNode } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm, Input } from 'antd';
 import { FilterDropdownProps } from 'antd/lib/table/interface'
 import { ColumnsType } from 'antd/lib/table'
 import { getGroup, dashboardList, deleteGroup } from '@/api/group';
+
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
-import { DashItem, BoardDetail, GroupItem, GroupItemParams, SorterResult } from '@/typing/Admin/groups';
-import { useDashApi, DashContext, dashReducer } from '@/views/Admin/DashManage/utils';
+import { GroupItem, SorterResult } from '@/typing/Admin/groups';
+import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
@@ -156,17 +158,8 @@ const DataPageManage: FC = () => {
     total: grounpListInfo.totalElements,  //数据的总的条数
   }
 
-  interface filters {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dashboardGroupName?: any
-
-  }
-  const handleChange = async (pagination: TablePaginationConfig, filters: filters, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[]) => {
+  const handleChange = async (pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[]) => {
     const { current, pageSize } = pagination
-    // debugger
-    // PagationRef.current = { size: pageSize as number, page: current as number }
-    console.log('111pagination', pagination)
-    // setPagation(PagationRef.current);
     let parmas = {
       page: current,
       size: pageSize,
@@ -180,9 +173,6 @@ const DataPageManage: FC = () => {
     }
     if (field) {
       parmas.sortField = field as string
-    }
-    if (order) {
-      parmas.direction = sortFieldObj[order as string]
     }
     if (order) {
       parmas.direction = sortFieldObj[order as string]
@@ -202,7 +192,7 @@ const DataPageManage: FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleReset = async (clearFilters: (any) | undefined) => {
-     clearFilters();
+    clearFilters();
   };
 
   return (

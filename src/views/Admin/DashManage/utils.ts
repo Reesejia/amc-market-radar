@@ -1,6 +1,5 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
-import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-import { DashItem, BoardDetail } from '@/typing/Admin/groups';
+import { dashboardList } from '@/api/group';
 
 const initialState = {
 	status: false,
@@ -12,7 +11,7 @@ const initialState = {
 	showGroup: false,
 	groupParams: {
 		page: 1,
-		size: 20,
+		size: 10,
 		sortField: '',
 		direction: ''
 	}
@@ -76,12 +75,8 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 
 export const useDashApi = (fetchApi: Function) => {
 	const [state, dispatch] = useReducer(dashReducer, initialState);
-	//   debugger
 	const { groupParams } = state
-	console.log("zyy", groupParams, state)
-
 	const fetchData = async () => {
-		console.log("fetchApi", fetchApi)
 		console.log("zyy23", groupParams)
 		// if (fetchApi) {
 		const params = { ...groupParams, page: groupParams.page - 1 }

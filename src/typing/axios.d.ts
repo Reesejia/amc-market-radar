@@ -1,5 +1,4 @@
 import * as axios from "axios";
-
 declare module "axios" {
     export interface AxiosResponse<T> {
         statusCode: number,
@@ -7,6 +6,15 @@ declare module "axios" {
       }
   }
 
+declare global {
+  interface Window {
+    __POWERED_BY_QIANKUN__: string;
+  }
+}
+
+export interface QianKunProps {
+  container: HTMLDivElement,
+}
   declare module "antd" {
        interface FilterValue {
       [propName: string]: string

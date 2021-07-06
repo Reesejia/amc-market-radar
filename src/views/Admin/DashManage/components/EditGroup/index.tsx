@@ -2,7 +2,7 @@ import { saveGroup } from '@/api/group';
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { Form, Input, Button, Transfer, message } from 'antd';
 import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/groups';
-import {useDashApi, DashContext} from '@/views/Admin/DashManage/utils'
+import { DashContext } from '@/views/Admin/DashManage/utils'
 import './index.scss';
 interface chidProps {
   boardDetail: BoardDetail
@@ -11,7 +11,7 @@ interface chidProps {
 const { TextArea } = Input;
 const EditGroup: FC<chidProps> = (props) => {
   const { boardDetail, onBoardDetail } = props;
-  const {dispatch, fetchData, dashList, isCreate} = useContext(DashContext)
+  const { dispatch, fetchData, dashList, isCreate } = useContext(DashContext)
   const initialForm = {
     dashboardGroupName: '',
     allDashboardGroupMappings: [],
@@ -48,9 +48,9 @@ const EditGroup: FC<chidProps> = (props) => {
     console.log('saveGroup res', res);
     if (res.statusCode === 0 && res.data) {
       message.success('操作成功');
-      dispatch({type: 'SET_EDIT_GROUP', payload: false})
+      dispatch({ type: 'SET_EDIT_GROUP', payload: false })
       if (isCreate) {
-        dispatch({type: 'CHANGE_STATUS', payload: false})
+        dispatch({ type: 'CHANGE_STATUS', payload: false })
       } else {
         onBoardDetail()
       }
@@ -73,9 +73,9 @@ const EditGroup: FC<chidProps> = (props) => {
 
   const oncancel = () => {
     if (isCreate) {
-      dispatch({type: 'CHANGE_STATUS', payload: false})
+      dispatch({ type: 'CHANGE_STATUS', payload: false })
     } else {
-      dispatch({type: 'SET_EDIT_GROUP', payload: false})
+      dispatch({ type: 'SET_EDIT_GROUP', payload: false })
     }
   };
   const checkBord = () => {
