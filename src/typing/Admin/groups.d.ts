@@ -2,6 +2,7 @@
 export interface GroupItemParams {
   page: number;
   size: number;
+  name?: string
   sortField?: string
   direction?: string
   [propName: string]: string
@@ -52,7 +53,8 @@ export interface NavGroupItem {
 	dashboardGroupId: string;
 	dashboardId: string;
 	dashboardName: string;
-	deleted: string;
+  deleted: string;
+  navigationId: string;
 	displayName: string;
   id: string;
   key: string;
@@ -63,6 +65,7 @@ export interface NavListInfo {
   id: string;
   navigationName: string;
   dashboardGroupName: string;
+  dashboardGroupId:string;
 	navigationGroups: Array<NavGroupItem>;
 }
 

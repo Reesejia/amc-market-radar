@@ -1,18 +1,16 @@
 import React, { FC, useContext, useState, useEffect, useRef, useCallback } from 'react'
 import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
-import { NavListInfo, NavListData, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
+import { NavListInfo, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
-import { updateNavigation } from '@/api/group'
-import { MenuOutlined } from '@ant-design/icons';
+import { updateNavigation, getBoardDetail } from '@/api/group'
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import "./index.scss"
 interface GroupProps {
   groupData: NavListInfo;
+  getNavigationList: Function
 }
-
-
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -27,10 +25,11 @@ const initialData = {
   navigationGroups: [],
   id: "",
   navigationName: "",
-  dashboardGroupName: ""
+  dashboardGroupName: "",
+  dashboardGroupId: ""
 };
 const GroupItem: FC<GroupProps> = (props: GroupProps) => {
-  const { groupData } = props
+  const { groupData, getNavigationList } = props
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
   const [data, setData] = useState<NavListInfo>(() => initialData)
@@ -45,34 +44,50 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
   const { Option } = Select;
 
-  const onGenderChange = (value: string) => {
-    console.log('onGenderChange', value)
-    switch (value) {
-      case 'male':
-        form.setFieldsValue({ note: 'Hi, man!' });
-        return;
-      case 'female':
-        form.setFieldsValue({ note: 'Hi, lady!' });
-        return;
-      case 'other':
-        form.setFieldsValue({ note: 'Hi there!' });
+  const onGenderChange = async(value: string, option: any) => {
+    const res = await getBoardDetail(value)
+    if(res.success && res.statusCode === 0){
+      const {dashboardGroupMappings} = res.data
+      // setData(dashboardGroupMappings)
+      console.log('res11', res)
+      console.log('onGenderChange', value, option)
+      const { children } = option
+      form.setFieldsValue({
+        dashboardGroupName: children
+      });
+      setData({
+        ...data,
+        dashboardGroupId: value,
+        dashboardGroupName: children,
+        navigationGroups: dashboardGroupMappings.map((item: NavGroupItem) => {
+          item.navigationId = data.id
+          return item
+        })
+      })
     }
   };
 
   const onFinish = async (values: { [x: string]: string; }) => {
+    console.log('values', values)
+    console.log('onFinish data', data)
     const keys = Object.keys(values)
-    const newData = data.navigationGroups
-    newData.forEach((e)=>{
-      const id = e.id
-      if(keys.includes(id)){
-        e.displayName = values[id]
-      }
+    setData({
+      ...data,
+      navigationGroups: data.navigationGroups.map((item,index) =>{
+        if(keys.includes(item.id)){
+          item.displayName = values[item.id]
+          item.id = ""
+        }
+        item.seq = index
+        return item
+      })
     })
-    const params = data
-    params.navigationGroups = newData
+
     const res = await updateNavigation(data)
     if (res.statusCode === 0 && res.success) {
       message.success('修改成功')
+      changeEditStatus(false)
+      getNavigationList()
     }
     console.log('onFinish', values);
   };
@@ -99,9 +114,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   }
 
   useEffect(() => {
+    console.log('useEffect')
     onFill()
     fillTable()
-  }, [editStatus])
+  }, [])
 
   const columns = [
     {
@@ -123,12 +139,13 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       key: 'displayName',
       render: (text: string, record: NavGroupItem) => {
         return editStatus ? <Form.Item
+          initialValue={record.displayName}
           style={{ margin: 0 }}
           name={record.id}
           rules={[
             {
               required: true,
-              message: `看板展示名称 is required.`,
+              message: `看板展示名称是必填项`,
             },
           ]}
         >
@@ -137,34 +154,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       }
     }
   ];
-
-
-  const EditableCell: React.FC<EditableCellProps> = (record) => {
-    console.log('record', record)
-    return (
-      <div>sss</div>
-    )
-    // return (
-    //   <td {...restProps}>
-    //     {editing ? (
-    //       <Form.Item
-    //         name={dataIndex}
-    //         style={{ margin: 0 }}
-    //         rules={[
-    //           {
-    //             required: true,
-    //             message: `Please Input ${title}!`,
-    //           },
-    //         ]}
-    //       >
-    //         <Input />
-    //       </Form.Item>
-    //     ) : (
-    //         children
-    //       )}
-    //   </td>
-    // );
-  };
 
   const type = 'DragableBodyRow';
 
@@ -226,7 +215,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           [hoverIndex, 0, dragRow],
         ],
       })
-      console.log('row', row)
       data.navigationGroups = row
       setData(() => Object.assign({}, data));
     },
@@ -277,7 +265,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
 
             <Col span={12}>
               <Form.Item name="dashboardGroupName" label="选择组合" rules={[{ required: true }]}>
-                <Input />
+                <Input disabled />
               </Form.Item>
             </Col>
         }
@@ -301,7 +289,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
             :
             <Table
               pagination={false}
-              dataSource={props.groupData.navigationGroups}
+              dataSource={data.navigationGroups}
               columns={columns}
               rowKey={(record) => record.dashboardId}
             />

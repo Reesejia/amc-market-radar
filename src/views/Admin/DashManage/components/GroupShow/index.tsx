@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { Modal, Button } from 'antd';
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import { navigationList } from '@/api/group'
-import { NavListInfo, NavListData } from '@/typing/Admin/groups'
+import { NavListData } from '@/typing/Admin/groups'
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
 import './index.scss'
 
@@ -10,21 +10,13 @@ const GroupShow: FC = () => {
   const { showGroup, dispatch } = useContext(DashContext)
   const [navList, setNavList] = React.useState<NavListData>([]);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const [modalText, setModalText] = React.useState('Content of the modal');
 
 
   const handleOk = () => {
-    // setModalText('The modal will be closed after two seconds');
-    // setConfirmLoading(true);
-    // setTimeout(() => {
-    //   setVisible(false);
-    //   setConfirmLoading(false);
-    // }, 2000);
     dispatch({ type: 'SHOW_GROUP', payload: false })
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     dispatch({ type: 'SHOW_GROUP', payload: false })
   };
 
@@ -46,6 +38,7 @@ const GroupShow: FC = () => {
         title="组合展示"
         visible={showGroup}
         confirmLoading={confirmLoading}
+        onCancel={handleCancel}
         destroyOnClose={true}
         maskClosable={false}
         keyboard={false}
@@ -56,13 +49,9 @@ const GroupShow: FC = () => {
           </Button>
         ]}
       >
-         {/* <GroupItem groupData={navList[0]}/> */}
-         {
-          console.log('groupData navList', navList)
-         }
         {
           navList.map((nav) => {
-            return <GroupItem key={nav.id} groupData={nav}/>
+            return <GroupItem key={nav.id} getNavigationList={getNavigationList} groupData={nav}/>
           })
         }
       </Modal>

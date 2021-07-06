@@ -1,6 +1,5 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
-import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-import { DashItem, BoardDetail } from '@/typing/Admin/groups';
+import { dashboardList } from '@/api/group';
 
 const initialState = {
 	status: false,
@@ -9,13 +8,13 @@ const initialState = {
 	isCreate: false,
 	isEditGroup: false,
 	dashList: [],
-  showGroup: false,
-  groupParams: {
-    page: 1,
-    size: 20,
-    sortField: '',
-    direction: ''
-  }
+	showGroup: false,
+	groupParams: {
+		page: 1,
+		size: 10,
+		sortField: '',
+		direction: ''
+	}
 
 };
 
@@ -29,7 +28,7 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 	console.log('dashReducer state', state);
 	console.log('dashReducer action', action);
 	switch (action.type) {
-    case 'CHAGE_GROUP_PARAMS':
+		case 'CHAGE_GROUP_PARAMS':
 			return {
 				...state,
 				groupParams: action.payload
@@ -74,17 +73,19 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 	}
 };
 
-export const useDashApi = (fetchApi?: Function) => {
-  const [ state, dispatch ] = useReducer(dashReducer, initialState);
-  const {groupParams} = state
+export const useDashApi = (fetchApi: Function) => {
+	const [state, dispatch] = useReducer(dashReducer, initialState);
+	const { groupParams } = state
 	const fetchData = async () => {
-		if (fetchApi) {
-      const params = {...groupParams, page: groupParams.page - 1}
-			const res = await fetchApi(params);
-			if (res.statusCode === 0 && res.success) {
-				dispatch({ type: 'FETCH_API', payload: res.data });
-			}
+		console.log("zyy23", groupParams)
+		// if (fetchApi) {
+		const params = { ...groupParams, page: groupParams.page - 1 }
+		console.log("zyy2", params)
+		const res = await fetchApi(params);
+		if (res.statusCode === 0 && res.success) {
+			dispatch({ type: 'FETCH_API', payload: res.data });
 		}
+		// }
 	};
 
 	const getDashboardList = async () => {
@@ -97,12 +98,12 @@ export const useDashApi = (fetchApi?: Function) => {
 	useEffect(() => {
 		fetchData();
 		getDashboardList();
-	}, []);
+	}, [groupParams]);
 	return { ...state, dispatch, fetchData };
 };
 
-const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => {};
-const fetchData = () => {};
+const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => { };
+const fetchData = () => { };
 export const DashContext = createContext({ ...initialState, dispatch, fetchData });
 
 export const labelStyle = { color: '#999', fontSize: '14px' };
