@@ -90,7 +90,7 @@
   },
   "scripts": {
     "dev": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "node scripts/build.js",
     "lint": "eslint --fix --ext .js,.vue,.ts src"
   },
   "eslintConfig": {
