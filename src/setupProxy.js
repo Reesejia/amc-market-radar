@@ -18,7 +18,7 @@ module.exports = function (app) {
     )
     app.use(
         createProxyMiddleware("/api/radar", {
-            target: "http://localhost:5000",
+            target: "http://10.5.8.252:5000",
             changeOrigin: true
         })
     )
