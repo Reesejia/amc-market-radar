@@ -2,7 +2,7 @@ import React, { FC, useContext, useState, useEffect, useRef, useCallback } from 
 import { Button, Form, Input, Select, Row, Col, Table, message } from 'antd';
 import { NavListInfo, CreateGroup, NavGroupItem } from '@/typing/Admin/groups'
 import { DashContext } from '@/views/Admin/DashManage/utils';
-import { updateNavigation } from '@/api/group'
+import { updateNavigation, getBoardDetail } from '@/api/group'
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
@@ -44,30 +44,44 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
   const { Option } = Select;
 
-  const onGenderChange = (value: string, option: any) => {
-    console.log('onGenderChange', value, option)
-    const { children } = option
-    form.setFieldsValue({
-      dashboardGroupName: children
-    });
-    setData({
-      ...data,
-      dashboardGroupId: value,
-      dashboardGroupName: children
-    })
+  const onGenderChange = async(value: string, option: any) => {
+    const res = await getBoardDetail(value)
+    if(res.success && res.statusCode === 0){
+      const {dashboardGroupMappings} = res.data
+      // setData(dashboardGroupMappings)
+      console.log('res11', res)
+      console.log('onGenderChange', value, option)
+      const { children } = option
+      form.setFieldsValue({
+        dashboardGroupName: children
+      });
+      setData({
+        ...data,
+        dashboardGroupId: value,
+        dashboardGroupName: children,
+        navigationGroups: dashboardGroupMappings.map((item: NavGroupItem) => {
+          item.navigationId = data.id
+          return item
+        })
+      })
+    }
   };
 
   const onFinish = async (values: { [x: string]: string; }) => {
+    console.log('values', values)
+    console.log('onFinish data', data)
     const keys = Object.keys(values)
-    const newData = data.navigationGroups
-    newData.forEach((e) => {
-      const id = e.id
-      if (keys.includes(id)) {
-        e.displayName = values[id]
-      }
+    setData({
+      ...data,
+      navigationGroups: data.navigationGroups.map((item,index) =>{
+        if(keys.includes(item.id)){
+          item.displayName = values[item.id]
+        }
+        item.seq = index
+        return item
+      })
     })
-    const params = data
-    params.navigationGroups = newData
+
     const res = await updateNavigation(data)
     if (res.statusCode === 0 && res.success) {
       message.success('修改成功')
@@ -99,9 +113,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   }
 
   useEffect(() => {
+    console.log('useEffect')
     onFill()
     fillTable()
-  }, [editStatus])
+  }, [])
 
   const columns = [
     {
@@ -273,7 +288,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
             :
             <Table
               pagination={false}
-              dataSource={props.groupData.navigationGroups}
+              dataSource={data.navigationGroups}
               columns={columns}
               rowKey={(record) => record.dashboardId}
             />

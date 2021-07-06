@@ -52,7 +52,8 @@ export interface NavGroupItem {
 	dashboardGroupId: string;
 	dashboardId: string;
 	dashboardName: string;
-	deleted: string;
+  deleted: string;
+  navigationId: string;
 	displayName: string;
   id: string;
   key: string;
