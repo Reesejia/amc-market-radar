@@ -1570,6 +1570,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-highlight-words@^0.16.2":
+  version "0.16.2"
+  resolved "https://registry.nlark.com/@types/react-highlight-words/download/@types/react-highlight-words-0.16.2.tgz#c196d1016db7519c607997699f51cb262789fc90"
+  integrity sha1-wZbRAW23UZxgeZdpn1HLJieJ/JA=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-router-dom@^5.1.7":
   version "5.1.7"
   resolved "https://registry.nlark.com/@types/react-router-dom/download/@types/react-router-dom-5.1.7.tgz"
@@ -5218,6 +5225,11 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.nlark.com/hex-color-regex/download/hex-color-regex-1.1.0.tgz"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
 
+highlight-words-core@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.nlark.com/highlight-words-core/download/highlight-words-core-1.2.2.tgz#1eff6d7d9f0a22f155042a00791237791b1eeaaa"
+  integrity sha1-Hv9tfZ8KIvFVBCoAeRI3eRse6qo=
+
 history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.nlark.com/history/download/history-4.10.1.tgz"
@@ -6420,6 +6432,11 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npm.taobao.org/media-typer/download/media-typer-0.3.0.tgz"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
+
+memoize-one@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.nlark.com/memoize-one/download/memoize-one-4.1.0.tgz#a2387c58c03fff27ca390c31b764a79addf3f906"
+  integrity sha1-ojh8WMA//yfKOQwxt2Snmt3z+QY=
 
 memory-fs@^0.4.1:
   version "0.4.1"
@@ -8187,7 +8204,7 @@ prompts@2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@15.x, prop-types@^15.0.0, prop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.x, prop-types@^15.0.0, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npm.taobao.org/prop-types/download/prop-types-15.7.2.tgz"
   integrity sha1-UsQedbjIfnK52TYOAga5ncv/psU=
@@ -8790,6 +8807,15 @@ react-grid-layout@^1.2.5:
     prop-types "^15.0.0"
     react-draggable "^4.0.0"
     react-resizable "^3.0.1"
+
+react-highlight-words@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.nlark.com/react-highlight-words/download/react-highlight-words-0.17.0.tgz#e79a559a2de301548339d7216264d6cd0f1eed6f"
+  integrity sha1-55pVmi3jAVSDOdchYmTWzQ8e7W8=
+  dependencies:
+    highlight-words-core "^1.2.0"
+    memoize-one "^4.0.0"
+    prop-types "^15.5.8"
 
 react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

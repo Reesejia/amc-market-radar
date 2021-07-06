@@ -9,7 +9,7 @@ const service = axios.create({
 // Request interceptors
 service.interceptors.request.use(
 	(config) => {
-		const token = window.sessionStorage.getItem('token') || '7216c31a-f864-43ad-8078-b2843305198d'
+		const token = window.sessionStorage.getItem('token') || 'ca325274-9b74-483f-84c6-a09679c21390'
 		const tenantId = window.sessionStorage.getItem('tenantId') || 1001
 		config.headers.tenantId = tenantId;
 		config.headers.Authorization = 'bearer ' + token;

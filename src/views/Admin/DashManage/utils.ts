@@ -9,14 +9,13 @@ const initialState = {
 	isCreate: false,
 	isEditGroup: false,
 	dashList: [],
-  showGroup: false,
-  groupParams: {
-    page: 1,
-    size: 20,
-	name: '',
-    sortField: '',
-    direction: ''
-  }
+	showGroup: false,
+	groupParams: {
+		page: 1,
+		size: 20,
+		sortField: '',
+		direction: ''
+	}
 
 };
 
@@ -30,7 +29,7 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 	console.log('dashReducer state', state);
 	console.log('dashReducer action', action);
 	switch (action.type) {
-    case 'CHAGE_GROUP_PARAMS':
+		case 'CHAGE_GROUP_PARAMS':
 			return {
 				...state,
 				groupParams: action.payload
@@ -76,20 +75,21 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 };
 
 export const useDashApi = (fetchApi: Function) => {
-  const [ state, dispatch ] = useReducer(dashReducer, initialState);
-//   debugger
-  const {groupParams} = state
-  console.log("zyy", groupParams, state)
+	const [state, dispatch] = useReducer(dashReducer, initialState);
+	//   debugger
+	const { groupParams } = state
+	console.log("zyy", groupParams, state)
+
 	const fetchData = async () => {
 		console.log("fetchApi", fetchApi)
 		console.log("zyy23", groupParams)
 		// if (fetchApi) {
-      const params = {...groupParams, page: groupParams.page - 1}
-	  console.log("zyy2", params)
-			const res = await fetchApi(params);
-			if (res.statusCode === 0 && res.success) {
-				dispatch({ type: 'FETCH_API', payload: res.data });
-			}
+		const params = { ...groupParams, page: groupParams.page - 1 }
+		console.log("zyy2", params)
+		const res = await fetchApi(params);
+		if (res.statusCode === 0 && res.success) {
+			dispatch({ type: 'FETCH_API', payload: res.data });
+		}
 		// }
 	};
 
@@ -103,12 +103,12 @@ export const useDashApi = (fetchApi: Function) => {
 	useEffect(() => {
 		fetchData();
 		getDashboardList();
-	}, []);
+	}, [groupParams]);
 	return { ...state, dispatch, fetchData };
 };
 
-const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => {};
-const fetchData = () => {};
+const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => { };
+const fetchData = () => { };
 export const DashContext = createContext({ ...initialState, dispatch, fetchData });
 
 export const labelStyle = { color: '#999', fontSize: '14px' };
