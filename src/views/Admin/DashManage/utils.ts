@@ -1,6 +1,5 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
-import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-import { DashItem, BoardDetail } from '@/typing/Admin/groups';
+import { dashboardList } from '@/api/group';
 
 const initialState = {
 	status: false,

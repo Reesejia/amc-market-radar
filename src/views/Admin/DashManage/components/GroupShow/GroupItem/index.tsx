@@ -123,6 +123,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       key: 'displayName',
       render: (text: string, record: NavGroupItem) => {
         return editStatus ? <Form.Item
+          initialValue={record.displayName}
           style={{ margin: 0 }}
           name={record.id}
           rules={[
