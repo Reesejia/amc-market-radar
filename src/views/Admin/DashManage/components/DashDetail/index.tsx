@@ -1,9 +1,9 @@
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
 import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
-import { getBoardDetail } from '@/api/group';
+import { DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '@/views/Admin/DashManage/utils';
 import { BoardDetail, DashItem } from '@/typing/Admin/groups';
-import {useDashApi, DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '@/views/Admin/DashManage/utils';
+import { getBoardDetail } from '@/api/group';
 import './index.scss';
 
 const { confirm } = Modal;

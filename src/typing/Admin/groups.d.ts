@@ -63,6 +63,7 @@ export interface NavListInfo {
   id: string;
   navigationName: string;
   dashboardGroupName: string;
+  dashboardGroupId:string;
 	navigationGroups: Array<NavGroupItem>;
 }
 

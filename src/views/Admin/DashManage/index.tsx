@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState, useRef, useReducer } from 'react';
+import React, { FC } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
-import { getGroup, dashboardList, deleteGroup } from '@/api/group';
+import { getGroup, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
-import { DashItem, BoardDetail, GroupItem, GroupItemParams, SorterResult } from '@/typing/Admin/groups';
-import { useDashApi, DashContext, dashReducer } from '@/views/Admin/DashManage/utils';
+import { GroupItem, SorterResult } from '@/typing/Admin/groups';
+import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
 
 export interface Props {
@@ -102,9 +102,6 @@ const DataPageManage: FC = () => {
 
   const handleChange = async(pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[] ) => {
     const { current, pageSize } = pagination
-    // PagationRef.current = { size: pageSize as number, page: current as number }
-    console.log('pagination', pagination)
-    // setPagation(PagationRef.current);
     let parmas = {
       page: current,
       size: pageSize,
@@ -122,7 +119,6 @@ const DataPageManage: FC = () => {
     if(order){
       parmas.direction = sortFieldObj[order as string]
     }
-    console.log('parmas', parmas)
     await dispatch({type: 'CHAGE_GROUP_PARAMS', payload: parmas})
     await fetchData()
     console.log('sorter filters',filters, sorter)
