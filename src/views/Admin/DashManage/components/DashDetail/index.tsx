@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
 import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
-import { DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle} from '@/views/Admin/DashManage/utils';
+import { DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle } from '@/views/Admin/DashManage/utils';
 import { BoardDetail, DashItem } from '@/typing/Admin/groups';
 import { getBoardDetail } from '@/api/group';
 import './index.scss';
@@ -11,7 +11,7 @@ const { confirm } = Modal;
 interface ChidProps {
 }
 const DashDetail: FC<ChidProps> = (props: ChidProps) => {
-  const {status, groupId, dispatch, isCreate, isEditGroup } = useContext(DashContext)
+  const { status, groupId, dispatch, isCreate, isEditGroup } = useContext(DashContext)
   const initalBoard = {
     allDashboardGroupMappings: [],
     dashboardGroupMappings: [],
@@ -26,8 +26,8 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
   const [boardDetail, setBoardDetail] = useState<BoardDetail>(initalBoard);
 
   useEffect(() => {
-      onBoardDetail();
-    },[groupId]);
+    onBoardDetail();
+  }, [groupId]);
 
   const onBoardDetail = async () => {
     if (groupId) {
@@ -50,14 +50,14 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
         okText: '继续',
         cancelText: '取消',
         onOk() {
-          dispatch({type: 'SET_EDIT_GROUP', payload: true})
+          dispatch({ type: 'SET_EDIT_GROUP', payload: true })
         },
         onCancel() {
           console.log('Cancel');
         }
       });
     } else {
-      dispatch({type: 'SET_EDIT_GROUP', payload: true})
+      dispatch({ type: 'SET_EDIT_GROUP', payload: true })
     }
   };
   return (
@@ -68,7 +68,7 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
         placement="right"
         closable={false}
         visible={status}
-        onClose={() => dispatch({type: 'CHANGE_STATUS', payload: false})}
+        onClose={() => dispatch({ type: 'CHANGE_STATUS', payload: false })}
       >
         <Descriptions
           title={boardDetail.dashboardGroupName}
@@ -84,9 +84,9 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
             )
           }
         >
-          <Descriptions.Item label="修改人">{boardDetail.updateByName || '-'}</Descriptions.Item>
-          <Descriptions.Item label="创建时间">{boardDetail.createTime || '-'}</Descriptions.Item>
-          <Descriptions.Item label="最近修改时间">{boardDetail.lastModifiedTime || '-'}</Descriptions.Item>
+          <Descriptions.Item label="修改人">{isCreate ? '-' : boardDetail.updateByName || '-'}</Descriptions.Item>
+          <Descriptions.Item label="创建时间">{isCreate ? '-' : boardDetail.createTime || '-'}</Descriptions.Item>
+          <Descriptions.Item label="最近修改时间">{isCreate ? '-' : boardDetail.lastModifiedTime || '-'}</Descriptions.Item>
         </Descriptions>
         <Divider />
         {isEditGroup ? (
