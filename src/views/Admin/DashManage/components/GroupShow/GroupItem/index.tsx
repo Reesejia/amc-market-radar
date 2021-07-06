@@ -76,6 +76,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       navigationGroups: data.navigationGroups.map((item,index) =>{
         if(keys.includes(item.id)){
           item.displayName = values[item.id]
+          item.id = ""
         }
         item.seq = index
         return item
