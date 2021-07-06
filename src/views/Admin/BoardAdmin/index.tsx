@@ -1,4 +1,4 @@
-import './index.scss';
+// import './index.scss';
 import { Component } from 'react';
 
 export interface Props {
