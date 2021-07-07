@@ -43,7 +43,7 @@ const DataPageManage: FC = () => {
             搜索
           </Button>
           <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            重制
+            重置
           </Button>
         </Space>
       </div>

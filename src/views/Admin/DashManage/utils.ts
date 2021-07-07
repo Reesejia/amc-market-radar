@@ -39,11 +39,6 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 				status: action.payload
 			};
 		case 'FETCH_API':
-			console.log("989", action.payload)
-			// let newValue = JSON.parse(JSON.stringify(state));
-			// newValue.grounpListInfo = action.payload
-			// console.log("10",newValue)
-			// return newValue
 			return {
 				...state,
 				grounpListInfo: action.payload
