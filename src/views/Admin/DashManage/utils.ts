@@ -11,7 +11,7 @@ const initialState = {
 	showGroup: false,
 	groupParams: {
 		page: 1,
-		size: 10,
+		size: 20,
 		sortField: '',
 		direction: ''
 	}
@@ -39,6 +39,11 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 				status: action.payload
 			};
 		case 'FETCH_API':
+			console.log("989", action.payload)
+			// let newValue = JSON.parse(JSON.stringify(state));
+			// newValue.grounpListInfo = action.payload
+			// console.log("10",newValue)
+			// return newValue
 			return {
 				...state,
 				grounpListInfo: action.payload
@@ -76,16 +81,13 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 export const useDashApi = (fetchApi: Function) => {
 	const [state, dispatch] = useReducer(dashReducer, initialState);
 	const { groupParams } = state
+
 	const fetchData = async () => {
-		console.log("zyy23", groupParams)
-		// if (fetchApi) {
 		const params = { ...groupParams, page: groupParams.page - 1 }
-		console.log("zyy2", params)
 		const res = await fetchApi(params);
 		if (res.statusCode === 0 && res.success) {
 			dispatch({ type: 'FETCH_API', payload: res.data });
 		}
-		// }
 	};
 
 	const getDashboardList = async () => {
@@ -97,8 +99,11 @@ export const useDashApi = (fetchApi: Function) => {
 
 	useEffect(() => {
 		fetchData();
-		getDashboardList();
 	}, [groupParams]);
+
+	useEffect(() => {
+		getDashboardList();
+	}, []);
 	return { ...state, dispatch, fetchData };
 };
 

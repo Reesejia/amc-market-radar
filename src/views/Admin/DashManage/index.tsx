@@ -1,18 +1,14 @@
 
-import React, { FC, useEffect, useState, useRef, useReducer, ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm, Input } from 'antd';
 import { FilterDropdownProps } from 'antd/lib/table/interface'
-import { ColumnsType } from 'antd/lib/table'
-import { getGroup, dashboardList, deleteGroup } from '@/api/group';
-
+import { getGroup, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
 import { GroupItem, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
-import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-
 export interface Props {
   test: string
 }
@@ -20,8 +16,6 @@ export interface Props {
 const DataPageManage: FC = () => {
   const reduderObj = useDashApi(getGroup)
   const { grounpListInfo, dispatch, fetchData, groupParams } = reduderObj
-  const [searchText, setSearchText] = useState('')
-  const [searchedColumn, setSearchedColumn] = useState('')
   const showDrawer = () => {
     dispatch({ type: 'CHANGE_STATUS', payload: true })
     dispatch({ type: 'SET_EDIT_GROUP', payload: true })
@@ -54,27 +48,7 @@ const DataPageManage: FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: unknown) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: string, record: { [x: string]: { toString: () => string; }; }) =>
-      record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-        : '',
-    onFilterDropdownVisibleChange: (visible: unknown) => {
-      if (visible) {
-        // setTimeout(() => this.searchInput.select(), 100);
-      }
-    },
-    render: (text: { toString: () => string; }) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
+    filterIcon: (filtered: unknown) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,10 +71,8 @@ const DataPageManage: FC = () => {
     {
       title: '修改人',
       dataIndex: 'updateByName',
-
       key: 'updateByName',
-      ...getColumnSearchProps('updateByName'),
-      // sorter: (a: GroupItem, b: GroupItem) => a.updateByName - b.name,
+      ...getColumnSearchProps('updateByName')
     },
     {
       title: '修改时间',
@@ -134,7 +106,6 @@ const DataPageManage: FC = () => {
                 <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
                   <a style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
                 </Popconfirm>
-
             }
           </Space>
         )
@@ -177,17 +148,14 @@ const DataPageManage: FC = () => {
     if (order) {
       parmas.direction = sortFieldObj[order as string]
     }
-    await dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: parmas })
-    await fetchData()
+    dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: parmas })
   }
-
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSearch = async (selectedKeys: Array<any>, confirm: () => void, dataIndex: string) => {
     confirm();
     let params = Object.assign({}, groupParams, { [dataIndex]: selectedKeys[0] })
-    await dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: params })
-    await fetchData()
+    dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: params })
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
