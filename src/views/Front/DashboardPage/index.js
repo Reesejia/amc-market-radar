@@ -108,7 +108,7 @@ class DragLayout extends PureComponent {
 
         return (
           <div key={widget.i} data-grid={widget} data-id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
-            <span>{widget.chartStyle.chart.title}</span>
+            <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
             <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
             {component}
           </div>
