@@ -40,8 +40,6 @@ export default class GridView extends Component {
   render() {
     return (
       <div>
-
-ddd
       {this.generateDOM()}
       </div>
     );

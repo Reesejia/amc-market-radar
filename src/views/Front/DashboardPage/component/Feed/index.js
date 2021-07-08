@@ -3,8 +3,7 @@ import './index.scss'
 const Feed = (props) =>{
     const data = props.widget.chartStyle.chart.datasourceDefine
     return (
-        <div className="FEED-WAPER">
-            <p>title</p>
+        <div className="feed-wrap">
             <Markdown data={data}/>
         </div>
     )

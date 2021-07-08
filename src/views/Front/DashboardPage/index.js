@@ -2,19 +2,20 @@ import React, { PureComponent, lazy } from 'react';
 import { Layout, Button, message } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
-import { getBarChart,getLineChart,getPieChart } from "./Chart";
+import { getBarChart, getLineChart, getPieChart } from "./Chart";
 import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
-import {getChartBusinessData} from '@/api/radar'
+import { getChartBusinessData } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
-import Feed from './Component/Feed';
-import GridView from '@/views/Front/DashboardPage/Component/GridView'
-import Chart from '@/views/Front/DashboardPage/Component/Chart'
-import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
-import TableView from '@/views/Front/DashboardPage/Component/TableView'
+import Feed from './component/Feed';
+import GridView from '@/views/Front/DashboardPage/component/GridView'
+import Chart from '@/views/Front/DashboardPage/component/Chart'
+import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
+import TableView from '@/views/Front/DashboardPage/component/TableView'
+import { title } from 'process';
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
 // // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
 // const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
@@ -25,11 +26,11 @@ import TableView from '@/views/Front/DashboardPage/Component/TableView'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
- class DragLayout extends PureComponent {
+class DragLayout extends PureComponent {
   static defaultProps = {
-    breakpoints:  {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0},
-    cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
-    margin: {lg: [15,15], md: [20,20], sm: [10,10], xs: [5,5]}
+    breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
+    cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+    margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
   };
 
   constructor(props) {
@@ -68,49 +69,53 @@ const { Header, Content } = Layout;
     console.log('this.state.widgets', this.state.widgets)
 
     return this.state.widgets
-    // .filter((item,index) => index< 1)
-    .map((widget, i) => {
-      let option;
-      let component;
-      if (widget.type === 'CHART') {
-        const {vizType} = widget.chartStyle.chart
-          if(vizType === 'table') {
+      // .filter((item,index) => index< 1)
+      .map((widget, i) => {
+        let option;
+        let component;
+        if (widget.type === 'CHART') {
+          const { vizType, title } = widget.chartStyle.chart
+          if (vizType === 'table') {
             component = (
-              <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+              <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] && this.state.resp[widget.i].data} style={{ width: '100%', height: '100%' }} />
             )
-          }else {
+          } else {
             component = (
-              <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+              <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] && this.state.resp[widget.i].data} style={{ width: '100%', height: '100%' }} />
             )
           }
 
-      } else if(widget.type === 'MARKDOWN'){
-        component = (
-          <MarkdownView key={widget.i} widget={widget} />
-        )
-      } else if(widget.type === 'FEED'){
-        component = (
-          <Feed key={widget.i} widget={widget}/>
-        )
-      }
-      else {
-        component = (
-          <div>{widget.i}</div>
-        )
-      }
-      // else if (l.type === 'line') {
-      //   option = getLineChart();
-      // }else if (l.type === 'pie') {
-      //   option = getPieChart();
-      // }
+        } else if (widget.type === 'MARKDOWN') {
+          component = (
+            <div className="">
+              <MarkdownView key={widget.i} widget={widget} />
+            </div>
 
-      return (
-        <div key={widget.i} data-grid={widget}>
-          <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
-          {component}
-        </div>
-      );
-    });
+          )
+        } else if (widget.type === 'FEED') {
+          component = (
+            <Feed key={widget.i} widget={widget} />
+          )
+        }
+        else {
+          component = (
+            <div>{widget.i}</div>
+          )
+        }
+        // else if (l.type === 'line') {
+        //   option = getLineChart();
+        // }else if (l.type === 'pie') {
+        //   option = getPieChart();
+        // }
+
+        return (
+          <div key={widget.i} data-grid={widget} data-id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+            <span>{widget.chartStyle.chart.title}</span>
+            <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
+            {component}
+          </div>
+        );
+      });
   };
 
 
@@ -148,7 +153,7 @@ const { Header, Content } = Layout;
     this.setState({ layouts: layout });
   }
 
-  ItemCallback(layout, oldItem, newItem){
+  ItemCallback(layout, oldItem, newItem) {
     console.log('ItemCallback layout', layout)
   }
 
@@ -171,9 +176,9 @@ const { Header, Content } = Layout;
     })
   }
 
-  mergeLayout(){
+  mergeLayout() {
     this.setState({
-      widgets:  this.state.widgets.map((widget,index) =>{
+      widgets: this.state.widgets.map((widget, index) => {
         return Object.assign(widget, this.state.layouts[index])
       })
     })
@@ -206,19 +211,19 @@ const { Header, Content } = Layout;
     }
   }
 
- async onGetChartBusinessData(){
+  async onGetChartBusinessData() {
     let chartIds = this.state.widgets.map(widget => widget.i)
     console.log('chartIds', chartIds)
-   const res = await getChartBusinessData({
+    const res = await getChartBusinessData({
       dashboardId: 6,
       chartIds
     })
     console.log('res000', res)
-    if(res.code === "0"){
+    if (res.code === "0") {
       this.setState({
         resp: res.resp
       })
-      console.log('000',this.state.resp['CHART-RrQKNVQWbL'])
+      console.log('000', this.state.resp['CHART-RrQKNVQWbL'])
     }
   }
 
@@ -269,7 +274,7 @@ const { Header, Content } = Layout;
               }
             >
               {this.generateDOM()}
-            {/* <GridView widgets={this.state.widgets}/> */}
+              {/* <GridView widgets={this.state.widgets}/> */}
             </ResponsiveReactGridLayout>
 
           </div>
