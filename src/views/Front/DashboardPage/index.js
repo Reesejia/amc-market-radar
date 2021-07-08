@@ -73,36 +73,36 @@ const { Header, Content } = Layout;
     .map((widget, i) => {
       let option;
       let component;
-      // if (widget.type === 'CHART') {
-      //   const {vizType} = widget.chartStyle.chart
-      //     if(vizType === 'table') {
-      //       component = (
-      //         <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
-      //       )
-      //     }else {
-      //       component = (
-      //         <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
-      //       )
-      //     }
+      if (widget.type === 'CHART') {
+        const {vizType} = widget.chartStyle.chart
+          if(vizType === 'table') {
+            component = (
+              <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+            )
+          }else {
+            component = (
+              <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] &&this.state.resp[widget.i].data} style={{width: '100%',height:'100%'}}/>
+            )
+          }
 
-      // } else if(widget.type === 'MARKDOWN'){
-      //   component = (
-      //     <MarkdownView key={widget.i} widget={widget} />
-      //   )
-      // } else if(widget.type === 'FEED'){
-      //   component = (
-      //     <Feed key={widget.i} widget={widget}/>
-      //   )
-      // }
-      // else {
-      //   component = (
-      //     <div>{widget.i}</div>
-      //   )
-      // }
+      } else if(widget.type === 'MARKDOWN'){
+        component = (
+          <MarkdownView key={widget.i} widget={widget} />
+        )
+      } else if(widget.type === 'FEED'){
+        component = (
+          <Feed key={widget.i} widget={widget}/>
+        )
+      }
+      else {
+        component = (
+          <div>{widget.i}</div>
+        )
+      }
 
-      component = (
-        <div>{widget.i}</div>
-      )
+      // component = (
+      //   <div>{widget.i}</div>
+      // )
       // else if (l.type === 'line') {
       //   option = getLineChart();
       // }else if (l.type === 'pie') {
@@ -228,8 +228,8 @@ const { Header, Content } = Layout;
   }
 
   componentDidMount() {
-    this.fetchPositionData(6)
-    // this.onGetPositionGrid(6)
+    // this.fetchPositionData(6)
+    this.onGetPositionGrid(6)
   }
 
   formatWidget(widgets) {
