@@ -15,7 +15,7 @@ class ParseLayout extends Column{
     findTabsNode(node){
       return {
         id: 'xxx',
-        h: 10,
+        h: 20,
         w: 12,
         x: 0,
         y: 2,
