@@ -17,7 +17,7 @@ import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { title } from 'process';
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
-// // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
+// const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
 // const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
 // const TableView =  lazy(() => import(/* webpackChunkName: "DragLayout" */'@/views/Front/DashboardPage/Component/TableView'))
 
@@ -65,6 +65,7 @@ class DragLayout extends PureComponent {
       );
     }
   }
+
   generateDOM = () => {
     console.log('this.state.widgets', this.state.widgets)
 
@@ -87,10 +88,7 @@ class DragLayout extends PureComponent {
 
         } else if (widget.type === 'MARKDOWN') {
           component = (
-            <div className="">
               <MarkdownView key={widget.i} widget={widget} />
-            </div>
-
           )
         } else if (widget.type === 'FEED') {
           component = (

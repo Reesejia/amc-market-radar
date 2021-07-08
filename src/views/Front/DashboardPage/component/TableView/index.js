@@ -1,45 +1,32 @@
-import React from 'react'
-import { Table, Tag, Space } from 'antd';
+import React, {useState, useEffect, useMemo} from 'react'
+import { Table} from 'antd';
 import "./index.scss"
 
+const TableView = (props) => {
+  const [loading,setLoading] = useState(true)
+  const [data,setData] = useState([])
 
-class TableView extends React.Component {
-  constructor(){
-    super()
-    this.state ={
-      columns: [],
-      data: [],
-      loading: true
-    }
-  }
+  let columns = useMemo(() =>{
+    let { vizDataBase } = props.widget.chartStyle.chart
+    vizDataBase = eval(vizDataBase)
+    vizDataBase.map(i => i.dataIndex = i.key)
+    return vizDataBase
+  }, props.widget)
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-     if(nextProps){
-      let {vizDataBase} = nextProps.widget.chartStyle.chart
-      vizDataBase = eval(vizDataBase)
-      vizDataBase.map(i => i.dataIndex = i.key)
-      const {businessData} = nextProps
-      if(businessData){
-        businessData.map((i,index) => i.key = index)
+
+  useEffect(() =>{
+    if (props) {
+      console.log('props.widget businessData', props.businessData)
+      const { businessData } = props
+      if (businessData) {
+        businessData.map((i, index) => i.key = index)
       }
-      return { columns: vizDataBase,data: businessData || [], loading: false }
-     }
-      return { columns: [{key: 'xx'}],data: []}
-  }
-  render(){
-    return (
-      <Table className="table-view-wraper" loading={this.state.loading} columns={this.state.columns} dataIndex="key" dataSource={this.state.data} />
-    )
-  }
+      setData(businessData)
+      setLoading(false)
+    }
+  }, [props.businessData])
+
+  return  <Table className="table-view-wraper" loading={loading} columns={columns} dataIndex="key" dataSource={data} />
 }
+
 export default TableView
-
-
-// const TableView = (props) =>{
-//   const {vizDataBase} = props.widget.chartStyle.chart
-//   const columns = eval(vizDataBase)
-//   console.log('columns', columns)
-//   const data = props.businessData
-//   console.log('props data', data)
-//     return
-// }
