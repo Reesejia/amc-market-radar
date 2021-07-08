@@ -11,7 +11,7 @@ const TableView = (props) => {
     vizDataBase = eval(vizDataBase)
     vizDataBase.map(i => i.dataIndex = i.key)
     return vizDataBase
-  }, props.widget)
+  }, [props.widget])
 
 
   useEffect(() =>{
