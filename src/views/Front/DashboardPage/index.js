@@ -64,6 +64,7 @@ const { Header, Content } = Layout;
       );
     }
   }
+
   generateDOM = () => {
     console.log('this.state.widgets', this.state.widgets)
 
@@ -98,6 +99,10 @@ const { Header, Content } = Layout;
           <div>{widget.i}</div>
         )
       }
+
+      // component = (
+      //   <div>{widget.i}</div>
+      // )
       // else if (l.type === 'line') {
       //   option = getLineChart();
       // }else if (l.type === 'pie') {
