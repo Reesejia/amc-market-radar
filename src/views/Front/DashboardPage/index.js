@@ -10,11 +10,11 @@ import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPa
 import { getChartBusinessData } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
-import Feed from './component/Feed';
-import GridView from '@/views/Front/DashboardPage/component/GridView'
-import Chart from '@/views/Front/DashboardPage/component/Chart'
-import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
-import TableView from '@/views/Front/DashboardPage/component/TableView'
+import Feed from './Component/Feed';
+import GridView from '@/views/Front/DashboardPage/Component/GridView'
+import Chart from '@/views/Front/DashboardPage/Component/Chart'
+import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
+import TableView from '@/views/Front/DashboardPage/Component/TableView'
 import { title } from 'process';
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
 // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
