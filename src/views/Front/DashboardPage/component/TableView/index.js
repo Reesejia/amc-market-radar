@@ -3,10 +3,10 @@ import { Table, Tag, Space } from 'antd';
 import "./index.scss"
 
 
-class TableView extends React.Component {
-  constructor(){
+class TableView extends React.PureComponent {
+  constructor() {
     super()
-    this.state ={
+    this.state = {
       columns: [],
       data: [],
       loading: true
@@ -14,19 +14,19 @@ class TableView extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-     if(nextProps){
-      let {vizDataBase} = nextProps.widget.chartStyle.chart
+    if (nextProps) {
+      let { vizDataBase } = nextProps.widget.chartStyle.chart
       vizDataBase = eval(vizDataBase)
       vizDataBase.map(i => i.dataIndex = i.key)
-      const {businessData} = nextProps
-      if(businessData){
-        businessData.map((i,index) => i.key = index)
+      const { businessData } = nextProps
+      if (businessData) {
+        businessData.map((i, index) => i.key = index)
       }
-      return { columns: vizDataBase,data: businessData || [], loading: false }
-     }
-      return { columns: [{key: 'xx'}],data: []}
+      return { columns: vizDataBase, data: businessData || [], loading: false }
+    }
+    return { columns: [{ key: 'xx' }], data: [] }
   }
-  render(){
+  render() {
     return (
       <Table className="table-view-wraper" loading={this.state.loading} columns={this.state.columns} dataIndex="key" dataSource={this.state.data} />
     )

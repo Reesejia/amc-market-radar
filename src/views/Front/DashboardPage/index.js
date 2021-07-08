@@ -16,7 +16,7 @@ import Chart from '@/views/Front/DashboardPage/Component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/Component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/Component/TableView'
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
-// // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
+// const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
 // const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
 // const TableView =  lazy(() => import(/* webpackChunkName: "DragLayout" */'@/views/Front/DashboardPage/Component/TableView'))
 
