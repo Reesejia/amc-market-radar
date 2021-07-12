@@ -1,6 +1,6 @@
 import  _axios from '../utils/axios'
 const  baseURL = '/api/radar';
-export function getPostion(dashboardId){
+export function getPostionOrigin(dashboardId){
     console.log('Request', _axios)
     return _axios({
         url: `${baseURL}/dashboard/position?dashboardId=${dashboardId}`,
