@@ -50,6 +50,9 @@ code {
   z-index: 999;
   display:none;
 }
+.remove span{
+  margin-left: 10px;
+}
 .react-grid-item{
   border: 1px solid #ececec;
   padding: 10px;

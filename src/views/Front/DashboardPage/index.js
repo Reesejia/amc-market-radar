@@ -39,7 +39,10 @@ class DragLayout extends PureComponent {
       layouts: this.getFromLS("layouts") || {},
       widgets: [],
       positionInfo: {},
-      resp: {}
+      resp: {},
+      curWidth: "",
+      curHeight: "",
+      curTransform: ""
     }
   }
 
@@ -88,17 +91,18 @@ class DragLayout extends PureComponent {
 
         } else if (widget.type === 'MARKDOWN') {
           component = (
-              <MarkdownView key={widget.i} widget={widget} />
+            <MarkdownView key={widget.i} widget={widget} />
           )
         } else if (widget.type === 'FEED') {
           component = (
             <Feed key={widget.i} widget={widget} />
           )
         }
-        else {
-          component = (
-            <div>{widget.i}</div>
-          )
+        else if (widget.type === 'TABS') {
+          // component = (
+          //   <div>{widget.i}ssss</div>
+          // )
+
         }
         // else if (l.type === 'line') {
         //   option = getLineChart();
@@ -107,15 +111,64 @@ class DragLayout extends PureComponent {
         // }
 
         return (
-          <div key={widget.i} data-grid={widget} data-id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
             <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
-            <span className='remove' onClick={this.onRemoveItem.bind(this, i)}>x</span>
+            <div className='remove'>
+              <span onClick={this.onRemoveItem.bind(this, i)}>x</span>
+              <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
+              <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
+            </div>
             {component}
           </div>
         );
       });
   };
 
+  showFullScreen(id) {
+    var ele = document.getElementById(id);
+    const { width, height, transform } = window.getComputedStyle(ele)
+    let translate = transform.split('(')[1].split(')')[0].split(',')
+    this.setState({
+      curWidth: width,
+      curHeight: height,
+      curTransform: `translate(${translate[4]}px, ${translate[5]}px`
+    })
+    const $sidebar = document.getElementsByClassName('sidebar-container')
+    let sideBarWidth = 0
+    if ($sidebar && $sidebar.length) {
+      sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+      console.log('sideBarWidth', sideBarWidth)
+    }
+    document.body.click()
+    const full = window.document.querySelector(`#${id}`)
+    full.style.position = 'fixed'
+    full.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+    full.style.height = 'calc(100vh)'
+    full.style.left = sideBarWidth
+    full.style.top = '0'
+    full.style.overflow = 'auto'
+    full.style.background = '#fff'
+    full.style.transform = 'none'
+    full.style['z-index'] = '1000'
+    // 防止body滚动
+    document.body.style.overflow = 'hidden'
+  }
+
+  closeFullScreen(id) {
+    console.log(this.height)
+    document.body.click()
+    this.isFullscreen = false
+    const full = window.document.querySelector(`#${id}`)
+    full.style.position = 'absolute'
+    full.style.width = this.state.curWidth
+    full.style.height = this.state.curHeight
+    full.style.transform = this.state.curTransform
+    full.style.left = ''
+    full.style.top = ''
+    full.style.overflow = ''
+    full.style['z-index'] = ''
+    document.body.style.overflow = 'auto'
+  }
 
 
   addChart(type) {
@@ -198,9 +251,7 @@ class DragLayout extends PureComponent {
   async onGetPositionGrid(dashboardId) {
     // this.props.getGrids(6)
     // console.log('boardOrigin', this.props.boardOrigin)
-
     const res = await getPositionGrid(dashboardId)
-    console.log('res111', res)
     if (res.statusCode === 0) {
       this.setState({
         widgets: res.data.gridPositionData
@@ -212,6 +263,7 @@ class DragLayout extends PureComponent {
   async onGetChartBusinessData() {
     let chartIds = this.state.widgets.map(widget => widget.i)
     console.log('chartIds', chartIds)
+
     const res = await getChartBusinessData({
       dashboardId: 6,
       chartIds
