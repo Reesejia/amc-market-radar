@@ -13,39 +13,55 @@ class ParseLayout extends Column{
     viewArr = []
 
     findTabsNode(node){
+      const tabsInfo = this.formatTabsNode(node)
+      const ids = []
+      tabsInfo.ids.map(item => {
+        if(Object.prototype.toString.call(item) === '[object Object]'){
+          ids.push(...item.ids)
+        }else if(Object.prototype.toString.call(item) === '[object String]'){
+          ids.push(item)
+        }
+      })
       return {
         id: 'xxx',
         h: 20,
         w: 12,
         x: 0,
         y: 2,
-        children: this.formatTabsNode(node)
+        type: 'TABS',
+        children: tabsInfo.tabsArr,
+        ids: ids.filter(id => id.length > 0)
       }
     }
 
     formatTabsNode(node) {
       let tabsArr = []
+      let ids = []
       if(node.children && node.children.length > 0){
         node.children.forEach(child => {
+          const tabsInfo = this.findTabsChild(this.parseLayoutJson[child])
           tabsArr.push({
             tabsKey: child,
-           ...this.findTabsChild(this.parseLayoutJson[child])
+            subTabs: tabsInfo.subTabs,
+            children: tabsInfo.children,
           })
+          ids.push(...tabsInfo.chartIds,tabsInfo.children)
         });
       }
-      return tabsArr
+      return {tabsArr,ids}
     }
 
 
     findTabsChild(node){
-      const tabsObj = {
+      const tabsInfo = {
         subTabs:  [],
-        children: []
+        children: [],
+        chartIds: []
       }
       if(node.children && node.children.length > 0){
         node.children.forEach(child =>{
           if(child.startsWith('TABS-')){
-            tabsObj.children = this.formatTabsNode(this.parseLayoutJson[child])
+            tabsInfo.children = this.formatTabsNode(this.parseLayoutJson[child])
           }else {
             findChild(this.parseLayoutJson[child],this.parseLayoutJson)
              function findChild(node, parseLayoutJson){
@@ -54,13 +70,14 @@ class ParseLayout extends Column{
                   findChild(parseLayoutJson[child])
                 })
               }else {
-                tabsObj.subTabs.push(node)
+                tabsInfo.subTabs.push(node)
+                tabsInfo.chartIds.push(node.id)
               }
             }
           }
         })
       }
-      return tabsObj
+      return tabsInfo
     }
 
     formatNodeObj = {

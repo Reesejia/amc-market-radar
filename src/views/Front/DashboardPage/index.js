@@ -2,12 +2,11 @@ import React, { PureComponent, lazy } from 'react';
 import { Layout, Button, message } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
-import { connect } from 'react-redux'
 import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart, getLineChart, getPieChart } from "./Chart";
-import { getPostion, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
-import { getChartBusinessData } from '@/api/radar'
+import { getPostionOrigin, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
+import { getChartBusiness } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
 import Feed from './component/Feed';
@@ -15,6 +14,7 @@ import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
+import { connect } from 'react-redux'
 import { title } from 'process';
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
 // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
@@ -104,12 +104,10 @@ class DragLayout extends PureComponent {
           // )
 
         }
-        // else if (l.type === 'line') {
-        //   option = getLineChart();
-        // }else if (l.type === 'pie') {
-        //   option = getPieChart();
-        // }
 
+        // component = (
+        //   <div>{widget.i}</div>
+        // )
         return (
           <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
             <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
@@ -194,7 +192,6 @@ class DragLayout extends PureComponent {
     this.setState({
       widgets: this.state.widgets.filter((item, index) => index !== i)
     });
-
   }
 
   onLayoutChange(layout, layouts) {
@@ -209,7 +206,7 @@ class DragLayout extends PureComponent {
   }
 
   async fetchPositionData(id) {
-    const res = await getPostion(id)
+    const res = await getPostionOrigin(id)
     if (res.statusCode === 0) {
       this.setState({
         positionInfo: res.data
@@ -219,7 +216,11 @@ class DragLayout extends PureComponent {
   }
 
   parseRes() {
-    let widgets = new ParseLayout({ parseLayoutJson: this.state.positionInfo.positionData, viewType: [] }).parseLayout()
+    let widgets = new ParseLayout({
+      parseLayoutJson: this.state.positionInfo.positionData,
+      // allBusinessData: this.state.positionInfo.
+      viewType: []
+    }).parseLayout()
     widgets = this.formatWidget(widgets)
     console.log('parseRes widgets', widgets)
     this.setState({
@@ -249,22 +250,28 @@ class DragLayout extends PureComponent {
   }
 
   async onGetPositionGrid(dashboardId) {
-    // this.props.getGrids(6)
+    // await this.props.getPositionGrid_action(6)
+    // await this.props.getChartBusiness_action()
     // console.log('boardOrigin', this.props.boardOrigin)
     const res = await getPositionGrid(dashboardId)
     if (res.statusCode === 0) {
       this.setState({
         widgets: res.data.gridPositionData
       })
-      this.onGetChartBusinessData()
+      const { gridPositionData } = res.data
+      const chartIds = gridPositionData && gridPositionData.map(chart => {
+        if (chart.type === 'TABS') {
+          return chart.ids
+        }
+        return chart.id
+      })
+      this.onGetChartBusiness(chartIds)
     }
   }
 
-  async onGetChartBusinessData() {
-    let chartIds = this.state.widgets.map(widget => widget.i)
+  async onGetChartBusiness(chartIds) {
     console.log('chartIds', chartIds)
-
-    const res = await getChartBusinessData({
+    const res = await getChartBusiness({
       dashboardId: 6,
       chartIds
     })
@@ -280,6 +287,7 @@ class DragLayout extends PureComponent {
   componentDidMount() {
     // this.fetchPositionData(6)
     this.onGetPositionGrid(6)
+    console.log('this222', this)
   }
 
   formatWidget(widgets) {
@@ -333,6 +341,6 @@ class DragLayout extends PureComponent {
     )
   }
 }
-export default DragLayout
-// const mapStateToProps = (state) => state.dashboard
-// export default connect(mapStateToProps, actions)(DragLayout)
+// export default DragLayout
+const mapStateToProps = (state) => state.dashboard
+export default connect(mapStateToProps, actions)(DragLayout)
