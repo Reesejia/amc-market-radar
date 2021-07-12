@@ -8,7 +8,8 @@ export default class ContextPage extends Component {
     constructor(){
         super()
         this.state = {
-            charsData: {}
+            charsData: {},
+            dashboardId: 6
         }
     }
     componentDidMount() {
@@ -17,15 +18,18 @@ export default class ContextPage extends Component {
 
     async onSaveDashboardData() {
         const res = await saveOriginBoardChartData({
-            charsData: this.state.charsData
+            charsData: this.state.charsData,
+            dashboardId: this.state.dashboardId
         })
         if(res.statusCode === 0){
             message.success('保存成功')
+        }else {
+          message.error(res.value)
         }
     }
 
     async onGetDashboardData() {
-        const res = await getDashboardData(6)
+        const res = await getDashboardData(this.state.dashboardId)
         if(res.statusCode === 0){
             const {charsData} = res.data
             for(let key in charsData) {
@@ -35,6 +39,8 @@ export default class ContextPage extends Component {
                 charsData
             })
             console.log('onGetDashboardData charsData', charsData)
+        }else {
+          message.error(res.errorMsg)
         }
     }
 
