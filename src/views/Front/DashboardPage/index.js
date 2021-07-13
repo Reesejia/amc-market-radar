@@ -10,6 +10,7 @@ import { getChartBusiness } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
 import Feed from './component/Feed';
+import TabsView from './component/TabsView';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
@@ -99,10 +100,9 @@ class DragLayout extends PureComponent {
           )
         }
         else if (widget.type === 'TABS') {
-          // component = (
-          //   <div>{widget.i}ssss</div>
-          // )
-
+          component = (
+            <TabsView widget={widget}/>
+          )
         }
 
         // component = (
@@ -250,9 +250,10 @@ class DragLayout extends PureComponent {
   }
 
   async onGetPositionGrid(dashboardId) {
-    // await this.props.getPositionGrid_action(6)
-    // await this.props.getChartBusiness_action()
-    // console.log('boardOrigin', this.props.boardOrigin)
+    await this.props.getPositionGrid_action(6)
+    console.log('boardOrigin', this.props.chartIds)
+    await this.props.getChartBusiness_action(this.props.chartIds)
+    console.log('boardOrigin', this.props)
     const res = await getPositionGrid(dashboardId)
     if (res.statusCode === 0) {
       this.setState({
