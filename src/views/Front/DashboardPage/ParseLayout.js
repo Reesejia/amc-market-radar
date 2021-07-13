@@ -44,6 +44,7 @@ class ParseLayout extends Column{
             tabsKey: child,
             subTabs: tabsInfo.subTabs,
             children: tabsInfo.children,
+            text: this.parseLayoutJson[child].meta.text
           })
           ids.push(...tabsInfo.chartIds,tabsInfo.children)
         });
