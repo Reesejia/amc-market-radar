@@ -33,7 +33,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
   const [data, setData] = useState<NavListInfo>(() => initialData)
-  const { grounpListInfo,fetchData } = useContext(DashContext)
+  const { grounpListInfo, fetchData } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 8 },
@@ -44,10 +44,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
   const { Option } = Select;
 
-  const onGenderChange = async(value: string, option: any) => {
+  const onGenderChange = async (value: string, option: any) => {
     const res = await getBoardDetail(value)
-    if(res.success && res.statusCode === 0){
-      const {dashboardGroupMappings} = res.data
+    if (res.success && res.statusCode === 0) {
+      const { dashboardGroupMappings } = res.data
       // setData(dashboardGroupMappings)
       console.log('res11', res)
       console.log('onGenderChange', value, option)
@@ -71,8 +71,8 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     const keys = Object.keys(values)
     setData({
       ...data,
-      navigationGroups: data.navigationGroups.map((item,index) =>{
-        if(keys.includes(item.id)){
+      navigationGroups: data.navigationGroups.map((item, index) => {
+        if (keys.includes(item.id)) {
           item.displayName = values[item.id]
           item.id = ""
         }
@@ -117,6 +117,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     onFill()
     fillTable()
   }, [])
+
+  useEffect(() => {
+    fillTable()
+  }, [props.groupData])
 
   const columns = [
     {

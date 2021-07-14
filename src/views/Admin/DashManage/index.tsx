@@ -94,15 +94,15 @@ const DataPageManage: FC = () => {
       )
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       dataIndex: 'action',
       render: (text: string, record: GroupItem) => {
-        const { used } = record
+        const { used, initValue } = record
         return (
           <Space size="middle">
             {
-              used ? '-' :
+               initValue || (!initValue && used) ? '-' :
                 <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
                   <a style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
                 </Popconfirm>

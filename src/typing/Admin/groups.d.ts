@@ -12,7 +12,8 @@ export interface GroupItem {
 	comment: string;
 	dashboardGroupName: string;
   lastModifiedTime: number
-  used: boolean
+  used: boolean,
+  initValue: boolean
 }
 
 
@@ -38,6 +39,7 @@ export interface DashInfoItem {
 }
 
 export interface BoardDetail {
+  initValue: any;
 	allDashboardGroupMappings: DashItem[];
 	comment: string;
 	createTime: string;
