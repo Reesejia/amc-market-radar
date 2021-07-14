@@ -6,11 +6,12 @@ import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart, getLineChart, getPieChart } from "./Chart";
 import { getPostionOrigin, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
+import {getDashboardData} from '@/api/radar'
 import { getChartBusiness } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
-import Feed from './component/Feed';
-import TabsView from './component/TabsView';
+import Feed from '@/views/Front/DashboardPage/component/Feed';
+import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
@@ -43,7 +44,9 @@ class DragLayout extends PureComponent {
       resp: {},
       curWidth: "",
       curHeight: "",
-      curTransform: ""
+      curTransform: "",
+      dashboardId: 6,
+      charsData: {}
     }
   }
 
@@ -69,58 +72,6 @@ class DragLayout extends PureComponent {
       );
     }
   }
-
-  generateDOM = () => {
-    console.log('this.state.widgets', this.state.widgets)
-
-    return this.state.widgets
-      // .filter((item,index) => index< 1)
-      .map((widget, i) => {
-        let option;
-        let component;
-        if (widget.type === 'CHART') {
-          const { vizType, title } = widget.chartStyle.chart
-          if (vizType === 'table') {
-            component = (
-              <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] && this.state.resp[widget.i].data} style={{ width: '100%', height: '100%' }} />
-            )
-          } else {
-            component = (
-              <Chart key={widget.i} widget={widget} businessData={this.state.resp[widget.i] && this.state.resp[widget.i].data} style={{ width: '100%', height: '100%' }} />
-            )
-          }
-
-        } else if (widget.type === 'MARKDOWN') {
-          component = (
-            <MarkdownView key={widget.i} widget={widget} />
-          )
-        } else if (widget.type === 'FEED') {
-          component = (
-            <Feed key={widget.i} widget={widget} />
-          )
-        }
-        else if (widget.type === 'TABS') {
-          component = (
-            <TabsView widget={widget}/>
-          )
-        }
-
-        // component = (
-        //   <div>{widget.i}</div>
-        // )
-        return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
-            <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
-            <div className='remove'>
-              <span onClick={this.onRemoveItem.bind(this, i)}>x</span>
-              <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-              <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
-            </div>
-            {component}
-          </div>
-        );
-      });
-  };
 
   showFullScreen(id) {
     var ele = document.getElementById(id);
@@ -206,7 +157,7 @@ class DragLayout extends PureComponent {
   }
 
   async fetchPositionData(id) {
-    const res = await getPostionOrigin(id)
+    const res = await getPostionOrigin(this.state.dashboardId)
     if (res.statusCode === 0) {
       this.setState({
         positionInfo: res.data
@@ -219,6 +170,7 @@ class DragLayout extends PureComponent {
     let widgets = new ParseLayout({
       parseLayoutJson: this.state.positionInfo.positionData,
       // allBusinessData: this.state.positionInfo.
+      charsData: this.state.charsData,
       viewType: []
     }).parseLayout()
     widgets = this.formatWidget(widgets)
@@ -239,7 +191,7 @@ class DragLayout extends PureComponent {
   async onSavePositionGrid() {
     this.mergeLayout()
     const res = await savePositionGrid({
-      dashboardId: 6,
+      dashboardId: this.state.dashboardId,
       gridPositionData: this.state.widgets
     })
     if (res.statusCode === 0) {
@@ -249,11 +201,8 @@ class DragLayout extends PureComponent {
 
   }
 
-  async onGetPositionGrid(dashboardId) {
-
-
-
-    const res = await getPositionGrid(dashboardId)
+  async onGetPositionGrid() {
+    const res = await getPositionGrid(this.state.dashboardId)
     if (res.statusCode === 0) {
       this.setState({
         widgets: res.data.gridPositionData
@@ -269,7 +218,7 @@ class DragLayout extends PureComponent {
       const a  = chartIds.slice(0,10)
       console.log('aa', a)
       this.onGetChartBusiness(chartIds)
-      await this.props.getPositionGrid_action(6)
+      await this.props.getPositionGrid_action(this.state.dashboardId)
       console.log('boardOrigin', this.props.chartIds)
       await this.props.getChartBusiness_action(this.props.chartIds)
       console.log('boardOrigin', this.props)
@@ -279,7 +228,7 @@ class DragLayout extends PureComponent {
   async onGetChartBusiness(chartIds) {
     console.log('chartIds', chartIds)
     const res = await getChartBusiness({
-      dashboardId: 6,
+      dashboardId: this.state.dashboardId,
       chartIds
     })
     console.log('res000', res)
@@ -291,11 +240,28 @@ class DragLayout extends PureComponent {
     }
   }
 
-  componentDidMount() {
-    // this.fetchPositionData(6)
+  async componentDidMount() {
+    // await this.onGetDashboardData()
+    // await this.fetchPositionData()
     this.onGetPositionGrid(6)
     console.log('this222', this)
   }
+
+  async onGetDashboardData() {
+    const res = await getDashboardData(this.state.dashboardId)
+    if(res.statusCode === 0){
+        const {charsData} = res.data
+        for(let key in charsData) {
+            delete charsData[key].data
+        }
+        this.setState({
+            charsData
+        })
+        console.log('onGetDashboardData charsData', charsData)
+    }else {
+      message.error(res.errorMsg)
+    }
+}
 
   formatWidget(widgets) {
     return widgets.map((widget, index) => {
@@ -325,23 +291,12 @@ class DragLayout extends PureComponent {
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={this.addChart.bind(this, 'line')}>添加折线图</Button>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={this.addChart.bind(this, 'pie')}>添加饼图</Button>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onGetPositionGrid(6)}>刷新</Button>
+          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onGetPositionGrid()}>刷新</Button>
         </Header>
         <Content style={{ marginTop: 44 }}>
           <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
-            <ResponsiveReactGridLayout
-              className="layout"
-              {...this.props}
-              layouts={this.state.widgets}
-              rowHeight={8}
-              onLayoutChange={(layout, layouts) =>
-                this.onLayoutChange(layout, layouts)
-              }
-            >
-              {this.generateDOM()}
-              {/* <GridView widgets={this.state.widgets}/> */}
-            </ResponsiveReactGridLayout>
 
+          <GridView {...this.state} onLayoutChange={() => this.onLayoutChange}/>
           </div>
         </Content>
       </Layout>

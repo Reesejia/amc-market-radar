@@ -2,12 +2,14 @@
 // import {ColumnHasRowAndCol} from './utils'
 import Column from './Column'
 class ParseLayout extends Column{
-    constructor({ parseLayoutJson, viewType }) {
+    constructor({ parseLayoutJson, viewType, charsData }) {
         super()
         this.parseLayoutJson = parseLayoutJson
         this.viewType = viewType
+        this.charsData = charsData
     }
     parseLayoutJson = {}
+    charsData = {}
     unAddType = ['TABS']
     // unAddType = ['TABS', 'COLUMN']
     viewArr = []
@@ -54,6 +56,8 @@ class ParseLayout extends Column{
 
 
     findTabsChild(node){
+      let self = this
+
       const tabsInfo = {
         subTabs:  [],
         children: [],
@@ -64,6 +68,7 @@ class ParseLayout extends Column{
           if(child.startsWith('TABS-')){
             tabsInfo.children = this.formatTabsNode(this.parseLayoutJson[child])
           }else {
+
             findChild(this.parseLayoutJson[child],this.parseLayoutJson)
              function findChild(node, parseLayoutJson){
               if(node.children && node.children.length > 0){
@@ -71,7 +76,12 @@ class ParseLayout extends Column{
                   findChild(parseLayoutJson[child])
                 })
               }else {
-                tabsInfo.subTabs.push(node)
+                let t1 = self.returnLastNodeObj(node)
+                let t2 = {
+                  chartStyle: self.charsData[node.id],
+                  i:node.id
+                }
+                tabsInfo.subTabs.push(Object.assign(t1, t2))
                 tabsInfo.chartIds.push(node.id)
               }
             }
@@ -97,7 +107,6 @@ class ParseLayout extends Column{
     //   const childArr = []
     // const   this.findChild(node)
     // }
-
 
 
     reconcileChildren(node) {

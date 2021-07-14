@@ -6,6 +6,8 @@ class Base{
             type: node.type,
             w: node.meta  && node.meta.width,
             h: node.meta  && node.meta.height / 5,
+            x: 0,
+            y: 2,
         }
         if (node.children && node.children.length > 0) {
             nodeObj.siblings = node.children.map(child => {
