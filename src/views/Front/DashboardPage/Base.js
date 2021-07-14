@@ -3,6 +3,8 @@ class Base{
 
         let nodeObj = {
             id: node.id,
+            i: node.id,
+            key: node.id,
             siblings: null,
             type: node.type,
             chartStyle: charsData[node.id],

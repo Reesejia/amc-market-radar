@@ -8,7 +8,7 @@ import * as types from '../action-types';
 let initialState = {
   boardDataOrigin: {},
   boardGridOrigin: {},
-  chartIds: {},
+  chartIds: [],
   chartsData: {}
 };
 export default function (state = initialState, action) {
@@ -19,10 +19,12 @@ export default function (state = initialState, action) {
      console.log('ooo', o)
       return o
     case types.GET_POSITION_DATA:
+      console.log('payload222', payload)
       const { dashboardId, gridPositionData, chartIds } = payload
       return { ...state, boardGridOrigin: { [dashboardId]: gridPositionData }, chartIds };
 
     case types.GET_BUSINESS_DATA:
+      console.log('GET_BUSINESS_DATA', payload)
       return { ...state, chartsData: payload };
 
     default:

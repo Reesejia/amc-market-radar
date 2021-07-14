@@ -1,11 +1,22 @@
 import  _axios from '../utils/axios'
 
 const  baseURL = '/aap/api';
-export function getDashboardData(dashboardId){
+
+// old 根据board id获取对应的postion 数据和 charseData 和 业务数据
+export function getDashboardData(dashboardId,refresh){
     return _axios({
-        url: `${baseURL}/v1/blackcat/dashboard?dashboardId=${dashboardId}`,
+        url: `/radar/dashboard?id=${dashboardId}&refresh=${refresh}`,
         method: 'get',
     })
+}
+
+
+// 指定看板grid数据
+export function getDashGrid(dashboardId, refresh){
+  return _axios({
+      url: `${baseURL}/v1/blackcat/dashboard/grid?dashboardId=${dashboardId}&refresh=${refresh}`,
+      method: 'get',
+  })
 }
 
 
@@ -15,5 +26,15 @@ export function getChartBusiness({dashboardId, chartIds}){
         method: 'get',
     })
 }
+
+// 更新superset grid 信息，将原来的position JSON  更新为grid data
+export function updateDashBoardData({dashboardId, gridPositionData}){
+  return _axios({
+      url: `/radar/dashboard/update`,
+      method: 'post',
+      data: {dashboardId, gridPositionData}
+  })
+}
+
 
 

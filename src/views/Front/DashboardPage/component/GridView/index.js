@@ -17,27 +17,35 @@ export default class GridView extends Component {
     margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
   };
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      widgets:[]
+      widgets: [],
+      chartsData: {}
     }
   }
-  static getDerivedStateFromProps(nextProps){
+  static getDerivedStateFromProps(nextProps) {
     console.log('nextProps11', nextProps)
-    return {
-      ...nextProps
+    const { widgets, chartsData } = nextProps
+    console.log('chartsData', chartsData)
+
+    if (widgets.length > 0) {
+      return {
+        widgets, chartsData,
+      }
     }
+    return {}
   }
 
   render() {
+    console.log(' this.state.widgets', this.state.widgets)
     return (
       <ResponsiveReactGridLayout
         className="layout"
         {...this.props}
         layouts={this.state.widgets}
         rowHeight={8}
-        onLayoutChange={(layout, layouts) =>{
+        onLayoutChange={(layout, layouts) => {
           this.state.onLayoutChange && this.state.onLayoutChange(layout, layouts)
           console.log('layouts999', layouts)
         }
@@ -52,28 +60,34 @@ export default class GridView extends Component {
               if (widget.type === 'CHART') {
                 const { vizType, title } = widget.chartStyle.chart
                 if (vizType === 'table') {
+                  console.log('widget.i', widget.i)
+                  console.log('this.state.chartsData', this.state.chartsData)
+                  console.log('this.state.chartsData[widget.i', this.state.chartsData &&this.state.chartsData[widget.i])
                   component = (
-                    <TableView key={widget.i} widget={widget} businessData={this.state.resp[widget.i] && this.state.resp[widget.i].data} style={{ width: '100%', height: '100%' }} />
+                    <TableView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data} style={{ width: '100%', height: '100%' }} />
                   )
                 } else {
                   component = (
-                    <Chart key={widget.i} widget={widget}  style={{ width: '100%', height: '100%' }} />
+                    <Chart widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data}  style={{ width: '100%', height: '100%' }} />
                   )
                 }
 
               } else if (widget.type === 'MARKDOWN') {
                 component = (
-                  <MarkdownView key={widget.i} widget={widget} />
+                  <MarkdownView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] &&this.state.chartsData[widget.i].data}/>
                 )
               } else if (widget.type === 'FEED') {
                 component = (
-                  <Feed key={widget.i} widget={widget} />
+                  <Feed widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i]&& this.state.chartsData[widget.i].data}/>
                 )
               }
               else if (widget.type === 'TABS') {
                 console.log('widget000', widget)
+                // component = (
+                //   <TabsView widget={widget} />
+                // )
                 component = (
-                  <TabsView widget={widget} />
+                  <div>{widget.i}</div>
                 )
               }
               // if (widget.type === 'TABS') {
@@ -86,6 +100,9 @@ export default class GridView extends Component {
               //       <div>{widget.i}</div>
               //     )
               //   }
+              // component = (
+              //         <div key={widget.i}>{widget.i}</div>
+              //       )
 
               return (
                 <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
