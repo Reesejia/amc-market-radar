@@ -250,10 +250,9 @@ class DragLayout extends PureComponent {
   }
 
   async onGetPositionGrid(dashboardId) {
-    await this.props.getPositionGrid_action(6)
-    console.log('boardOrigin', this.props.chartIds)
-    await this.props.getChartBusiness_action(this.props.chartIds)
-    console.log('boardOrigin', this.props)
+
+
+
     const res = await getPositionGrid(dashboardId)
     if (res.statusCode === 0) {
       this.setState({
@@ -270,6 +269,10 @@ class DragLayout extends PureComponent {
       const a  = chartIds.slice(0,10)
       console.log('aa', a)
       this.onGetChartBusiness(chartIds)
+      await this.props.getPositionGrid_action(6)
+      console.log('boardOrigin', this.props.chartIds)
+      await this.props.getChartBusiness_action(this.props.chartIds)
+      console.log('boardOrigin', this.props)
     }
   }
 
