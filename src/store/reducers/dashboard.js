@@ -6,24 +6,26 @@ import * as types from '../action-types';
 // }
 
 let initialState = {
-  boardOrigin: {},
+  boardDataOrigin: {},
+  boardGridOrigin: {},
   chartIds: {},
   chartsData: {}
 };
 export default function (state = initialState, action) {
-	switch (action.type) {
-		case types.GET_POSITION_DATA:
-			const {dashboardId, gridPositionData, chartIds} = action.payload
-      console.log("action.payload", action.payload)
-			console.log('dashboardId, gridPositionData', dashboardId, gridPositionData)
-      // return { ...state, boardOrigin: {[dashboardId]: gridPositionData, chartIds: [state.chartIds,chartIds]} };
+  const {payload} = action
+  switch (action.type) {
+    case types.GET_DASH_ORIGIN_DATA:
+     let o = { ...state, boardDataOrigin: {...state.boardDataOrigin, ...payload} };
+     console.log('ooo', o)
+      return o
+    case types.GET_POSITION_DATA:
+      const { dashboardId, gridPositionData, chartIds } = payload
+      return { ...state, boardGridOrigin: { [dashboardId]: gridPositionData }, chartIds };
 
-      return { ...state, boardOrigin: {[dashboardId]: gridPositionData}, chartIds };
+    case types.GET_BUSINESS_DATA:
+      return { ...state, chartsData: payload };
 
-      case types.GET_BUSINESS_DATA:
-        console.log("zyy", action.payload)
-        return { ...state, chartsData: action.payload };
-		default:
-			return state;
-	}
+    default:
+      return state;
+  }
 }

@@ -6,7 +6,7 @@ import ReactEcharts from 'echarts-for-react';
 import ParseLayout from './ParseLayout'
 import { getBarChart, getLineChart, getPieChart } from "./Chart";
 import { getPostionOrigin, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
-import {getDashboardData} from '@/api/radar'
+
 import { getChartBusiness } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
 import { TypeRadar } from '@/store/reducers/dashboard';
@@ -119,32 +119,6 @@ class DragLayout extends PureComponent {
     document.body.style.overflow = 'auto'
   }
 
-
-  addChart(type) {
-    const addItem = {
-      x: (this.state.widgets.length * 3) % (this.state.cols || 12),
-      y: Infinity, // puts it at the bottom
-      w: 3,
-      h: 2,
-      i: new Date().getTime().toString(),
-    };
-    this.setState(
-      {
-        widgets: this.state.widgets.concat({
-          ...addItem,
-          type,
-        }),
-      },
-    );
-  };
-
-  onRemoveItem(i) {
-    console.log(this.state.widgets)
-    this.setState({
-      widgets: this.state.widgets.filter((item, index) => index !== i)
-    });
-  }
-
   onLayoutChange(layout, layouts) {
     console.log('layout00', layout)
     console.log('layouts11', layouts)
@@ -198,7 +172,6 @@ class DragLayout extends PureComponent {
       message.success('保存成功')
       // this.onGetPositionGrid(6)
     }
-
   }
 
   async onGetPositionGrid() {
@@ -241,27 +214,27 @@ class DragLayout extends PureComponent {
   }
 
   async componentDidMount() {
-    // await this.onGetDashboardData()
+    await this.props.onGetDashboardData_action(this.state.dashboardId)
     // await this.fetchPositionData()
-    this.onGetPositionGrid(6)
-    console.log('this222', this)
+    // this.onGetPositionGrid(6)
+    // console.log('this222', this)
   }
 
-  async onGetDashboardData() {
-    const res = await getDashboardData(this.state.dashboardId)
-    if(res.statusCode === 0){
-        const {charsData} = res.data
-        for(let key in charsData) {
-            delete charsData[key].data
-        }
-        this.setState({
-            charsData
-        })
-        console.log('onGetDashboardData charsData', charsData)
-    }else {
-      message.error(res.errorMsg)
-    }
-}
+//   async onGetDashboardData() {
+//     const res = await getDashboardData(this.state.dashboardId)
+//     if(res.statusCode === 0){
+//         const {charsData} = res.data
+//         for(let key in charsData) {
+//             delete charsData[key].data
+//         }
+//         this.setState({
+//             charsData
+//         })
+//         console.log('onGetDashboardData charsData', charsData)
+//     }else {
+//       message.error(res.errorMsg)
+//     }
+// }
 
   formatWidget(widgets) {
     return widgets.map((widget, index) => {
@@ -287,9 +260,6 @@ class DragLayout extends PureComponent {
     return (
       <Layout>
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={this.addChart.bind(this, 'bar')}>添加柱状图</Button>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={this.addChart.bind(this, 'line')}>添加折线图</Button>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={this.addChart.bind(this, 'pie')}>添加饼图</Button>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onGetPositionGrid()}>刷新</Button>
         </Header>

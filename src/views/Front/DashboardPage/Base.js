@@ -1,9 +1,11 @@
 class Base{
-    returnLastNodeObj(node) {
+    returnLastNodeObj(node, charsData) {
+
         let nodeObj = {
             id: node.id,
             siblings: null,
             type: node.type,
+            chartStyle: charsData[node.id],
             w: node.meta  && node.meta.width,
             h: node.meta  && node.meta.height / 5,
             x: 0,
