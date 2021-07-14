@@ -1,16 +1,18 @@
 import './public-path';
 import React, { HtmlHTMLAttributes } from 'react';
-import {QianKunProps} from '@/typing/axios'
+import { QianKunProps } from '@/typing/axios'
 import ReactDOM from 'react-dom';
 import Router from './Router'
 import './index.css';
+import zhCN from 'antd/lib/locale/zh_CN';
+import { ConfigProvider } from 'antd';
 
 
 function render(props: any) {
   const { container } = props;
-  const ret =container && container.querySelector('#root')
-  console.log('ret33',ret)
-  ReactDOM.render(<Router />, container ? container.querySelector('#root') : document.querySelector('#root'));
+  const ret = container && container.querySelector('#root')
+  console.log('ret33', ret)
+  ReactDOM.render(<ConfigProvider locale={zhCN}><Router /></ConfigProvider>, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 
 if (!window.__POWERED_BY_QIANKUN__) {
@@ -26,7 +28,7 @@ export async function mount(props: QianKunProps) {
   render(props);
 }
 
-export async function unmount(props: any ) {
+export async function unmount(props: any) {
   const { container } = props;
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }

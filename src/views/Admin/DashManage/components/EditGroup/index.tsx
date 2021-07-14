@@ -11,7 +11,7 @@ interface chidProps {
 const { TextArea } = Input;
 const EditGroup: FC<chidProps> = (props) => {
   const { boardDetail, onBoardDetail } = props;
-  const { dispatch, fetchData,getNavigationList, dashList, isCreate } = useContext(DashContext)
+  const { dispatch, fetchData, getNavigationList, dashList, isCreate } = useContext(DashContext)
   const initialForm = {
     dashboardGroupName: '',
     allDashboardGroupMappings: [],
