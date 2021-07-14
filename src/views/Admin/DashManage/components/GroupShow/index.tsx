@@ -1,15 +1,12 @@
 import React, { FC, useContext, useEffect } from 'react'
 import { Modal, Button } from 'antd';
 import { DashContext } from '@/views/Admin/DashManage/utils';
-import { navigationList } from '@/api/group'
-import { NavListData } from '@/typing/Admin/groups'
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
 import './index.scss'
 
 const GroupShow: FC = () => {
-  const { showGroup, dispatch } = useContext(DashContext)
-  const [navList, setNavList] = React.useState<NavListData>([]);
-  const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const { showGroup, navList, getNavigationList, dispatch } = useContext(DashContext)
+  const [confirmLoading] = React.useState(false);
 
 
   const handleOk = () => {
@@ -19,13 +16,6 @@ const GroupShow: FC = () => {
   const handleCancel = () => {
     dispatch({ type: 'SHOW_GROUP', payload: false })
   };
-
-  const getNavigationList = async () => {
-    const res = await navigationList()
-    if (res.statusCode === 0 && res.success) {
-      setNavList(res.data)
-    }
-  }
 
   useEffect(() => {
     getNavigationList()
