@@ -259,12 +259,15 @@ class DragLayout extends PureComponent {
         widgets: res.data.gridPositionData
       })
       const { gridPositionData } = res.data
-      const chartIds = gridPositionData && gridPositionData.map(chart => {
+      let chartIds = [];
+      gridPositionData && gridPositionData.map(chart => {
         if (chart.type === 'TABS') {
-          return chart.ids
+          chartIds.push(...chart.ids)
         }
-        return chart.id
+        chartIds.push(chart.id)
       })
+      const a  = chartIds.slice(0,10)
+      console.log('aa', a)
       this.onGetChartBusiness(chartIds)
     }
   }
