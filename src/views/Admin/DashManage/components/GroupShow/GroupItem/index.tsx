@@ -33,7 +33,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
   const [data, setData] = useState<NavListInfo>(() => initialData)
-  const { grounpListInfo } = useContext(DashContext)
+  const { grounpListInfo,fetchData } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 8 },
@@ -68,8 +68,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
   const onFinish = async (values: { [x: string]: string; }) => {
-    console.log('values', values)
-    console.log('onFinish data', data)
     const keys = Object.keys(values)
     setData({
       ...data,
@@ -88,6 +86,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       message.success('修改成功')
       changeEditStatus(false)
       getNavigationList()
+      fetchData()
     }
     console.log('onFinish', values);
   };
@@ -145,6 +144,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           rules={[
             {
               required: true,
+              whitespace: true,
               message: `看板展示名称是必填项`,
             },
           ]}
