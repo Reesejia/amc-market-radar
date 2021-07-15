@@ -1,23 +1,10 @@
-import React, { PureComponent, lazy } from 'react';
-import { Layout, Button, message } from 'antd';
+import React, { PureComponent } from 'react';
+import { Layout, Button } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
-import ReactEcharts from 'echarts-for-react';
-import ParseLayout from './ParseLayout'
-import { getBarChart, getLineChart, getPieChart } from "./Chart";
-import { getPostionOrigin, savePositionGrid, getPositionGrid } from '@/api/dashboardPage'
-
-import { getChartBusiness } from '@/api/radar'
 import actions from '@/store/actions/dashboard';
-import { TypeRadar } from '@/store/reducers/dashboard';
-import Feed from '@/views/Front/DashboardPage/component/Feed';
-import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
-import Chart from '@/views/Front/DashboardPage/component/Chart'
-import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
-import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { connect } from 'react-redux'
-import { title } from 'process';
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
 // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
 // const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
@@ -125,79 +112,19 @@ class DragLayout extends PureComponent {
     this.setState({ layouts: layout });
   }
 
-  ItemCallback(layout, oldItem, newItem) {
-    console.log('ItemCallback layout', layout)
-  }
-
 
   setInit() {
-    this.setState({
-      isInit: true
-    })
     this.props.onGetDashboardData_action(this.state.dashboardId, false)
     this.getGridsData(true)
   }
 
-  mergeLayout() {
-    this.setState({
-      widgets: this.state.widgets.map((widget, index) => {
-        return Object.assign(widget, this.state.layouts[index])
-      })
-    })
-  }
-
-  async onSavePositionGrid() {
-    this.mergeLayout()
-    const res = await savePositionGrid({
-      dashboardId: this.state[this.dashboardId],
-      gridPositionData: this.state.widgets
-    })
-    if (res.statusCode === 0) {
-      message.success('保存成功')
-      // this.onGetPositionGrid(6)
-    }
-  }
-
-  // async onSavePositionGrid() {
-  //   this.mergeLayout()
-  //   const res = await savePositionGrid({
-  //     dashboardId: this.state.dashboardId,
-  //     gridPositionData: this.state.widgets
-  //   })
-  //   if (res.statusCode === 0) {
-  //     message.success('保存成功')
-  //     // this.onGetPositionGrid(6)
-  //   }
-  // }
-
-   componentDidMount() {
+  componentDidMount() {
     this.getGridsData(false)
   }
 
   async getGridsData(refresh){
     await this.props.getPositionGrid_action(this.state.dashboardId, refresh)
     await this.props.getChartBusiness_action()
-  }
-
-
-  formatWidget(widgets) {
-    return widgets.map((widget, index) => {
-      let o = {
-        x: (this.state.widgets.length * 3) % (this.state.cols || 12),
-        y: 2, // puts it at the bottom
-        i: widget.id
-      }
-      if (widget.type === 'CHART' || widget.type === 'FEED') {
-        // Object.assign(o, {x: })
-      } else if (widget.type === 'COLUMN') {
-
-      } else if (widget.type === 'TABS') {
-        // Object.assign(o, {w: 12})
-      } else if (widget.type === 'MARKDOWN') {
-        // Object.assign(o, {w: 12})
-      }
-      return Object.assign(widget, o)
-    });
   }
 
   render() {
