@@ -8,18 +8,8 @@ import GridView from '@/views/Front/DashboardPage/component/GridView'
 import store from '@/store'
 import { Popconfirm } from 'antd';
 import { connect, } from 'react-redux'
-import {bindActionCreators} from 'redux'
-// const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
-// const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
-// const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
-// const TableView =  lazy(() => import(/* webpackChunkName: "DragLayout" */'@/views/Front/DashboardPage/Component/TableView'))
 
-
-
-
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
-
 class DragLayout extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -82,14 +72,16 @@ class DragLayout extends PureComponent {
  async onSavePositionGrid() {
     if (this.gridRef.current) {
       const { widgets } = this.gridRef.current.state
-      store.dispatch({
-        type: types.UPDATE_GRIDDATA,
-        payload: {
-          dashId: this.state.dashboardId,
-          gridwidgets: widgets
-        }
-      })
-      await this.props.updateGridData_action(this.state.dashboardId)
+      if(widgets){
+        store.dispatch({
+          type: types.UPDATE_GRIDDATA,
+          payload: {
+            dashId: this.state.dashboardId,
+            gridwidgets: widgets
+          }
+        })
+        await this.props.updateGridData_action(this.state.dashboardId)
+      }
     }
   }
 

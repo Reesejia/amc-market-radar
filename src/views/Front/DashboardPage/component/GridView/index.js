@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
-import ReactEcharts from 'echarts-for-react';
 import _ from "lodash";
 import Feed from '@/views/Front/DashboardPage/component/Feed';
 import TabsView from '@/views/Front/DashboardPage/component/TabsView';
-// import GridView from '@/views/Front/DashboardPage/component/GridView'
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
@@ -95,20 +93,20 @@ export default class GridView extends PureComponent {
             const { vizType, title } = widget.chartStyle.chart
             if (vizType === 'table') {
               component = (
-                <TableView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data} style={{ width: '100%', height: '100%' }} />
+                <TableView widget={widget}  style={{ width: '100%', height: '100%' }} />
               )
             } else {
               component = (
-                <Chart widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data}  style={{ width: '100%', height: '100%' }} />
+                <Chart widget={widget}   style={{ width: '100%', height: '100%' }} />
               )
             }
           } else if (widget.type === 'MARKDOWN') {
             component = (
-              <MarkdownView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] &&this.state.chartsData[widget.i].data}/>
+              <MarkdownView widget={widget} />
             )
           } else if (widget.type === 'FEED') {
             component = (
-              <Feed widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i]&& this.state.chartsData[widget.i].data}/>
+              <Feed widget={widget}/>
             )
           }
           else if (widget.type === 'TABS') {

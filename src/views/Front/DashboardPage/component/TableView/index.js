@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import { Table} from 'antd';
+import {connect} from 'react-redux'
 import "./index.scss"
 
 const TableView = (props) => {
@@ -29,4 +30,13 @@ const TableView = (props) => {
   return  <Table className="table-view-wraper" loading={loading} columns={columns} dataIndex="key" dataSource={data} />
 }
 
-export default TableView
+const mapStateToProps = (state, ownProps) => {
+  let businessData = []
+  if(ownProps.widget && ownProps.widget.id){
+    businessData =  state.dashboard.chartsData[ownProps.widget.id] && state.dashboard.chartsData[ownProps.widget.id].data
+  }
+  return {
+    businessData
+  }
+}
+export default connect(mapStateToProps)(TableView)
