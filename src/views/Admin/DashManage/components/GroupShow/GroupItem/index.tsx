@@ -225,6 +225,11 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     [data],
   );
 
+  const reback = () => {
+    changeEditStatus(false)
+    onFill()
+    fillTable()
+  }
 
   console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
@@ -303,7 +308,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           editStatus ?
             <Row justify="center" align="middle">
               <Form.Item {...tailLayout}>
-                <Button onClick={() => changeEditStatus(false)} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
+                <Button onClick={reback} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
                 <Button type="primary" htmlType="submit">确认</Button>
               </Form.Item>
             </Row>
