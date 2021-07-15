@@ -78,13 +78,12 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
           layout="vertical"
           size={'small'}
           extra={
-            !isEditGroup &&
-              boardDetail.initValue ? <Button disabled>
+            !isEditGroup ? boardDetail.initValue ? <Button disabled>
               编辑
             </Button> :
               <Button type="primary" onClick={() => handleEditGroup(boardDetail.used)}>
                 编辑
-              </Button>
+              </Button>: ""
           }
         >
           <Descriptions.Item label="修改人">{isCreate ? '-' : boardDetail.updateByName || '-'}</Descriptions.Item>
