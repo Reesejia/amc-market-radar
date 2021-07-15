@@ -28,7 +28,7 @@ export function getChartBusiness({dashboardId, chartIds}){
 }
 
 // 更新superset grid 信息，将原来的position JSON  更新为grid data
-export function updateDashBoardData({dashboardId, gridPositionData}){
+export function updateGridData({dashboardId, gridPositionData}){
   return _axios({
       url: `/radar/dashboard/update`,
       method: 'post',

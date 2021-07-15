@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import _ from "lodash";
 import Feed from '@/views/Front/DashboardPage/component/Feed';
@@ -10,7 +10,7 @@ import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-export default class GridView extends Component {
+export default class GridView extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 },
@@ -38,6 +38,53 @@ export default class GridView extends Component {
     return {}
   }
 
+
+  showFullScreen(id) {
+    var ele = document.getElementById(id);
+    const { width, height, transform } = window.getComputedStyle(ele)
+    let translate = transform.split('(')[1].split(')')[0].split(',')
+    this.setState({
+      curWidth: width,
+      curHeight: height,
+      curTransform: `translate(${translate[4]}px, ${translate[5]}px`
+    })
+    const $sidebar = document.getElementsByClassName('sidebar-container')
+    let sideBarWidth = 0
+    if ($sidebar && $sidebar.length) {
+      sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+      console.log('sideBarWidth', sideBarWidth)
+    }
+    document.body.click()
+    const full = window.document.querySelector(`#${id}`)
+    full.style.position = 'fixed'
+    full.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+    full.style.height = 'calc(100vh)'
+    full.style.left = sideBarWidth
+    full.style.top = '0'
+    full.style.overflow = 'auto'
+    full.style.background = '#fff'
+    full.style.transform = 'none'
+    full.style['z-index'] = '1000'
+    // 防止body滚动
+    document.body.style.overflow = 'hidden'
+  }
+
+  closeFullScreen(id) {
+    console.log(this.height)
+    document.body.click()
+    this.isFullscreen = false
+    const full = window.document.querySelector(`#${id}`)
+    full.style.position = 'absolute'
+    full.style.width = this.state.curWidth
+    full.style.height = this.state.curHeight
+    full.style.transform = this.state.curTransform
+    full.style.left = ''
+    full.style.top = ''
+    full.style.overflow = ''
+    full.style['z-index'] = ''
+    document.body.style.overflow = 'auto'
+  }
+
   getChartDom = () =>{
     return  this.state.widgets
         // .filter((item,index) => index< 1)
@@ -47,9 +94,6 @@ export default class GridView extends Component {
           if (widget.type === 'CHART') {
             const { vizType, title } = widget.chartStyle.chart
             if (vizType === 'table') {
-              console.log('widget.i', widget.i)
-              console.log('this.state.chartsData', this.state.chartsData)
-              console.log('this.state.chartsData[widget.i', this.state.chartsData &&this.state.chartsData[widget.i])
               component = (
                 <TableView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data} style={{ width: '100%', height: '100%' }} />
               )
@@ -58,7 +102,6 @@ export default class GridView extends Component {
                 <Chart widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data}  style={{ width: '100%', height: '100%' }} />
               )
             }
-
           } else if (widget.type === 'MARKDOWN') {
             component = (
               <MarkdownView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] &&this.state.chartsData[widget.i].data}/>
@@ -92,15 +135,38 @@ export default class GridView extends Component {
             <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
               <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
               <div className='remove'>
-                {/* <span onClick={this.onRemoveItem.bind(this, i)}>x</span>
                 <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
+                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
               </div>
               {component}
             </div>
           );
         })
   }
+
+  onLayoutChange(layout, layouts) {
+    console.log('layouts00', layout)
+    this.setState({
+      widgets: this.state.widgets.map((widget, index) => {
+        return Object.assign(widget, {
+          x: layout[index].x,
+          y: layout[index].y,
+          h: layout[index].h,
+          w: layout[index].w
+        })
+      })
+    })
+    console.log('onLayoutChange layouts11 widgets',this.state.widgets)
+  }
+
+   mergeLayout() {
+    this.setState({
+      widgets: this.state.widgets.map((widget, index) => {
+        return Object.assign(widget, this.state.layouts[index])
+      })
+    })
+  }
+
 
   render() {
     console.log(' this.state.widgets', this.state.widgets)
@@ -111,8 +177,7 @@ export default class GridView extends Component {
         layouts={this.state.widgets}
         rowHeight={8}
         onLayoutChange={(layout, layouts) => {
-          this.state.onLayoutChange && this.state.onLayoutChange(layout, layouts)
-          console.log('layouts999', layouts)
+        this.onLayoutChange(layout, layouts)
         }
         }
       >

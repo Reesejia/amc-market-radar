@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { getBarChart, getLineChart, getPieChart } from "@/views/Front/DashboardPage/Chart";
 import ReactEcharts from 'echarts-for-react';
-export default class ContextPage extends Component {
+export default class ContextPage extends PureComponent {
   constructor() {
     super()
     this.state = {

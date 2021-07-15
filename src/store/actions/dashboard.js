@@ -2,7 +2,7 @@ import * as types from '../action-types'
 import { Dispatch, Store } from 'redux'
 import { TypeAction, TypeThunkFunction } from '@/typings/common'
 import { getPositionGrid } from '@/api/dashboardPage'
-import { getChartBusiness, getDashboardData, updateDashBoardData, getDashGrid } from '@/api/radar'
+import { getChartBusiness, getDashboardData, updateGridData, getDashGrid } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
 export default {
@@ -20,13 +20,6 @@ export default {
           let { positionJson } = dashboard
           positionJson = JSON.parse(positionJson)
           dashboard.positionJson = positionJson
-          const gridwidgets = new ParseLayout({
-            parseLayoutJson: positionJson,
-            charsData: charsData,
-            viewType: []
-          }).parseLayout()
-          console.log('gridwidgets', gridwidgets)
-
           const payload = {
             [dashboardId]: {
               charsData,
@@ -34,14 +27,32 @@ export default {
             }
           }
           dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload })
-          const ret = await updateDashBoardData({
-            dashboardId,
-            gridPositionData: JSON.stringify(gridwidgets)
-            // gridPostionData: JSON.stringify(gridwidgets)
-          })
-          if (ret.statusCode === 0 && res.success) {
-            message.success('数据初始化成功')
-          }
+
+          const gridwidgets = new ParseLayout({
+            parseLayoutJson: positionJson,
+            charsData: charsData,
+            viewType: []
+          }).parseLayout()
+          console.log('gridwidgets', gridwidgets)
+          dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
+        }
+      }
+    }
+  },
+  updateGridData_action(dashboardId) {
+    if (!dashboardId) message.error('请输入对应的看板id')
+    return async function (dispatch, getState) {
+      const boardGridOrigin = getState().dashboard.boardGridOrigin;
+      console.log('boardGridOrigin', boardGridOrigin)
+      const gridwidgets = boardGridOrigin[dashboardId]
+      if (boardGridOrigin[dashboardId]) {
+        const ret = await updateGridData({
+          dashboardId,
+          gridPositionData: JSON.stringify(gridwidgets)
+          // gridPostionData: JSON.stringify(gridwidgets)
+        })
+        if (ret.statusCode === 0 && ret.success) {
+          message.success('数据初始化成功')
         }
       }
     }
@@ -61,7 +72,7 @@ export default {
           return chart.id
         })
         chartIds = chartIds.flat(1)
-        dispatch({ type: types.GET_POSITION_DATA, payload: {gridPositionData, chartIds, dashboardId} })
+        dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
       }
       // }
     }
@@ -69,11 +80,11 @@ export default {
   getChartBusiness_action() {
     return async function (dispatch, getState) {
       const chartIds = getState().dashboard.chartIds;
-      if(chartIds.length === 0) return
+      if (chartIds.length === 0) return
       console.log('chartIds22', chartIds)
       const res = await getChartBusiness({
         dashboardId: 6,
-        chartIds:chartIds.join(',')
+        chartIds: chartIds.join(',')
       })
       console.log('getChartBusiness res', res)
       if (res.code === "0") {

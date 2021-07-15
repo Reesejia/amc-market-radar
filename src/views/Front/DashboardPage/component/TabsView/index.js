@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useReducer } from 'react'
+import React, { PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
 import { Tabs } from 'antd';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 
@@ -6,7 +6,7 @@ const { TabPane } = Tabs;
 
 // import "./index.scss"
 
-class TabsView extends React.Component {
+class TabsView extends PureComponent {
   constructor(props){
     super(props)
     this.state = {
@@ -31,7 +31,7 @@ class TabsView extends React.Component {
             }
 
             {
-              item && item.subTabs ? <TabsView widget={item.children.tabsArr} /> : null
+              item && item.subTabs ? <TabsView widget={{children:item.children.tabsArr}} /> : null
             }
           </TabPane>
         ))}

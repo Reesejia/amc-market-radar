@@ -1,14 +1,18 @@
-import React, { PureComponent } from 'react';
+import React, { createRef, PureComponent } from 'react';
 import { Layout, Button } from 'antd';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import _ from "lodash";
 import actions from '@/store/actions/dashboard';
+import * as types from '@/store/action-types';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
-import { connect } from 'react-redux'
+import store from '@/store'
+import { connect, } from 'react-redux'
+import {bindActionCreators} from 'redux'
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
 // const Chart =  lazy(() => import(/* webpackChunkName: "Chart" */'@/views/Front/DashboardPage/Component/Chart'))
 // const MarkdownView =  lazy(() => import(/* webpackChunkName: "MarkdownView" */'@/views/Front/DashboardPage/Component/MarkdownView'))
 // const TableView =  lazy(() => import(/* webpackChunkName: "DragLayout" */'@/views/Front/DashboardPage/Component/TableView'))
+
 
 
 
@@ -32,8 +36,8 @@ class DragLayout extends PureComponent {
       curHeight: "",
       curTransform: "",
       dashboardId: 6,
-      isInit: true
     }
+    this.gridRef = createRef()
   }
 
   getFromLS(key) {
@@ -59,72 +63,33 @@ class DragLayout extends PureComponent {
     }
   }
 
-  showFullScreen(id) {
-    var ele = document.getElementById(id);
-    const { width, height, transform } = window.getComputedStyle(ele)
-    let translate = transform.split('(')[1].split(')')[0].split(',')
-    this.setState({
-      curWidth: width,
-      curHeight: height,
-      curTransform: `translate(${translate[4]}px, ${translate[5]}px`
-    })
-    const $sidebar = document.getElementsByClassName('sidebar-container')
-    let sideBarWidth = 0
-    if ($sidebar && $sidebar.length) {
-      sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-      console.log('sideBarWidth', sideBarWidth)
-    }
-    document.body.click()
-    const full = window.document.querySelector(`#${id}`)
-    full.style.position = 'fixed'
-    full.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
-    full.style.height = 'calc(100vh)'
-    full.style.left = sideBarWidth
-    full.style.top = '0'
-    full.style.overflow = 'auto'
-    full.style.background = '#fff'
-    full.style.transform = 'none'
-    full.style['z-index'] = '1000'
-    // 防止body滚动
-    document.body.style.overflow = 'hidden'
-  }
-
-  closeFullScreen(id) {
-    console.log(this.height)
-    document.body.click()
-    this.isFullscreen = false
-    const full = window.document.querySelector(`#${id}`)
-    full.style.position = 'absolute'
-    full.style.width = this.state.curWidth
-    full.style.height = this.state.curHeight
-    full.style.transform = this.state.curTransform
-    full.style.left = ''
-    full.style.top = ''
-    full.style.overflow = ''
-    full.style['z-index'] = ''
-    document.body.style.overflow = 'auto'
-  }
-
-  onLayoutChange(layout, layouts) {
-    console.log('layout00', layout)
-    console.log('layouts11', layouts)
-    // this.saveToLS("layouts", layouts);
-    this.setState({ layouts: layout });
-  }
-
-
-  setInit() {
-    this.props.onGetDashboardData_action(this.state.dashboardId, false)
-    this.getGridsData(true)
+  async setInit() {
+    await this.props.onGetDashboardData_action(this.state.dashboardId, false)
+    await this.props.updateGridData_action(this.state.dashboardId)
+    await this.getGridsData(true)
   }
 
   componentDidMount() {
     this.getGridsData(false)
   }
 
-  async getGridsData(refresh){
+  async getGridsData(refresh) {
     await this.props.getPositionGrid_action(this.state.dashboardId, refresh)
-    await this.props.getChartBusiness_action()
+    await this.props.getChartBusiness_action(this.state.dashboardId)
+  }
+
+ async onSavePositionGrid() {
+    if (this.gridRef.current) {
+      const { widgets } = this.gridRef.current.state
+      store.dispatch({
+        type: types.UPDATE_GRIDDATA,
+        payload: {
+          dashId: this.state.dashboardId,
+          gridwidgets: widgets
+        }
+      })
+      await this.props.updateGridData_action(this.state.dashboardId)
+    }
   }
 
   render() {
@@ -138,10 +103,9 @@ class DragLayout extends PureComponent {
         <Content style={{ marginTop: 44 }}>
           <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
             <GridView
-              {...this.state}
+              ref={this.gridRef}
               chartsData={this.props.chartsData}
               widgets={this.props.boardGridOrigin && this.props.boardGridOrigin[this.state.dashboardId] || []}
-              onLayoutChange={() => this.onLayoutChange}
             />
           </div>
         </Content>
@@ -150,5 +114,22 @@ class DragLayout extends PureComponent {
   }
 }
 // export default DragLayout
-const mapStateToProps = (state) => state.dashboard
+const mapStateToProps = (state) => {
+  return {
+    chartsData: state.dashboard.chartsData,
+    boardGridOrigin: state.dashboard.boardGridOrigin,
+  }
+}
+
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//   return bindActionCreators({
+//     onGetDashboardData_action:() =>dispatch(actions.onGetDashboardData_action),
+//     updateGridData_action: () =>dispatch(actions.updateGridData_action),
+//     getChartBusiness_action: () =>dispatch(actions.getChartBusiness_action),
+//     getPositionGrid_action: () =>dispatch(actions.getPositionGrid_action),
+//     onUpdateDridData: ({ dashId, gridwidgets}) => {
+//       dispatch({ type: types.UPDATE_GRIDDATA, payload: { dashId, gridwidgets} })
+//     }
+//   })
+// }
 export default connect(mapStateToProps, actions)(DragLayout)
