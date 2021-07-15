@@ -66,3 +66,7 @@ code {
 .react-grid-item:hover .react-resizable-handle{
   visibility: visible;
 }
+
+* {
+  touch-action: none;
+}
