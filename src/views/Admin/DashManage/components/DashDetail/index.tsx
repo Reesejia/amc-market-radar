@@ -31,8 +31,9 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
   }, [groupId]);
 
   const onBoardDetail = async () => {
-    if (groupId) {
-      const res = await getBoardDetail(groupId);
+    const id = groupId.id
+    if (id) {
+      const res = await getBoardDetail(id);
       if (res.statusCode === 0 && res.success) {
         setBoardDetail(res.data);
       }

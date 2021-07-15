@@ -9,11 +9,13 @@ import { GroupItem, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
 import { SearchOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 export interface Props {
   test: string
 }
 
 const DataPageManage: FC = () => {
+  const [curGrounId, setCurGrounpId] = useState("")
   const reduderObj = useDashApi(getGroup)
   const { grounpListInfo, dispatch, fetchData, groupParams } = reduderObj
   const showDrawer = () => {
@@ -62,7 +64,7 @@ const DataPageManage: FC = () => {
       render: (text: string, record: GroupItem) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
           dispatch({ type: 'CHANGE_STATUS', payload: true })
-          dispatch({ type: 'CHANGE_GROUPID', payload: record.id })
+          dispatch({ type: 'CHANGE_GROUPID', payload:{id:record.id }})
           dispatch({ type: 'SET_EDIT_GROUP', payload: false })
           dispatch({ type: 'CHANGE_ISCREATE', payload: false })
         }}>{text}</a>)
