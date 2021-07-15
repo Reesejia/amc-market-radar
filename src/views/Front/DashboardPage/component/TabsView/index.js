@@ -4,8 +4,6 @@ import GridView from '@/views/Front/DashboardPage/component/GridView'
 
 const { TabPane } = Tabs;
 
-// import "./index.scss"
-
 class TabsView extends PureComponent {
   constructor(props){
     super(props)
@@ -14,9 +12,7 @@ class TabsView extends PureComponent {
     }
   }
   static getDerivedStateFromProps(nextProps){
-    console.log('nextProps widget000', nextProps)
     if(nextProps){
-
       return {...nextProps}
     }
   }
@@ -31,7 +27,7 @@ class TabsView extends PureComponent {
             }
 
             {
-              item && item.subTabs ? <TabsView widget={{children:item.children.tabsArr}} /> : null
+              item.children && item.children.tabsArr ? <TabsView widget={{children:item.children.tabsArr}} /> : null
             }
           </TabPane>
         ))}
