@@ -1,7 +1,4 @@
 import * as types from '../action-types'
-import { Dispatch, Store } from 'redux'
-import { TypeAction, TypeThunkFunction } from '@/typings/common'
-import { getPositionGrid } from '@/api/dashboardPage'
 import { getChartBusiness, getDashboardData, updateGridData, getDashGrid } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'

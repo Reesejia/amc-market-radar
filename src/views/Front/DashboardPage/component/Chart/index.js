@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { getBarChart, getLineChart, getPieChart } from "@/views/Front/DashboardPage/Chart";
 import ReactEcharts from 'echarts-for-react';
 import {connect} from 'react-redux'
 class ChartComponent extends PureComponent {

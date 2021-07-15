@@ -1,10 +1,6 @@
 import { TypeAction } from '@/typings/common';
 import * as types from '../action-types';
 
-// export interface TypeRadar {
-//   chartIds: string[]
-// }
-
 let initialState = {
   boardDataOrigin: {},
   boardGridOrigin: {},

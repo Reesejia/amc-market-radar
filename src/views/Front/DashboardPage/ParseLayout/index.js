@@ -1,7 +1,6 @@
 
-// import {ColumnHasRowAndCol} from './utils'
-import Column from './Column'
-class ParseLayout extends Column {
+import Base from './Base'
+class ParseLayout extends Base {
   constructor({ parseLayoutJson, viewType, charsData }) {
     super()
     this.parseLayoutJson = parseLayoutJson
@@ -58,7 +57,6 @@ class ParseLayout extends Column {
 
   findTabsChild(node) {
     let self = this
-
     const tabsInfo = {
       subTabs: [],
       children: [],
