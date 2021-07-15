@@ -6,6 +6,7 @@ import actions from '@/store/actions/dashboard';
 import * as types from '@/store/action-types';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import store from '@/store'
+import { Popconfirm } from 'antd';
 import { connect, } from 'react-redux'
 import {bindActionCreators} from 'redux'
 // const GridView =  lazy(() => import(/* webpackChunkName: "GridView" */'@/views/Front/DashboardPage/Component/GridView'))
@@ -98,7 +99,9 @@ class DragLayout extends PureComponent {
       <Layout>
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.setInit()}>初始化数据</Button>
+            <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
+          <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
+      </Popconfirm>
         </Header>
         <Content style={{ marginTop: 44 }}>
           <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
