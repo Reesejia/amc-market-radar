@@ -4,7 +4,7 @@ import { dashboardList, navigationList } from '@/api/group';
 const initialState = {
 	status: false,
 	grounpListInfo: { content: [], totalElements: 0 },
-	groupId: '',
+	groupId: { id: '' },
 	isCreate: false,
 	isEditGroup: false,
 	dashList: [],
