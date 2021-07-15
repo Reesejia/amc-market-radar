@@ -29,6 +29,10 @@ class TabsView extends React.Component {
             {
               item && item.subTabs ? <GridView widgets={item.subTabs} /> : null
             }
+
+            {
+              item && item.subTabs ? <TabsView widget={item.children.tabsArr} /> : null
+            }
           </TabPane>
         ))}
       </Tabs>
