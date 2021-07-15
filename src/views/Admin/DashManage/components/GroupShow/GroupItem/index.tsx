@@ -259,7 +259,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
                 >
                   {
                     grounpListInfo.content.map((group: CreateGroup) => {
-                      return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
+                      return <Option key={group.id} value={group.id as string} >{group.dashboardGroupName}</Option>
                     })
                   }
                 </Select>
