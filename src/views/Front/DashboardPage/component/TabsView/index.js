@@ -21,7 +21,8 @@ class TabsView extends React.Component {
     }
   }
   render() {
-    return <div>
+    console.log('TabsView this.props', this.props)
+    return (<div>
       <Tabs>
         {this.state.widget.children && this.state.widget.children.map((item, i) => (
           <TabPane tab={item.text} key={item.tabsKey}>
@@ -32,6 +33,7 @@ class TabsView extends React.Component {
         ))}
       </Tabs>
     </div>
+    )
   }
 }
 export default TabsView

@@ -69,6 +69,7 @@ export default {
   getChartBusiness_action() {
     return async function (dispatch, getState) {
       const chartIds = getState().dashboard.chartIds;
+      if(chartIds.length === 0) return
       console.log('chartIds22', chartIds)
       const res = await getChartBusiness({
         dashboardId: 6,

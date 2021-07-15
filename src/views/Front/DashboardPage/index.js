@@ -135,6 +135,7 @@ class DragLayout extends PureComponent {
       isInit: true
     })
     this.props.onGetDashboardData_action(this.state.dashboardId, false)
+    this.getGridsData(true)
   }
 
   mergeLayout() {
@@ -169,68 +170,15 @@ class DragLayout extends PureComponent {
   //   }
   // }
 
-  async onGetPositionGrid() {
-    const res = await getPositionGrid(this.state.dashboardId)
-    if (res.statusCode === 0) {
-      this.setState({
-        widgets: res.data.gridPositionData
-      })
-      const { gridPositionData } = res.data
-      let chartIds = [];
-      gridPositionData && gridPositionData.map(chart => {
-        if (chart.type === 'TABS') {
-          chartIds.push(...chart.ids)
-        }
-        chartIds.push(chart.id)
-      })
-      const a = chartIds.slice(0, 10)
-      console.log('aa', a)
-      this.onGetChartBusiness(chartIds)
-      await this.props.getPositionGrid_action(this.state.dashboardId)
-      console.log('boardOrigin', this.props.chartIds)
-      await this.props.getChartBusiness_action(this.props.chartIds)
-      console.log('boardOrigin', this.props)
-    }
+   componentDidMount() {
+    this.getGridsData(false)
   }
 
-  async onGetChartBusiness(chartIds) {
-    console.log('chartIds', chartIds)
-    const res = await getChartBusiness({
-      dashboardId: this.state.dashboardId,
-      chartIds
-    })
-    console.log('res000', res)
-    if (res.code === "0") {
-      this.setState({
-        resp: res.resp
-      })
-      console.log('000', this.state.resp['CHART-RrQKNVQWbL'])
-    }
+  async getGridsData(refresh){
+    await this.props.getPositionGrid_action(this.state.dashboardId, refresh)
+    await this.props.getChartBusiness_action()
   }
 
-  async componentDidMount() {
-   await this.props.getPositionGrid_action(this.state.dashboardId, false)
-   await this.props.getChartBusiness_action()
-    // await this.fetchPositionData()
-    // this.onGetPositionGrid(6)
-    // console.log('this222', this)
-  }
-
-  //   async onGetDashboardData() {
-  //     const res = await getDashboardData(this.state.dashboardId)
-  //     if(res.statusCode === 0){
-  //         const {charsData} = res.data
-  //         for(let key in charsData) {
-  //             delete charsData[key].data
-  //         }
-  //         this.setState({
-  //             charsData
-  //         })
-  //         console.log('onGetDashboardData charsData', charsData)
-  //     }else {
-  //       message.error(res.errorMsg)
-  //     }
-  // }
 
   formatWidget(widgets) {
     return widgets.map((widget, index) => {
@@ -253,12 +201,11 @@ class DragLayout extends PureComponent {
   }
 
   render() {
-    console.log('this.props', this.props)
+    console.log('this.props index', this.props)
     return (
       <Layout>
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onGetPositionGrid()}>刷新</Button>
           <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.setInit()}>初始化数据</Button>
         </Header>
         <Content style={{ marginTop: 44 }}>

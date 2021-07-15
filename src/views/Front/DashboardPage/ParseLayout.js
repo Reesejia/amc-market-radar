@@ -26,6 +26,7 @@ class ParseLayout extends Column {
     })
     return {
       id: 'xxx',
+      i: 'xxx',
       h: 20,
       w: 12,
       x: 0,

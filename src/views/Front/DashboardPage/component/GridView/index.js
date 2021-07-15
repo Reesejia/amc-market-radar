@@ -24,6 +24,7 @@ export default class GridView extends Component {
       chartsData: {}
     }
   }
+
   static getDerivedStateFromProps(nextProps) {
     console.log('nextProps11', nextProps)
     const { widgets, chartsData } = nextProps
@@ -35,6 +36,70 @@ export default class GridView extends Component {
       }
     }
     return {}
+  }
+
+  getChartDom = () =>{
+    return  this.state.widgets
+        // .filter((item,index) => index< 1)
+        .map((widget, i) => {
+          let option;
+          let component;
+          if (widget.type === 'CHART') {
+            const { vizType, title } = widget.chartStyle.chart
+            if (vizType === 'table') {
+              console.log('widget.i', widget.i)
+              console.log('this.state.chartsData', this.state.chartsData)
+              console.log('this.state.chartsData[widget.i', this.state.chartsData &&this.state.chartsData[widget.i])
+              component = (
+                <TableView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data} style={{ width: '100%', height: '100%' }} />
+              )
+            } else {
+              component = (
+                <Chart widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data}  style={{ width: '100%', height: '100%' }} />
+              )
+            }
+
+          } else if (widget.type === 'MARKDOWN') {
+            component = (
+              <MarkdownView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] &&this.state.chartsData[widget.i].data}/>
+            )
+          } else if (widget.type === 'FEED') {
+            component = (
+              <Feed widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i]&& this.state.chartsData[widget.i].data}/>
+            )
+          }
+          else if (widget.type === 'TABS') {
+            console.log('widget00011', widget)
+            component = (
+              <TabsView widget={widget} />
+            )
+          }
+          // if (widget.type === 'TABS') {
+          //     console.log('widget000', widget)
+          //     component = (
+          //       <TabsView widget={widget} />
+          //     )
+          //   }else {
+          //     component = (
+          //       <div>{widget.i}</div>
+          //     )
+          //   }
+          // component = (
+          //         <div key={widget.i}>{widget.i}</div>
+          //       )
+
+          return (
+            <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+              <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
+              <div className='remove'>
+                {/* <span onClick={this.onRemoveItem.bind(this, i)}>x</span>
+                <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
+                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
+              </div>
+              {component}
+            </div>
+          );
+        })
   }
 
   render() {
@@ -51,72 +116,7 @@ export default class GridView extends Component {
         }
         }
       >
-        {
-          this.state.widgets
-            // .filter((item,index) => index< 1)
-            .map((widget, i) => {
-              let option;
-              let component;
-              if (widget.type === 'CHART') {
-                const { vizType, title } = widget.chartStyle.chart
-                if (vizType === 'table') {
-                  console.log('widget.i', widget.i)
-                  console.log('this.state.chartsData', this.state.chartsData)
-                  console.log('this.state.chartsData[widget.i', this.state.chartsData &&this.state.chartsData[widget.i])
-                  component = (
-                    <TableView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data} style={{ width: '100%', height: '100%' }} />
-                  )
-                } else {
-                  component = (
-                    <Chart widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] && this.state.chartsData[widget.i].data}  style={{ width: '100%', height: '100%' }} />
-                  )
-                }
-
-              } else if (widget.type === 'MARKDOWN') {
-                component = (
-                  <MarkdownView widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i] &&this.state.chartsData[widget.i].data}/>
-                )
-              } else if (widget.type === 'FEED') {
-                component = (
-                  <Feed widget={widget} businessData={this.state.chartsData &&this.state.chartsData[widget.i]&& this.state.chartsData[widget.i].data}/>
-                )
-              }
-              else if (widget.type === 'TABS') {
-                console.log('widget000', widget)
-                // component = (
-                //   <TabsView widget={widget} />
-                // )
-                component = (
-                  <div>{widget.i}</div>
-                )
-              }
-              // if (widget.type === 'TABS') {
-              //     console.log('widget000', widget)
-              //     component = (
-              //       <TabsView widget={widget} />
-              //     )
-              //   }else {
-              //     component = (
-              //       <div>{widget.i}</div>
-              //     )
-              //   }
-              // component = (
-              //         <div key={widget.i}>{widget.i}</div>
-              //       )
-
-              return (
-                <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
-                  <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
-                  <div className='remove'>
-                    {/* <span onClick={this.onRemoveItem.bind(this, i)}>x</span>
-                    <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-                    <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
-                  </div>
-                  {component}
-                </div>
-              );
-            })
-        }
+       {this.getChartDom()}
       </ResponsiveReactGridLayout>
     );
   }
