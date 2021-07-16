@@ -1,5 +1,5 @@
 import * as types from '../action-types'
-import { getChartBusiness, getDashboardData, updateGridData, getDashGrid } from '@/api/radar'
+import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
 export default {
@@ -68,7 +68,7 @@ export default {
           }
           return chart.id
         })
-        chartIds = chartIds.flat(1)
+        chartIds = chartIds.length > 0 && chartIds.flat(1)
         dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
       }
       // }
@@ -88,5 +88,13 @@ export default {
         dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }
     }
-  }
+  },
+  getNavigationList_action() {
+    return async function (dispatch, getState) {
+      const res = await navigationList()
+      if (res.statusCode === 0 && res.success) {
+        dispatch({ type: types.GET_NAV_LIST, payload: res.data })
+      }
+    }
+  },
 }
