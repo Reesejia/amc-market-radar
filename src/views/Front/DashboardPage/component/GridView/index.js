@@ -6,12 +6,13 @@ import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
+import WithLazyload from './WithLazyload'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 export default class GridView extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
-    cols: { lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 },
+    cols:  {lg: 12, md: 12, sm: 12, xs: 4, xxs: 2},
     margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
   };
 
@@ -83,63 +84,77 @@ export default class GridView extends PureComponent {
     document.body.style.overflow = 'auto'
   }
 
-  getChartDom = () =>{
-    return  this.state.widgets
-        // .filter((item,index) => index< 1)
-        .map((widget, i) => {
-          let option;
-          let component;
-          if (widget.type === 'CHART') {
-            const { vizType, title } = widget.chartStyle.chart
-            if (vizType === 'table') {
-              component = (
-                <TableView widget={widget}  style={{ width: '100%', height: '100%' }} />
-              )
-            } else {
-              component = (
-                <Chart widget={widget}   style={{ width: '100%', height: '100%' }} />
-              )
-            }
-          } else if (widget.type === 'MARKDOWN') {
-            component = (
-              <MarkdownView widget={widget} />
-            )
-          } else if (widget.type === 'FEED') {
-            component = (
-              <Feed widget={widget}/>
-            )
-          }
-          else if (widget.type === 'TABS') {
-            console.log('widget00011', widget)
-            component = (
-              <TabsView widget={widget} />
-            )
-          }
-          // if (widget.type === 'TABS') {
-          //     console.log('widget000', widget)
-          //     component = (
-          //       <TabsView widget={widget} />
-          //     )
-          //   }else {
-          //     component = (
-          //       <div>{widget.i}</div>
-          //     )
-          //   }
-          // component = (
-          //         <div key={widget.i}>{widget.i}</div>
-          //       )
+  componentDidUpdate() {
 
-          return (
-            <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
-              <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
-              <div className='remove'>
-                <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
-              </div>
-              {component}
+  }
+  getChartDom = () => {
+
+
+    return this.state.widgets
+      // .filter((item,index) => index< 1)
+      .map((widget, index) => {
+        let option;
+        let component;
+        if (widget.type === 'CHART') {
+          const { vizType, title } = widget.chartStyle.chart
+          if (vizType === 'table') {
+            component = (
+              <WithLazyload widget={widget} index={index}><TableView widget={widget} style={{ width: '100%', height: '100%' }} /> </WithLazyload>
+            )
+            // component =  WithLazyload(<TableView widget={widget} />)
+          } else {
+            component = (
+              <WithLazyload widget={widget} index={index}><Chart widget={widget} style={{ width: '100%', height: '100%' }} /> </WithLazyload>
+            )
+          }
+        } else if (widget.type === 'MARKDOWN') {
+          component = (
+            <WithLazyload widget={widget} index={index}><MarkdownView widget={widget} /> </WithLazyload>
+          )
+        } else if (widget.type === 'FEED') {
+          component = (
+            <WithLazyload widget={widget} index={index}><Feed widget={widget} /> </WithLazyload>
+          )
+        }
+        else if (widget.type === 'TABS') {
+          console.log('widget00011', widget)
+          component = (
+            <WithLazyload widget={widget} index={index}>
+              <TabsView widget={widget} />
+            </WithLazyload>
+          )
+        }
+        // console.log('componentcomponent', component)
+
+        // if (widget.type === 'CHART') {
+
+        //     component = (
+        //       <WithLazyload  id={widget.id} >
+        //         <Chart widget={widget} />
+        //       </WithLazyload>
+        //     )
+        //     console.log('component333', component)
+        //   }else {
+        //     component = (
+        //       <div>{widget.i}</div>
+        //     )
+        //     console.log('component44', component)
+        //   }
+        // component = (
+        //         <div key={widget.i}>{widget.i}</div>
+        //       )
+
+        return (
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+            <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
+            <div className='remove'>
+              <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
+              <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
             </div>
-          );
-        })
+            {component}
+          </div>
+        );
+      })
   }
 
   onLayoutChange(layout, layouts) {
@@ -154,10 +169,10 @@ export default class GridView extends PureComponent {
         })
       })
     })
-    console.log('onLayoutChange layouts11 widgets',this.state.widgets)
+    console.log('onLayoutChange layouts11 widgets', this.state.widgets)
   }
 
-   mergeLayout() {
+  mergeLayout() {
     this.setState({
       widgets: this.state.widgets.map((widget, index) => {
         return Object.assign(widget, this.state.layouts[index])
@@ -170,16 +185,17 @@ export default class GridView extends PureComponent {
     console.log(' this.state.widgets', this.state.widgets)
     return (
       <ResponsiveReactGridLayout
+      width={1200}
         className="layout"
         {...this.props}
         layouts={this.state.widgets}
-        rowHeight={8}
+        rowHeight={10}
         onLayoutChange={(layout, layouts) => {
-        this.onLayoutChange(layout, layouts)
+          this.onLayoutChange(layout, layouts)
         }
         }
       >
-       {this.getChartDom()}
+        {this.getChartDom()}
       </ResponsiveReactGridLayout>
     );
   }
