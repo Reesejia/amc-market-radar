@@ -44,7 +44,9 @@ const WithLazyload = (OldComponent) => {
           threshold: [0]
         })
         ob.observe(ele)
-        tasks.push({ classComponent: this, show: false })
+        if(!this.state.show){
+          tasks.push({ classComponent: this, show: false })
+        }
       }
       window.requestIdleCallback(myNonEssentialWork);
     }
