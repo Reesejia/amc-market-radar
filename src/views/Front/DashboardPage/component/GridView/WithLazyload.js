@@ -3,15 +3,15 @@ import React, { PureComponent } from 'react'
 let tasks = []
 function myNonEssentialWork(deadline) {
   while (deadline.timeRemaining() > 20 && tasks.length > 0) {
-      console.log('timeRemaining222 item', tasks)
+      // console.log('timeRemaining222 item', tasks)
       const task = tasks.shift()
       if(!task.classComponent) return 
       if (!task.classComponent.state.show) {
+        // console.log('timeRemaining222 item show')
         task.classComponent.setState({
           show: true
         })
       }
-      console.log('this.show', task.classComponent.state.show)
   }
   if (tasks.length > 0) {
     requestIdleCallback(myNonEssentialWork);
@@ -38,14 +38,23 @@ const WithLazyload = (OldComponent) => {
               this.setState({
                 show: true
               })
+              target.$task.remove()
             }
           })
         }, {
           threshold: [0]
         })
-        ob.observe(ele)
         if(!this.state.show){
-          tasks.push({ classComponent: this, show: false })
+          const task = {
+            classComponent: this,
+            show: false,
+          }
+          task.remove = () =>{
+            tasks = tasks.filter(t => t !== task.classComponent)
+          }
+          ele.$task = task
+          ob.observe(ele)
+          tasks.push(task)
         }
       }
       window.requestIdleCallback(myNonEssentialWork);
