@@ -1,4 +1,5 @@
 import Markdown from '../MarkdownView/Markdown'
+import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
 import './index.scss'
 const Feed = (props) =>{
     const data = props.widget.chartStyle.chart.datasourceDefine
@@ -9,4 +10,4 @@ const Feed = (props) =>{
     )
 }
 
-export default Feed
+export default WithLazyload(Feed)

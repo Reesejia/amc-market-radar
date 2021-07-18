@@ -6,10 +6,10 @@ import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
-import WithLazyload from './WithLazyload'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-export default class GridView extends PureComponent {
+
+class GridView extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols:  {lg: 12, md: 12, sm: 12, xs: 4, xxs: 2},
@@ -99,29 +99,26 @@ export default class GridView extends PureComponent {
           const { vizType, title } = widget.chartStyle.chart
           if (vizType === 'table') {
             component = (
-              <WithLazyload widget={widget} index={index}><TableView widget={widget} style={{ width: '100%', height: '100%' }} /> </WithLazyload>
+            <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
             )
             // component =  WithLazyload(<TableView widget={widget} />)
           } else {
             component = (
-              <WithLazyload widget={widget} index={index}><Chart widget={widget} style={{ width: '100%', height: '100%' }} /> </WithLazyload>
+                <Chart widget={widget} style={{ width: '100%', height: '100%' }} /> 
             )
           }
         } else if (widget.type === 'MARKDOWN') {
           component = (
-            <WithLazyload widget={widget} index={index}><MarkdownView widget={widget} /> </WithLazyload>
+           <MarkdownView widget={widget} />
           )
         } else if (widget.type === 'FEED') {
           component = (
-            <WithLazyload widget={widget} index={index}><Feed widget={widget} /> </WithLazyload>
+            <Feed widget={widget} />
           )
         }
         else if (widget.type === 'TABS') {
-          console.log('widget00011', widget)
           component = (
-            <WithLazyload widget={widget} index={index}>
               <TabsView widget={widget} />
-            </WithLazyload>
           )
         }
         // console.log('componentcomponent', component)
@@ -200,3 +197,6 @@ export default class GridView extends PureComponent {
     );
   }
 }
+
+
+export default GridView
