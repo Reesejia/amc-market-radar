@@ -34,11 +34,14 @@ const WithLazyload = (OldComponent) => {
           changes.forEach(change => {
             const { isIntersecting, target } = change
             if (isIntersecting) {
+              // console.log('this.state.show', this.state.show)
               ob.unobserve(ele)
-              this.setState({
-                show: true
-              })
-              target.$task.remove()
+              if(!this.state.show){
+                this.setState({
+                  show: true
+                })
+                target.$task.remove()
+              }
             }
           })
         }, {
