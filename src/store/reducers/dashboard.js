@@ -6,7 +6,8 @@ let initialState = {
   boardGridOrigin: {},
   chartIds: [],
   chartsData: {},
-  navList: []
+  navList: [],
+  boardId: "n1"
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -34,6 +35,9 @@ export default function (state = initialState, action) {
       console.log('GET_NAV_LIST', payload)
       return { ...state, navList: payload };
 
+    case types.BOARD_ID:
+      console.log('BOARD_ID', payload)
+      return { ...state, boardId: payload };
     default:
       return state;
   }

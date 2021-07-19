@@ -6,12 +6,12 @@ import { Provider } from 'react-redux';
 import Router from './Router';
 import './index.css';
 import store from './store/index';
+import * as types from '@/store/action-types';
 
 
 function render(props: any) {
   const { container } = props;
   const ret = container && container.querySelector('#root')
-  console.log('ret33', ret)
   ReactDOM.render(<Provider store={store}>
     <Router />
   </Provider>, container ? container.querySelector('#root') : document.querySelector('#root'));
@@ -31,7 +31,7 @@ export async function mount(props: QianKunProps) {
   m.set('/amc/sub-app-radar', 'n1');
   m.set('/amc/sub-app-house', 'n2');
   let boardId = m.get(props.routerBase)
-  // TO DO 存储store的值
+  store.dispatch({ type: types.BOARD_ID, payload: boardId})
   render(props);
 }
 
