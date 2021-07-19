@@ -27,7 +27,7 @@ _axios.interceptors.request.use(
       })
       config = merge(config, configNew)
     }
-    const token = window.sessionStorage.getItem('token') || 'dafdd3dc-2506-4cb7-b9c8-411a0019ad3b'
+    const token = window.sessionStorage.getItem('token') || 'd85e706c-9045-4a55-a3e5-45d30d062924'
     const tenantId = window.sessionStorage.getItem('tenantId') || 1001
     config.headers.tenantId = tenantId
     config.headers.Authorization = 'bearer ' + token

@@ -13,6 +13,32 @@ class ParseLayout extends Base {
   // unAddType = ['TABS', 'COLUMN']
   viewArr = []
 
+  parseLayout() {
+    let root = this.parseLayoutJson.ROOT_ID
+    this.reconcileChildren(root)
+    console.log('viewArr', this.viewArr)
+    return this.viewArr
+  }
+
+  reconcileChildren(node) {
+    if (node.children && node.children.length > 0) {
+      if (this.unAddType.includes(node.type)) {
+        this.viewArr.push(this.formatNodeObj[node.type](node))
+      } else {
+        node.children.forEach(child => {
+          this.reconcileChildren(this.parseLayoutJson[child])
+        });
+      }
+    } else {
+      this.viewArr.push(this.returnLastNodeObj(node, this.charsData))
+    }
+  }
+
+  formatNodeObj = {
+    'COLUMN': this.formatColumnNode.bind(this),
+    'TABS': this.findTabsNode.bind(this),
+  }
+
   findTabsNode(node) {
     const tabsInfo = this.formatTabsNode(node)
     const ids = []
@@ -83,32 +109,6 @@ class ParseLayout extends Base {
       })
     }
     return tabsInfo
-  }
-
-  formatNodeObj = {
-    'COLUMN': this.formatColumnNode.bind(this),
-    'TABS': this.findTabsNode.bind(this),
-  }
-
-  parseLayout() {
-    let root = this.parseLayoutJson.ROOT_ID
-    this.reconcileChildren(root)
-    console.log('viewArr', this.viewArr)
-    return this.viewArr
-  }
-
-  reconcileChildren(node) {
-    if (node.children && node.children.length > 0) {
-      if (this.unAddType.includes(node.type)) {
-        this.viewArr.push(this.formatNodeObj[node.type](node))
-      } else {
-        node.children.forEach(child => {
-          this.reconcileChildren(this.parseLayoutJson[child])
-        });
-      }
-    } else {
-      this.viewArr.push(this.returnLastNodeObj(node, this.charsData))
-    }
   }
 }
 
