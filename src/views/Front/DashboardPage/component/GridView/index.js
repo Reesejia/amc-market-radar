@@ -88,8 +88,6 @@ class GridView extends PureComponent {
 
   }
   getChartDom = () => {
-
-
     return this.state.widgets
       // .filter((item,index) => index< 1)
       .map((widget, index) => {

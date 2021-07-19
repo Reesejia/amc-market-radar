@@ -62,7 +62,7 @@ class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    this.getGridsData(false)
+    // this.getGridsData(false)
   }
 
   async getGridsData(refresh) {
