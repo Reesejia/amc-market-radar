@@ -1,19 +1,17 @@
-
-import React, { PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
+import React, { createRef, PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import GridContent from '../../GridContent'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import "./index.scss"
-import { Content } from 'antd/lib/layout/layout';
 
 const { TabPane } = Tabs;
 
 const HeaderTab = (props) => {
   const [list, setList] = useState([])
-  const [isDashboard] = useState(true)
-  const [dashboardId, setDashboardId] = useState(6)
+  const [dashboardId, setDashboardId] = useState("")
+
+  const gridRef = createRef()
 
   const getGridsData = async (refresh) => {
     await props.getPositionGrid_action(dashboardId, refresh)
@@ -22,18 +20,16 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     let groupId = props.groupId
-    console.log("zyy", groupId)
     if (props.navList.length) {
       const listArr = props.navList.find(o => o.id === groupId).navigationGroups
       setList(listArr)
-      setDashboardId()
+      setDashboardId(listArr[0] && listArr[0].dashboardId)
     }
   }, [props.navList])
 
 
   useEffect(() => {
     props.getNavigationList_action()
-    getGridsData(false)
   }, [])
 
   useEffect(() => {
@@ -42,32 +38,33 @@ const HeaderTab = (props) => {
 
   const tabChange = (key) => {
     setDashboardId(key)
-
   }
 
-  return (
-    <Content>
-      <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper">
-        {
-          list.length > 0 && list.map((item) => (
-            <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
+  return <div style={{ width: "100%" }}>
+    <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper">
+      {
+        list.length > 0 && list.map((item) => (
+          <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
+            <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
               {
-                props.boardGridOrigin[item.dashboardId] &&  <GridView
-                {...props.boardGridOrigin[item.dashboardId]}
-               /> || null
+                props.boardGridOrigin[dashboardId] ?
+                  <GridView
+                  widgets={props.boardGridOrigin[dashboardId].widgets}
+                  dashboardId={item.dashboardId}
+                  />
+                  :
+                  null
               }
-            </TabPane>
-          ))
-        }
-      </Tabs>
-    </Content>
-  )
-
+            </div>
+          </TabPane>
+        ))
+      }
+    </Tabs>
+  </div>
 
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('ownProps111', ownProps)
   return {
     navList: state.dashboard.navList,
     groupId: state.dashboard.groupId,

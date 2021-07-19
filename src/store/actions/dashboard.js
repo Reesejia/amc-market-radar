@@ -74,19 +74,16 @@ export default {
     return async function (dispatch, getState) {
       const boardGridOrigin = getState().dashboard.boardGridOrigin
       const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
-      console.log('aa333',chartIds)
       if (chartIds && chartIds.length  > 0) {
-        console.log('chartIds22', chartIds)
-        const res = await getChartBusiness({
-          dashboardId,
-          chartIds: chartIds.join(',')
-        })
-        console.log('getChartBusiness res', res)
-        if (res.code === "0") {
-          dispatch({ type: types.GET_BUSINESS_DATA, payload: {businessDashId: dashboardId, chartsData: res.resp } })
-        }
+      const res = await getChartBusiness({
+        dashboardId,
+        chartIds: chartIds.join(',')
+      })
+      console.log('getChartBusiness res', res)
+      if (res.code === "0") {
+        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }
-
+    }
     }
   },
 

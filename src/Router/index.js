@@ -5,7 +5,7 @@ import DataPageManage from '../views/Admin/DashManage'
 
 const DragLayout = lazy(() => import(/* webpackChunkName: "DragLayout" */'../views/Front/GridDemo/DragLayout'))
 const BoardAdmin = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'../views/Admin/BoardAdmin'))
-const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage/component/HeaderTab'))
+const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage'))
 const FormatData= lazy(() => import(/* webpackChunkName: "FormatData" */'../views/Front/FormatData/index'))
 // import DragLayout from '../views/Front/DragLayout'
 // const DragLayout = lazy(() => import('../views/Front/DragLayout'))

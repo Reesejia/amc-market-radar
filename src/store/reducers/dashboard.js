@@ -39,14 +39,11 @@ export default function (state = initialState, action) {
       console.log('cccc', c)
       return c
 
+      case types.GET_BUSINESS_DATA:
+        console.log('GET_BUSINESS_DATA', payload)
+        return { ...state, chartsData: payload };
 
-    case types.GET_BUSINESS_DATA:
-      const { businessDashId, chartsData } = payload
-      const businessObj = state.boardGridOrigin[businessDashId]
-      businessObj.chartsData = chartsData
-      const e = { ...state, boardGridOrigin: { ...state.boardGridOrigin, [businessDashId]: businessObj } };
-      console.log('eee', e)
-      return e;
+
 
     case types.GET_NAV_LIST:
       console.log('GET_NAV_LIST', payload)
@@ -60,7 +57,6 @@ export default function (state = initialState, action) {
           if (!Object.prototype.hasOwnProperty.call(state.boardGridOrigin, nav.dashboardId)) {
             state.boardGridOrigin[nav.dashboardId] = {
               widgets: [],
-              chartsData: {},
               chartIds: []
             }
           }
