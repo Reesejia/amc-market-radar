@@ -5,7 +5,8 @@ let initialState = {
   boardDataOrigin: {},
   boardGridOrigin: {},
   chartIds: [],
-  chartsData: {}
+  chartsData: {},
+  navList: []
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -22,12 +23,16 @@ export default function (state = initialState, action) {
     case types.UPDATE_GRIDDATA:
       let { dashId, gridwidgets } = payload
       console.log('UPDATE_GRIDDATA payload', payload)
-      return { ...state, boardGridOrigin: { ...state.boardDataOrigin,[dashId]: gridwidgets } };
+      return { ...state, boardGridOrigin: { ...state.boardDataOrigin, [dashId]: gridwidgets } };
 
 
     case types.GET_BUSINESS_DATA:
       console.log('GET_BUSINESS_DATA', payload)
       return { ...state, chartsData: payload };
+
+    case types.GET_NAV_LIST:
+      console.log('GET_NAV_LIST', payload)
+      return { ...state, navList: payload };
 
     default:
       return state;
