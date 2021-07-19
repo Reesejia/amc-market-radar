@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 
 let tasks = []
 function myNonEssentialWork(deadline) {
-  while (deadline.timeRemaining() > 20 && tasks.length > 0) {
+  while (deadline.timeRemaining() > 0 && tasks.length > 0) {
       // console.log('timeRemaining222 item', tasks)
       const task = tasks.shift()
       if(!task.classComponent) return
