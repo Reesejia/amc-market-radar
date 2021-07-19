@@ -1,8 +1,9 @@
+
 import React, { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import {connect} from 'react-redux'
 import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
-
+import * as echarts from 'echarts'
 class ChartComponent extends PureComponent {
   constructor() {
     super()
@@ -13,31 +14,29 @@ class ChartComponent extends PureComponent {
   chartRef = React.createRef()
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const echarts2 = echarts
     const widget = nextProps && nextProps.widget
     const { chartStyle } = widget
     let option = {}
-
     if (chartStyle && chartStyle.chart) {
-      const { vizDataBase } = chartStyle.chart
+      const { vizDataBase, vizType } = chartStyle.chart
       let final = {}
       try{
         final =  vizDataBase ? `${vizDataBase.replace(/\[ \]/g, '[]').replace(/echarts/g, 'echarts2')}` : ''
-        console.log(' vizDataBase widget', widget)
         eval(final)
       }catch(e){
         console.error('chart final',e)
         final = {}
       }
-
-      console.log('option', option)
-      const detailType = option.series && option.series[0].type
+      const detailType = vizType
       const all = {}
       const { businessData } = nextProps
       console.log('state.dashboard.chartsData nextProps', nextProps)
       console.log('state.dashboard.chartsData', businessData)
       if(businessData){
         const list = businessData
-        if (detailType === 'radar') {
+        if (detailType === 'radar' || detailType === 'multiple-bar') { // 雷达图
+          const all = {}
           if (list) {
             const keys = Object.keys(list[0])
             keys.forEach((item, index) => {
@@ -47,11 +46,17 @@ class ChartComponent extends PureComponent {
               })
               all[index] = arr
             })
-            option.series[0].data.map((item, index) => {
+          }
+          if (detailType === 'radar') {
+            option.series[0].data.forEach((item, index) => {
               item.value = all[index] || []
             })
+          } else if (detailType === 'multiple-bar') {
+              option.series.forEach((item, index) => {
+                item.data = all[index] || []
+              })
           }
-        }else if (detailType === 'line' || detailType === 'mix-line-bar' || detailType === 'area' || detailType === 'bar' || detailType === 'horizontal-bar') { // 折线图 || 折线-柱状图 || 区域图 || 柱状图
+        } else if (detailType === 'line' || detailType === 'mix-line-bar' || detailType === 'area' || detailType === 'bar' || detailType === 'horizontal-bar') { // 折线图 || 折线-柱状图 || 区域图 || 柱状图
           const all = {}
           const axisList = []
           if (list && list[0]) {
@@ -73,7 +78,7 @@ class ChartComponent extends PureComponent {
           })
           // 横坐标为日期
           if (detailType === 'horizontal-bar') {
-            if (this.chartOption.yAxis instanceof Array) {
+            if (option.yAxis instanceof Array) {
               option.yAxis[0].data = axisList
             } else {
               option.yAxis.data = axisList
@@ -85,6 +90,19 @@ class ChartComponent extends PureComponent {
               option.xAxis.data = axisList
             }
           }
+        } else if (detailType === 'pie') { // 饼图
+          const arr = []
+          if (list.length) {
+            const keys = Object.keys(list[0])
+            list.forEach(item => {
+              arr.push({name: item[keys[0]], value: item[keys[1]]})
+            })
+          }
+          option.series[0].data = arr
+        }
+         else if (detailType === 'map') {
+          option.series[0].data = list
+          console.log(JSON.parse(JSON.stringify(option)))
         }
       }
       return { option, id: widget.i, }
