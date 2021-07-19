@@ -6,6 +6,7 @@ import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
+// import GridContentWraper from '@/views/Front/DashboardPage/HighComponent/GridContentWraper'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -205,4 +206,5 @@ class GridView extends PureComponent {
 }
 
 
-export default GridView
+// export default GridContentWraper(GridView)
+ export default GridView

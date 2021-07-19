@@ -1,19 +1,22 @@
 import './public-path';
 import React, { HtmlHTMLAttributes } from 'react';
-import { QianKunProps } from '@/typing/axios'
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import Router from './Router';
-import './index.css';
+import { ConnectedRouter } from 'connected-react-router'
 import store from './store/index';
 import * as types from '@/store/action-types';
+import history from '@/Router/history';
+import './index.css';
 
 
-function render(props: any) {
+function render(props) {
   const { container } = props;
   const ret = container && container.querySelector('#root')
   ReactDOM.render(<Provider store={store}>
+    <ConnectedRouter history={history}>
     <Router />
+    </ConnectedRouter>
   </Provider>, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 
@@ -25,17 +28,17 @@ export async function bootstrap() {
   console.log('[react16] react app bootstraped');
 }
 
-export async function mount(props: QianKunProps) {
+export async function mount(props) {
   console.log('[react16] props from main framework', props);
   let m = new Map();
   m.set('/amc/sub-app-radar', 'n1');
   m.set('/amc/sub-app-house', 'n2');
   let boardId = m.get(props.routerBase)
-  store.dispatch({ type: types.BOARD_ID, payload: boardId})
+  store.dispatch({ type: types.GROUP_ID, payload: boardId})
   render(props);
 }
 
-export async function unmount(props: any) {
+export async function unmount(props) {
   const { container } = props;
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }

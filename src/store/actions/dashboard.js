@@ -19,13 +19,7 @@ export default {
           if (positionJson) {
             positionJson = JSON.parse(positionJson)
             dashboard.positionJson = positionJson
-            const payload = {
-              [dashboardId]: {
-                charsData,
-                dashboard
-              }
-            }
-            dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload })
+            dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: {originDashId: dashboardId, dashboard} })
             gridwidgets  = new ParseLayout({
               parseLayoutJson: positionJson,
               charsData: charsData,
@@ -59,7 +53,7 @@ export default {
   getPositionGrid_action(dashboardId, refresh) {
     return async function (dispatch, getState) {
       const dashboardStore = getState().dashboard;
-      // if (!(dashboardId in dashboardStore.boardOrigin)) {
+      if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
         let { gridPositionData } = res.data
@@ -73,24 +67,29 @@ export default {
         chartIds = chartIds.length > 0 && chartIds.flat(1)
         dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
       }
-      // }
+      }
     }
   },
   getChartBusiness_action(dashboardId) {
     return async function (dispatch, getState) {
-      const chartIds = getState().dashboard.chartIds;
-      if (chartIds.length === 0) return
-      console.log('chartIds22', chartIds)
-      const res = await getChartBusiness({
-        dashboardId,
-        chartIds: chartIds.join(',')
-      })
-      console.log('getChartBusiness res', res)
-      if (res.code === "0") {
-        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
+      const boardGridOrigin = getState().dashboard.boardGridOrigin
+      const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
+      console.log('aa333',chartIds)
+      if (chartIds && chartIds.length  > 0) {
+        console.log('chartIds22', chartIds)
+        const res = await getChartBusiness({
+          dashboardId,
+          chartIds: chartIds.join(',')
+        })
+        console.log('getChartBusiness res', res)
+        if (res.code === "0") {
+          dispatch({ type: types.GET_BUSINESS_DATA, payload: {businessDashId: dashboardId, chartsData: res.resp } })
+        }
       }
+
     }
   },
+
   getNavigationList_action() {
     return async function (dispatch, getState) {
       const res = await navigationList()
