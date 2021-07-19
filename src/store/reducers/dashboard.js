@@ -13,7 +13,6 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case types.GET_DASH_ORIGIN_DATA:
       let o = { ...state, boardDataOrigin: { ...state.boardDataOrigin, ...payload } };
-      console.log('ooo', o)
       return o
 
     case types.GET_GRID_DATA:

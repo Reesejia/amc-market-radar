@@ -19,8 +19,16 @@ class ChartComponent extends PureComponent {
 
     if (chartStyle && chartStyle.chart) {
       const { vizDataBase } = chartStyle.chart
-      let final = vizDataBase ? `${vizDataBase.replace(/\[ \]/g, '[]').replace(/echarts/g, 'echarts2')}` : ''
-      eval(final)
+      let final = {}
+      try{
+        final =  vizDataBase ? `${vizDataBase.replace(/\[ \]/g, '[]').replace(/echarts/g, 'echarts2')}` : ''
+        console.log(' vizDataBase widget', widget)
+        eval(final)
+      }catch(e){
+        console.error('chart final',e)
+        final = {}
+      }
+
       console.log('option', option)
       const detailType = option.series && option.series[0].type
       const all = {}
@@ -46,7 +54,7 @@ class ChartComponent extends PureComponent {
         }else if (detailType === 'line' || detailType === 'mix-line-bar' || detailType === 'area' || detailType === 'bar' || detailType === 'horizontal-bar') { // 折线图 || 折线-柱状图 || 区域图 || 柱状图
           const all = {}
           const axisList = []
-          if (list) {
+          if (list && list[0]) {
             const keys = Object.keys(list[0])
             const xAxis = keys.shift()
             list.forEach(op => {

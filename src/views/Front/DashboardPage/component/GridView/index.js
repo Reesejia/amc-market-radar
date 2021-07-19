@@ -103,8 +103,12 @@ class GridView extends PureComponent {
             )
             // component =  WithLazyload(<TableView widget={widget} />)
           } else {
+            // console.log('widget xxxxx', widget)
             component = (
-                <Chart widget={widget} style={{ width: '100%', height: '100%' }} /> 
+                <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
+                // component = (
+                //   <div key={widget.i}>{widget.i}</div>
+                // )
             )
           }
         } else if (widget.type === 'MARKDOWN') {
@@ -120,6 +124,10 @@ class GridView extends PureComponent {
           component = (
               <TabsView widget={widget} />
           )
+        }else {
+              component = (
+                <div key={widget.i}>{widget.i}</div>
+              )
         }
         // console.log('componentcomponent', component)
 

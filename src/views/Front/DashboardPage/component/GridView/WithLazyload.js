@@ -5,7 +5,7 @@ function myNonEssentialWork(deadline) {
   while (deadline.timeRemaining() > 20 && tasks.length > 0) {
       // console.log('timeRemaining222 item', tasks)
       const task = tasks.shift()
-      if(!task.classComponent) return 
+      if(!task.classComponent) return
       if (!task.classComponent.state.show) {
         // console.log('timeRemaining222 item show')
         task.classComponent.setState({

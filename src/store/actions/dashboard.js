@@ -15,22 +15,24 @@ export default {
         }
         if (dashboard) {
           let { positionJson } = dashboard
-          positionJson = JSON.parse(positionJson)
-          dashboard.positionJson = positionJson
-          const payload = {
-            [dashboardId]: {
-              charsData,
-              dashboard
+          let gridwidgets =[]
+          if (positionJson) {
+            positionJson = JSON.parse(positionJson)
+            dashboard.positionJson = positionJson
+            const payload = {
+              [dashboardId]: {
+                charsData,
+                dashboard
+              }
             }
+            dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload })
+            gridwidgets  = new ParseLayout({
+              parseLayoutJson: positionJson,
+              charsData: charsData,
+              viewType: []
+            }).parseLayout()
+            console.log('gridwidgets', gridwidgets)
           }
-          dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload })
-
-          const gridwidgets = new ParseLayout({
-            parseLayoutJson: positionJson,
-            charsData: charsData,
-            viewType: []
-          }).parseLayout()
-          console.log('gridwidgets', gridwidgets)
           dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
         }
       }
@@ -74,13 +76,13 @@ export default {
       // }
     }
   },
-  getChartBusiness_action() {
+  getChartBusiness_action(dashboardId) {
     return async function (dispatch, getState) {
       const chartIds = getState().dashboard.chartIds;
       if (chartIds.length === 0) return
       console.log('chartIds22', chartIds)
       const res = await getChartBusiness({
-        dashboardId: 6,
+        dashboardId,
         chartIds: chartIds.join(',')
       })
       console.log('getChartBusiness res', res)

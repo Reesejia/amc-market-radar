@@ -35,8 +35,8 @@ class Base {
       siblings: null,
       type: node.type,
       chartStyle: charsData[node.id],
-      w: node.meta && node.meta.width,
-      h: node.meta && node.meta.height / 5,
+      w: node.meta && node.meta.width || 1,
+      h: node.meta && node.meta.height / 5 || 1,
       x: 0,
       y: 2,
     }

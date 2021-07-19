@@ -27,7 +27,7 @@ class DragLayout extends PureComponent {
       curWidth: "",
       curHeight: "",
       curTransform: "",
-      dashboardId: 6,
+      dashboardId: 7,
     }
     this.gridRef = createRef()
   }
@@ -58,11 +58,11 @@ class DragLayout extends PureComponent {
   async setInit() {
     await this.props.onGetDashboardData_action(this.state.dashboardId, false)
     await this.props.updateGridData_action(this.state.dashboardId)
-    await this.getGridsData(true)
+    // await this.getGridsData(true)
   }
 
   componentDidMount() {
-    // this.getGridsData(false)
+    this.getGridsData(false)
   }
 
   async getGridsData(refresh) {
@@ -95,7 +95,7 @@ class DragLayout extends PureComponent {
           <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
             <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
           </Popconfirm>
-          <HeaderTab></HeaderTab>
+          {/* <HeaderTab></HeaderTab> */}
         </Header>
         <Content style={{ marginTop: 44 }}>
           <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>

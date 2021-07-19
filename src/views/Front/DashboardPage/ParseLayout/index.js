@@ -6,6 +6,7 @@ class ParseLayout extends Base {
     this.parseLayoutJson = parseLayoutJson
     this.viewType = viewType
     this.charsData = charsData
+    console.log('this.parseLayoutJson', this.parseLayoutJson)
   }
   parseLayoutJson = {}
   charsData = {}
@@ -49,9 +50,10 @@ class ParseLayout extends Base {
         ids.push(item)
       }
     })
+    let id = `tabsId_${new Date().valueOf()}`
     return {
-      id: 'xxx',
-      i: 'xxx',
+      id: node.id,
+      i: node.id,
       h: 20,
       w: 12,
       x: 0,
@@ -94,11 +96,11 @@ class ParseLayout extends Base {
           tabsInfo.children = this.formatTabsNode(this.parseLayoutJson[child])
         } else {
 
-          findChild(this.parseLayoutJson[child], this.parseLayoutJson)
-          function findChild(node, parseLayoutJson) {
+          findChild(this.parseLayoutJson[child])
+          function findChild(node) {
             if (node.children && node.children.length > 0) {
               node.children.forEach(child => {
-                findChild(parseLayoutJson[child])
+                findChild(self.parseLayoutJson[child])
               })
             } else {
               tabsInfo.subTabs.push(self.returnLastNodeObj(node, self.charsData))
