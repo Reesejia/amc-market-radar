@@ -90,14 +90,18 @@ class DragLayout extends PureComponent {
     console.log('this.props index', this.props)
     return (
       <Layout>
-        <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}>
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
-          <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
-            <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
-          </Popconfirm>
-          {/* <HeaderTab></HeaderTab> */}
-        </Header>
-        <Content style={{ marginTop: 44 }}>
+        {/* <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}> */}
+        <div style={{ display: 'flex',justifyContent: 'space-between',alignItems:'center',background: '#fff','padding': '0 30px' }}>
+          <HeaderTab></HeaderTab>
+          <div>
+            <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
+            <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
+              <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
+            </Popconfirm>
+          </div>
+        </div>
+        {/* </Header> */}
+        <Content>
           <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
             <GridView
               ref={this.gridRef}
