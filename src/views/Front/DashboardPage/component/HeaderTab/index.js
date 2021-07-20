@@ -19,7 +19,7 @@ const HeaderTab = (props) => {
   }
 
   useEffect(() => {
-    let groupId = props.groupId
+    let groupId = props.groupId || 'n1'
     if (props.navList.length) {
       const listArr = props.navList.find(o => o.id === groupId).navigationGroups
       setList(listArr)

@@ -1,10 +1,12 @@
 import { Spin } from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
+import DashManage from '@/views/Admin/DashManage'
+import DashboardPage from '@/views/Front/DashboardPage'
 
+// const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
+// const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage'))
 // const DragLayout = lazy(() => import(/* webpackChunkName: "DragLayout" */'../views/Front/GridDemo/DragLayout'))
-const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'../views/Admin/DashManage'))
-const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage'))
 // const FormatData= lazy(() => import(/* webpackChunkName: "FormatData" */'../views/Front/FormatData/index'))
 // import DragLayout from '../views/Front/DragLayout'
 // const DragLayout = lazy(() => import('../views/Front/DragLayout'))
@@ -24,7 +26,6 @@ const routes = () => (
         <Switch>
           <Route path="/dashManage" component={DashManage} />
           <Route path="/dashboardPage" component={DashboardPage} />
-          <Redirect to="/dashManage" />
         </Switch>
       </div>
     </Suspense>
