@@ -1,17 +1,11 @@
 import React, { createRef, PureComponent } from 'react';
-import { Layout, Button } from 'antd';
-import { WidthProvider, Responsive } from "react-grid-layout";
-import _ from "lodash";
+import { Button } from 'antd';
 import actions from '@/store/actions/dashboard';
 import * as types from '@/store/action-types';
-import GridView from '@/views/Front/DashboardPage/component/GridView'
-
+// import HeaderTab from "@/views/Front/DashboardPage/component/HeaderTab"
 import store from '@/store'
 import { Popconfirm } from 'antd';
 import { connect, } from 'react-redux'
-import { dashboardList } from '../../../api/group';
-
-const { Header, Content } = Layout;
 class DragLayout extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -58,12 +52,11 @@ class DragLayout extends PureComponent {
 
   async setInit() {
     await this.props.onGetDashboardData_action(this.state.dashboardId, false)
-    // await this.props.updateGridData_action(this.state.dashboardId)
-    // await this.getGridsData(true)
+    await this.props.updateGridData_action(this.state.dashboardId)
+    await this.getGridsData(true)
   }
 
   componentDidMount() {
-    console.log('32333')
     // this.getGridsData(false)
   }
 
@@ -88,36 +81,29 @@ class DragLayout extends PureComponent {
     }
   }
 
-  ge
-
   render() {
     console.log('this.props index', this.props)
     return (
-      <Layout>
-        {/* <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}> */}
-        <div style={{ background: '#fff', 'padding': '0 30px' }}>
-          <div>
+      <div>
+        <div style={{ background: '#fff', padding: '0 30px' }}>
+          <HeaderTab></HeaderTab>
+          {/* <div style={{
+            position: 'fixed',
+            top: '10px',
+            right: '20px'
+          }}>
             <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
             <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
               <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
             </Popconfirm>
-          </div>
-              <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
-              <GridView
-                ref={this.gridRef}
-                chartsData={this.props.chartsData}
-                widgets={this.props.boardGridOrigin && this.props.boardGridOrigin[this.state.dashboardId] || []}
-              />
-            </div>
+          </div> */}
         </div>
-        {/* </Header> */}
-
-      </Layout>
+      </div>
     )
   }
 }
 // export default DragLayout
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     chartsData: state.dashboard.chartsData,
     boardGridOrigin: state.dashboard.boardGridOrigin,
@@ -135,5 +121,4 @@ const mapStateToProps = (state, ownProps) => {
 //     }
 //   })
 // }
-// export default connect(mapStateToProps, actions)(DragLayout)
-export default DragLayout
+export default connect(mapStateToProps, actions)(DragLayout)

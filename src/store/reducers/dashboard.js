@@ -34,6 +34,7 @@ export default function (state = initialState, action) {
       let { dashId, gridwidgets } = payload
       console.log('UPDATE_GRIDDATA payload', payload)
       const dashIdObj = state.boardGridOrigin[dashId]
+      console.log("dashIdObj", state.boardGridOrigin)
       dashIdObj.widgets = gridwidgets
       const c = { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashId]: dashIdObj } };
       console.log('cccc', c)
@@ -42,8 +43,6 @@ export default function (state = initialState, action) {
       case types.GET_BUSINESS_DATA:
         console.log('GET_BUSINESS_DATA', payload)
         return { ...state, chartsData: payload };
-
-
 
     case types.GET_NAV_LIST:
       console.log('GET_NAV_LIST', payload)

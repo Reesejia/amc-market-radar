@@ -1,124 +1,106 @@
-import React, { createRef, PureComponent } from 'react';
-import { Button } from 'antd';
-import actions from '@/store/actions/dashboard';
-import * as types from '@/store/action-types';
-import HeaderTab from "@/views/Front/DashboardPage/component/HeaderTab"
+import React, { createRef, PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
+import { Tabs } from 'antd';
+import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
+import GridView from '@/views/Front/DashboardPage/component/GridView'
+import { Popconfirm, Button } from 'antd';
 import store from '@/store'
-import { Popconfirm } from 'antd';
-import { connect, } from 'react-redux'
-class DragLayout extends PureComponent {
-  static defaultProps = {
-    breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
-    cols: { lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 },
-    margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
-  };
+import * as types from '@/store/action-types';
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      layouts: this.getFromLS("layouts") || {},
-      positionInfo: {},
-      resp: {},
-      curWidth: "",
-      curHeight: "",
-      curTransform: "",
-      dashboardId: 7,
+const { TabPane } = Tabs;
+
+const HeaderTab = (props) => {
+  const [list, setList] = useState([])
+  const [dashboardId, setDashboardId] = useState("")
+
+  const getGridsData = async (refresh) => {
+    await props.getPositionGrid_action(dashboardId, refresh)
+    await props.getChartBusiness_action(dashboardId)
+  }
+
+  useEffect(() => {
+    let groupId = props.groupId
+    if (props.navList.length) {
+      const listArr = props.navList.find(o => o.id === groupId).navigationGroups
+      setList(listArr)
+      setDashboardId(listArr[0] && listArr[0].dashboardId)
     }
-    this.gridRef = createRef()
+  }, [props.navList])
+
+
+  useEffect(() => {
+    props.getNavigationList_action()
+  }, [])
+
+  useEffect(async () => {
+    getGridsData(true)
+  }, [dashboardId])
+
+  const tabChange = (key) => {
+    setDashboardId(key)
   }
 
-  getFromLS(key) {
-    let ls = {};
-    if (global.localStorage) {
-      try {
-        ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
-      } catch (e) {
-        /*Ignore*/
-      }
-    }
-    return ls[key];
+  const setInit = async () => {
+    await props.onGetDashboardData_action(dashboardId, true)
+    await props.updateGridData_action(dashboardId)
+    await getGridsData(true)
   }
 
-  saveToLS(key, value) {
-    if (global.localStorage) {
-      global.localStorage.setItem(
-        "rgl-8",
-        JSON.stringify({
-          [key]: value
-        })
-      );
-    }
-  }
-
-  async setInit() {
-    await this.props.onGetDashboardData_action(this.state.dashboardId, false)
-    await this.props.updateGridData_action(this.state.dashboardId)
-    await this.getGridsData(true)
-  }
-
-  componentDidMount() {
-    // this.getGridsData(false)
-  }
-
-  async getGridsData(refresh) {
-    await this.props.getPositionGrid_action(this.state.dashboardId, refresh)
-    await this.props.getChartBusiness_action(this.state.dashboardId)
-  }
-
-  async onSavePositionGrid() {
+  const onSavePositionGrid = async () => {
     if (this.gridRef.current) {
       const { widgets } = this.gridRef.current.state
       if (widgets) {
         store.dispatch({
           type: types.UPDATE_GRIDDATA,
           payload: {
-            dashId: this.state.dashboardId,
+            dashId: dashboardId,
             gridwidgets: widgets
           }
         })
-        await this.props.updateGridData_action(this.state.dashboardId)
+        await props.updateGridData_action(dashboardId)
       }
     }
   }
 
-  render() {
-    console.log('this.props index', this.props)
-    return (
-      <div>
-        <div style={{ background: '#fff', padding: '0 30px' }}>
-          <HeaderTab></HeaderTab>
-          <div style={{
-            position: 'fixed',
-            top: '10px',
-            right: '20px'
-          }}>
-            <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => this.onSavePositionGrid()}>保存数据</Button>
-            <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => this.setInit()} okText={"初始化"} cancelText="算了">
-              <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
-            </Popconfirm>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  return <div style={{ width: "100%", background: '#fff', padding: '0 30px',position:'relative' }}>
+    <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper">
+      {
+        list.length > 0 && list.map((item) => (
+          <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
+            <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
+              {
+                props.boardGridOrigin[dashboardId] ?
+                  <GridView
+                    widgets={props.boardGridOrigin[dashboardId].widgets}
+                    dashboardId={item.dashboardId}
+                  />
+                  :
+                  null
+              }
+            </div>
+          </TabPane>
+        ))
+      }
+    </Tabs>
+    <div style={{
+      position: 'absolute',
+      top: '10px',
+      right: '20px'
+    }}>
+      <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => onSavePositionGrid()}>保存数据</Button>
+      <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => setInit()} okText={"初始化"} cancelText="算了">
+        <Button type="primary" style={{ 'marginRight': '7px' }}>初始化数据</Button>
+      </Popconfirm>
+    </div>
+  </div>
+
 }
-// export default DragLayout
-const mapStateToProps = (state) => {
+
+const mapStateToProps = (state, ownProps) => {
   return {
-    chartsData: state.dashboard.chartsData,
+    navList: state.dashboard.navList,
+    groupId: state.dashboard.groupId,
     boardGridOrigin: state.dashboard.boardGridOrigin,
   }
 }
-
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   return bindActionCreators({
-//     onGetDashboardData_action:() =>dispatch(actions.onGetDashboardData_action),
-//     updateGridData_action: () =>dispatch(actions.updateGridData_action),
-//     getChartBusiness_action: () =>dispatch(actions.getChartBusiness_action),
-//     getPositionGrid_action: () =>dispatch(actions.getPositionGrid_action),
-//     onUpdateDridData: ({ dashId, gridwidgets}) => {
-//       dispatch({ type: types.UPDATE_GRIDDATA, payload: { dashId, gridwidgets} })
-//     }
-//   })
-// }
-export default connect(mapStateToProps, actions)(DragLayout)
+export default connect(mapStateToProps, actions)(HeaderTab)
