@@ -1,12 +1,14 @@
-import React, { FC } from 'react';
-import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm } from 'antd';
+
+import React, { FC, ReactNode } from 'react';
+import { Button, Table, Space, Tag, TablePaginationConfig, message, Popconfirm, Input } from 'antd';
+import { FilterDropdownProps } from 'antd/lib/table/interface'
 import { getGroup, deleteGroup } from '@/api/group';
 import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
 import { GroupItem, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
-
+import { SearchOutlined } from '@ant-design/icons';
 export interface Props {
   test: string
 }
@@ -14,8 +16,6 @@ export interface Props {
 const DataPageManage: FC = () => {
   const reduderObj = useDashApi(getGroup)
   const { grounpListInfo, dispatch, fetchData, groupParams } = reduderObj
-
-
   const showDrawer = () => {
     dispatch({ type: 'CHANGE_STATUS', payload: true })
     dispatch({ type: 'SET_EDIT_GROUP', payload: true })
@@ -23,11 +23,41 @@ const DataPageManage: FC = () => {
     dispatch({ type: 'CHANGE_GROUPID', payload: "" })
   };
 
-  const columns = [
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps): ReactNode => (
+      <div style={{ padding: 8 }}>
+        <Input
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => { handleSearch(selectedKeys, confirm, dataIndex) }}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            搜索
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            重置
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: unknown) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const columns: any = [
     {
       title: '组合名称',
       dataIndex: 'dashboardGroupName',
       key: 'dashboardGroupName',
+      ...getColumnSearchProps('dashboardGroupName'),
       // sorter: (a: any, b: any) => a.name - b.name,
       render: (text: string, record: GroupItem) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
@@ -42,7 +72,7 @@ const DataPageManage: FC = () => {
       title: '修改人',
       dataIndex: 'updateByName',
       key: 'updateByName',
-      // sorter: (a: GroupItem, b: GroupItem) => a.updateByName - b.name,
+      ...getColumnSearchProps('updateByName')
     },
     {
       title: '修改时间',
@@ -76,7 +106,6 @@ const DataPageManage: FC = () => {
                 <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
                   <a style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
                 </Popconfirm>
-
             }
           </Space>
         )
@@ -100,7 +129,7 @@ const DataPageManage: FC = () => {
     total: grounpListInfo.totalElements,  //数据的总的条数
   }
 
-  const handleChange = async(pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[] ) => {
+  const handleChange = async (pagination: TablePaginationConfig, filters: object, sorter: SorterResult<GroupItem> | SorterResult<GroupItem>[]) => {
     const { current, pageSize } = pagination
     let parmas = {
       page: current,
@@ -108,28 +137,38 @@ const DataPageManage: FC = () => {
       sortField: '',
       direction: ''
     }
-    const {field, order} = sorter as SorterResult<GroupItem>
-    const sortFieldObj: {[PropName:string]: string} = {
-      descend:  "desc", // 降序
+    const { field, order } = sorter as SorterResult<GroupItem>
+    const sortFieldObj: { [PropName: string]: string } = {
+      descend: "desc", // 降序
       ascend: "asc", // 升序
     }
-    if(field){
+    if (field) {
       parmas.sortField = field as string
     }
-    if(order){
+    if (order) {
       parmas.direction = sortFieldObj[order as string]
     }
-    await dispatch({type: 'CHAGE_GROUP_PARAMS', payload: parmas})
-    await fetchData()
-    console.log('sorter filters',filters, sorter)
+    dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: parmas })
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSearch = async (selectedKeys: Array<any>, confirm: () => void, dataIndex: string) => {
+    confirm();
+    let params = Object.assign({}, groupParams, { [dataIndex]: selectedKeys[0] })
+    dispatch({ type: 'CHAGE_GROUP_PARAMS', payload: params })
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleReset = async (clearFilters: (any) | undefined) => {
+    clearFilters();
+  };
 
   return (
     <div className="data-page-manage">
       <div className="dash-header">
         <div className="title">
           数据页面管理
-         </div>
+        </div>
         <div className="btn">
           <Button type="primary" onClick={() => dispatch({ type: 'SHOW_GROUP', payload: true })}>组合展示</Button>
           <Button type="primary" className="add-btn" onClick={showDrawer}>新增组合</Button>
@@ -158,4 +197,8 @@ const DataPageManage: FC = () => {
 
 export default DataPageManage
 
+
+function handleReset(clearFilters: (() => void) | undefined): void {
+  throw new Error('Function not implemented.');
+}
 
