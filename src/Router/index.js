@@ -26,6 +26,7 @@ const routes = () => (
         <Switch>
           <Route path="/dashManage" component={DashManage} />
           <Route path="/dashboardPage" component={DashboardPage} />
+          <Route path="/" component={DashboardPage} />
         </Switch>
       </div>
     </Suspense>
