@@ -1,6 +1,5 @@
 import './public-path';
 import React, { HtmlHTMLAttributes } from 'react';
-import { QianKunProps } from '@/typing/axios'
 import ReactDOM from 'react-dom';
 import Router from './Router'
 import './index.css';
@@ -8,7 +7,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import { ConfigProvider } from 'antd';
 
 
-function render(props: any) {
+function render(props) {
   const { container } = props;
   const ret = container && container.querySelector('#root')
   console.log('ret33', ret)
@@ -23,12 +22,12 @@ export async function bootstrap() {
   console.log('[react16] react app bootstraped');
 }
 
-export async function mount(props: QianKunProps) {
+export async function mount(props) {
   console.log('[react16] props from main framework', props);
   render(props);
 }
 
-export async function unmount(props: any) {
+export async function unmount(props) {
   const { container } = props;
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }
