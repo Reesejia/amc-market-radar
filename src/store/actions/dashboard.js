@@ -57,7 +57,12 @@ export default {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
         let { gridPositionData } = res.data
-        gridPositionData = JSON.parse(gridPositionData)
+        if(gridPositionData.length > 0){
+          gridPositionData = JSON.parse(gridPositionData)
+        }else {
+          gridPositionData =[]
+        }
+
         let chartIds = gridPositionData && gridPositionData.map(chart => {
           if (chart.type === 'TABS') {
             return chart.ids
