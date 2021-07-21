@@ -18,7 +18,6 @@ const TableView = (props) => {
 
   useEffect(() =>{
     if (props) {
-      console.log('props.widget businessData', props.businessData)
       const { businessData } = props
       if (businessData) {
         businessData.map((i, index) => i.key = index)

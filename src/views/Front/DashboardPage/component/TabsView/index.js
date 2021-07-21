@@ -18,7 +18,6 @@ class TabsView extends PureComponent {
     }
   }
   render() {
-    console.log('TabsView this.props', this.props)
     return (<div>
       <Tabs>
         {this.state.widget.children && this.state.widget.children.map((item, i) => (

@@ -48,8 +48,10 @@ const HeaderTab = (props) => {
   }
 
   const onSavePositionGrid = async () => {
-    if (this.gridRef.current) {
-      const { widgets } = this.gridRef.current.state
+    if (gridRef.current) {
+      console.log('gridRef.current', gridRef.current)
+
+      const { widgets } = gridRef.current.state
       if (widgets) {
         store.dispatch({
           type: types.UPDATE_GRIDDATA,
@@ -59,6 +61,7 @@ const HeaderTab = (props) => {
           }
         })
         await props.updateGridData_action(dashboardId)
+        await props.getPositionGrid_action(dashboardId, true)
       }
     }
   }

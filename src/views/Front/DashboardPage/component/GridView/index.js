@@ -168,7 +168,7 @@ class GridView extends PureComponent {
   }
 
   onLayoutChange(layout, layouts) {
-    console.log('layouts00', layout)
+    // console.log('layouts00', layout)
     this.setState({
       widgets: this.state.widgets.map((widget, index) => {
         return Object.assign(widget, {
