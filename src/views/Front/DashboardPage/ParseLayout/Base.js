@@ -1,5 +1,6 @@
 class Base {
   COLUMN_CHILD = ['COLUMN', 'ROW']
+  width100Type = ['HEADER','TABS', 'DIVIDER']
 
   ColumnHasRowAndCol(children) {
     children.some(child => !this.COLUMN_CHILD.includes(this.getNodesType(child)));
@@ -28,14 +29,27 @@ class Base {
   }
 
   returnLastNodeObj(node, charsData) {
+    let chartStyle;
+    let width = 0;
+    if(this.width100Type.includes(node.type)){
+      if(node.type === 'HEADER'){
+        chartStyle = {
+          text: node.meta && node.meta.text
+        }
+      }
+      width = 12
+    }else {
+      chartStyle = charsData[node.id]
+      width =  node.meta && node.meta.width || 1
+    }
     let nodeObj = {
       id: node.id,
       i: node.id,
       key: node.id,
       siblings: null,
       type: node.type,
-      chartStyle: charsData[node.id],
-      w: node.meta && node.meta.width || 1,
+      chartStyle,
+      w:width,
       h: node.meta && node.meta.height / 5 || 1,
       x: 0,
       y: 2,

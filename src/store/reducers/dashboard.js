@@ -7,7 +7,7 @@ let initialState = {
   chartIds: [],
   chartsData: {},
   navList: [],
-  groupId: "n2"
+  groupId: "n1"
 };
 export default function (state = initialState, action) {
   const { payload } = action

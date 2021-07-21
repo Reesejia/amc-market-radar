@@ -11,6 +11,7 @@ class ParseLayout extends Base {
   parseLayoutJson = {}
   charsData = {}
   unAddType = ['TABS']
+
   // unAddType = ['TABS', 'COLUMN']
   viewArr = []
 
@@ -50,7 +51,6 @@ class ParseLayout extends Base {
         ids.push(item)
       }
     })
-    let id = `tabsId_${new Date().valueOf()}`
     return {
       id: node.id,
       i: node.id,

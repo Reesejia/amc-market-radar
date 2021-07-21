@@ -18,6 +18,7 @@ export default {
           let gridwidgets =[]
           if (positionJson) {
             positionJson = JSON.parse(positionJson)
+            console.log('positionJson init', positionJson)
             dashboard.positionJson = positionJson
             dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: {originDashId: dashboardId, dashboard} })
             gridwidgets  = new ParseLayout({
@@ -57,7 +58,7 @@ export default {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
         let { gridPositionData } = res.data
-        if(gridPositionData.length > 0){
+        if(gridPositionData && gridPositionData.length > 0){
           gridPositionData = JSON.parse(gridPositionData)
         }else {
           gridPositionData =[]
