@@ -31,6 +31,7 @@ export async function bootstrap() {
 export async function mount(props) {
   console.log('[react16] props from main framework', props);
   let m = new Map();
+  m.set('/amc/manage/amc-dashbi', 'n1');
   m.set('/amc/sub-app-radar', 'n1');
   m.set('/amc/sub-app-house', 'n2');
   let boardId = m.get(props.routerBase)
