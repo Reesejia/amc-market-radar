@@ -7,13 +7,13 @@ import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 // import GridContentWraper from '@/views/Front/DashboardPage/HighComponent/GridContentWraper'
-
+import { PageHeader, Divider } from 'antd';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
-    cols:  {lg: 12, md: 12, sm: 12, xs: 4, xxs: 2},
+    cols: { lg: 12, md: 12, sm: 12, xs: 4, xxs: 2 },
     margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
   };
 
@@ -98,21 +98,21 @@ class GridView extends PureComponent {
           const { vizType, title } = widget.chartStyle.chart
           if (vizType === 'table') {
             component = (
-            <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
+              <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
             )
             // component =  WithLazyload(<TableView widget={widget} />)
           } else {
             // console.log('widget xxxxx', widget)
             component = (
-                <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
-                // component = (
-                //   <div key={widget.i}>{widget.i}</div>
-                // )
+              <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
+              // component = (
+              //   <div key={widget.i}>{widget.i}</div>
+              // )
             )
           }
         } else if (widget.type === 'MARKDOWN') {
           component = (
-           <MarkdownView widget={widget} />
+            <MarkdownView widget={widget} />
           )
         } else if (widget.type === 'FEED') {
           component = (
@@ -121,12 +121,26 @@ class GridView extends PureComponent {
         }
         else if (widget.type === 'TABS') {
           component = (
-              <TabsView widget={widget} />
+            <TabsView widget={widget} />
           )
-        }else {
-              component = (
-                <div key={widget.i}>{widget.i}</div>
-              )
+        } else if (widget.type === 'HEADER') {
+          // title={widget.meta.text}
+          component = (
+            <PageHeader
+              className="site-page-header"
+              onBack={() => null}
+              title="title"
+              backIcon={<div style={{width:"5px",height:'25px',background:'#1890ff'}}></div>}
+            />
+          )
+        } else if (widget.type === 'DIVIDER') {
+          component = (
+            <Divider />
+          )
+        } else {
+          component = (
+            <div key={widget.i}>{widget.i}</div>
+          )
         }
         // console.log('componentcomponent', component)
 
@@ -189,7 +203,7 @@ class GridView extends PureComponent {
     console.log(' this.state.widgets', this.state.widgets)
     return (
       <ResponsiveReactGridLayout
-      width={1200}
+        width={1200}
         className="layout"
         {...this.props}
         layouts={this.state.widgets}
@@ -207,4 +221,4 @@ class GridView extends PureComponent {
 
 
 // export default GridContentWraper(GridView)
- export default GridView
+export default GridView
