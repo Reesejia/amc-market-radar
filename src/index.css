@@ -79,3 +79,15 @@ code {
 .header-tab-wrapper {
   width: 100%;
 }
+
+.header-tab-wrapper .ant-tabs-content-holder {
+  margin-top: 50px;
+}
+
+.header-tab-wrapper .ant-tabs-nav {
+  position: fixed;
+    z-index: 999;
+    width: 100%;
+    height: auto;
+    background: #fff;
+}
