@@ -4,7 +4,7 @@ import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
 import store from '@/store'
 
-const onGetDashboardData_action = (dashboardId, refresh) => {
+const onGetDashboardData_action = async (dashboardId, refresh) => {
   return async function (dispatch, getState) {
     const res = await getDashboardData(dashboardId, refresh)
     if (res.code === "0") {
@@ -32,7 +32,7 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
     }
   }
 }
-const updateGridData_action = (dashboardId) => {
+const updateGridData_action = async (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
   return async function (dispatch, getState) {
     const boardGridOrigin = store.getState().dashboard.boardGridOrigin;
@@ -57,7 +57,7 @@ const updateGridData_action = (dashboardId) => {
   }
 }
 // 指定看板的数据
-const getPositionGrid_action = (dashboardId, refresh) => {
+const getPositionGrid_action =async (dashboardId, refresh) => {
   return async (dispatch, getState) => {
     const dashboardStore = store.getState().dashboard;
     if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
@@ -84,7 +84,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
     }
   }
 }
-const getChartBusiness_action = (dashboardId) => {
+const getChartBusiness_action =async (dashboardId) => {
   return async function (dispatch, getState) {
     const boardGridOrigin = store.getState().dashboard.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
@@ -100,7 +100,7 @@ const getChartBusiness_action = (dashboardId) => {
   }
 }
 
-const getNavigationList_action = () => {
+const getNavigationList_action = async() => {
   return async function (dispatch, getState) {
     const res = await navigationList()
     if (res.statusCode === 0 && res.success) {
