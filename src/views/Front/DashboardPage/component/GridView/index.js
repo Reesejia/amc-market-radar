@@ -130,6 +130,7 @@ class GridView extends PureComponent {
               className="site-page-header"
               onBack={() => null}
               title="title"
+              backIcon={<div style={{width:"5px",height:'25px',background:'#1890ff'}}></div>}
             />
           )
         } else if (widget.type === 'DIVIDER') {
