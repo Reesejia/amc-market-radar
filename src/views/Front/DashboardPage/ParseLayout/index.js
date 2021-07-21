@@ -59,6 +59,8 @@ class ParseLayout extends Base {
       x: 0,
       y: 2,
       type: 'TABS',
+      isDraggable: false,
+      isResizable:true,
       children: tabsInfo.tabsArr,
       ids: ids.filter(id => id.length > 0)
     }

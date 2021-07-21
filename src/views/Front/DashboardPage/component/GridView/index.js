@@ -163,7 +163,7 @@ class GridView extends PureComponent {
         //       )
 
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
             <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
             <div className='remove'>
               <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
