@@ -38,7 +38,13 @@ const updateGridData_action = (dashboardId) => {
   return async function (dispatch, getState) {
     const boardGridOrigin = store.getState().dashboard.boardGridOrigin;
     console.log('boardGridOrigin', boardGridOrigin)
-    const gridwidgets = boardGridOrigin[dashboardId].widgets
+    const gridwidgets = boardGridOrigin[dashboardId].widgets.map(element => {
+      if (element.id === "TABS-fbvOzXKTIc") {
+        element.static = true
+      }
+      return element
+    });
+
     if (boardGridOrigin[dashboardId]) {
       const ret = await updateGridData({
         dashboardId,
@@ -60,7 +66,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
         let { gridPositionData } = res.data
-        if (gridPositionData) {
+        if (gridPositionData && gridPositionData.length > 0) {
           gridPositionData = JSON.parse(gridPositionData)
           let chartIds = gridPositionData && gridPositionData.map(chart => {
             if (chart.type === 'TABS') {
