@@ -32,7 +32,7 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
     }
   }
 }
-const updateGridData_action = (dashboardId) => {
+const updateGridData_action = async (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
   return async (dispatch, getState) => {
     const boardGridOrigin = getState().dashboard.boardGridOrigin;
@@ -57,7 +57,7 @@ const updateGridData_action = (dashboardId) => {
   }
 }
 // 指定看板的数据
-const getPositionGrid_action = (dashboardId, refresh) => {
+const getPositionGrid_action =async (dashboardId, refresh) => {
   return async (dispatch, getState) => {
     const dashboardStore = getState().dashboard;
     if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {

@@ -185,7 +185,6 @@ class GridView extends PureComponent {
   render() {
     return (
       <ResponsiveReactGridLayout
-        width={1200}
         className="layout"
         {...this.props}
         layouts={this.state.widgets}
