@@ -1,7 +1,6 @@
 import React, { PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
 import { Tabs } from 'antd';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
-import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
 
 const { TabPane } = Tabs;
 
@@ -36,4 +35,4 @@ class TabsView extends PureComponent {
     )
   }
 }
-export default WithLazyload(TabsView)
+export default TabsView

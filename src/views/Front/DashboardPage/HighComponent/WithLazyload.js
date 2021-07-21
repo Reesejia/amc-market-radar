@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import  { PureComponent } from 'react'
 
 let tasks = []
 function myNonEssentialWork(deadline) {
@@ -19,8 +19,7 @@ function myNonEssentialWork(deadline) {
 }
 
 
-const WithLazyload = (OldComponent) => {
-  return class ClassComponent extends PureComponent {
+class WithLazyload extends PureComponent {
     constructor(props) {
       super(props)
       this.state = {
@@ -28,13 +27,13 @@ const WithLazyload = (OldComponent) => {
       }
     }
     componentDidMount() {
-      if (this.props.widget) {
-        let ele = document.getElementById(this.props.widget.id)
+      if (this.props.id) {
+        let ele = document.getElementById(this.props.id)
         const ob = new IntersectionObserver((changes) => {
           changes.forEach(change => {
+            console.log('change', change)
             const { isIntersecting, target } = change
-            if (isIntersecting) {
-              // console.log('this.state.show', this.state.show)
+            if (!isIntersecting) {
               ob.unobserve(ele)
               if(!this.state.show){
                 this.setState({
@@ -47,6 +46,7 @@ const WithLazyload = (OldComponent) => {
         }, {
           threshold: [0]
         })
+        ob.observe(ele)
         if(!this.state.show){
           const task = {
             classComponent: this,
@@ -56,7 +56,7 @@ const WithLazyload = (OldComponent) => {
             tasks = tasks.filter(t => t !== task.classComponent)
           }
           ele.$task = task
-          ob.observe(ele)
+
           tasks.push(task)
         }
       }
@@ -67,12 +67,11 @@ const WithLazyload = (OldComponent) => {
       return (
         <>
           {
-            this.state.show && <OldComponent {...this.props} />
+            this.state.show && this.props.children
           }
         </>
       )
     }
   }
-}
 
 export default WithLazyload

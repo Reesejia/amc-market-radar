@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import { Table} from 'antd';
-import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
 import {connect} from 'react-redux'
 import "./index.scss"
 
@@ -39,4 +38,4 @@ const mapStateToProps = (state, ownProps) => {
     businessData
   }
 }
-export default connect(mapStateToProps)(WithLazyload(TableView))
+export default connect(mapStateToProps)(TableView)

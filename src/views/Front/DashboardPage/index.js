@@ -70,7 +70,7 @@ const HeaderTab = (props) => {
   }
 
   return <div style={{ width: "100%", background: '#fff', padding: '0 30px',position:'relative' }}>
-    <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper">
+    <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>

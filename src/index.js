@@ -7,6 +7,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import store from './store/index';
 import * as types from '@/store/action-types';
 import history from '@/Router/history';
+import 'default-passive-events'
 import './index.css';
 
 
