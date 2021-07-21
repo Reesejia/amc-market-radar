@@ -20,13 +20,16 @@ const HeaderTab = (props) => {
   }
 
   useEffect(() => {
-    let groupId = props.groupId
-    if (props.navList.length) {
-      const listArr = props.navList.find(o => o.id === groupId).navigationGroups
-      setList(listArr)
-      setDashboardId(listArr[0] && listArr[0].dashboardId)
+    console.log('groupId', props.groupId)
+    let groupId = props.groupId || 'n1'
+    if(groupId){
+      if (props.navList.length) {
+        const listArr = props.navList.find(o => o.id === groupId).navigationGroups
+        setList(listArr)
+        setDashboardId(listArr[0] && listArr[0].dashboardId)
+      }
     }
-  }, [props.navList])
+  }, [props.navList,props.groupId])
 
 
   useEffect(() => {
