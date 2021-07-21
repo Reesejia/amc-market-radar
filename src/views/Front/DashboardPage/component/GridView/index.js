@@ -90,9 +90,7 @@ class GridView extends PureComponent {
   }
   getChartDom = () => {
     return this.state.widgets
-      // .filter((item,index) => index< 1)
       .map((widget, index) => {
-        let option;
         let component;
         if (widget.type === 'CHART') {
           const { vizType, title } = widget.chartStyle.chart
@@ -100,14 +98,9 @@ class GridView extends PureComponent {
             component = (
               <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
             )
-            // component =  WithLazyload(<TableView widget={widget} />)
           } else {
-            // console.log('widget xxxxx', widget)
             component = (
               <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
-              // component = (
-              //   <div key={widget.i}>{widget.i}</div>
-              // )
             )
           }
         } else if (widget.type === 'MARKDOWN') {
@@ -124,13 +117,12 @@ class GridView extends PureComponent {
             <TabsView widget={widget} />
           )
         } else if (widget.type === 'HEADER') {
-          // title={widget.meta.text}
           component = (
             <PageHeader
               className="site-page-header"
               onBack={() => null}
-              title="title"
-              backIcon={<div style={{width:"5px",height:'25px',background:'#1890ff'}}></div>}
+              title={widget.chartStyle.text}
+              backIcon={<div style={{ width: '3px', height: '25px', background: '#1890ff' }}></div>}
             />
           )
         } else if (widget.type === 'DIVIDER') {
@@ -176,7 +168,6 @@ class GridView extends PureComponent {
   }
 
   onLayoutChange(layout, layouts) {
-    console.log('layouts00', layout)
     this.setState({
       widgets: this.state.widgets.map((widget, index) => {
         return Object.assign(widget, {
@@ -200,7 +191,6 @@ class GridView extends PureComponent {
 
 
   render() {
-    console.log(' this.state.widgets', this.state.widgets)
     return (
       <ResponsiveReactGridLayout
         width={1200}
