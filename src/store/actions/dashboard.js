@@ -5,7 +5,7 @@ import { message } from 'antd'
 import store from '@/store'
 
 const onGetDashboardData_action = (dashboardId, refresh) => {
-  return async function (dispatch, getState) {
+  return async (dispatch, getState) => {
     const res = await getDashboardData(dashboardId, refresh)
     if (res.code === "0") {
       const { charsData, dashboard } = res.resp
@@ -20,22 +20,22 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
         if (positionJson) {
           positionJson = JSON.parse(positionJson)
           dashboard.positionJson = positionJson
-          store.dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
+          dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
           gridwidgets = new ParseLayout({
             parseLayoutJson: positionJson,
             charsData: charsData,
             viewType: []
           }).parseLayout()
         }
-        store.dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
+        dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
       }
     }
   }
 }
 const updateGridData_action = (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
-  return async function (dispatch, getState) {
-    const boardGridOrigin = store.getState().dashboard.boardGridOrigin;
+  return async (dispatch, getState) => {
+    const boardGridOrigin = getState().dashboard.boardGridOrigin;
     const gridwidgets = boardGridOrigin[dashboardId].widgets.map(element => {
       if (element.id === "TABS-fbvOzXKTIc") {
         element.static = true
@@ -59,7 +59,7 @@ const updateGridData_action = (dashboardId) => {
 // 指定看板的数据
 const getPositionGrid_action = (dashboardId, refresh) => {
   return async (dispatch, getState) => {
-    const dashboardStore = store.getState().dashboard;
+    const dashboardStore = getState().dashboard;
     if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
@@ -73,7 +73,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
             return chart.id
           })
           chartIds = chartIds.length > 0 && chartIds.flat(1)
-          store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
+          dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
         } else {
           await onGetDashboardData_action(dashboardId, false)()
           await updateGridData_action(dashboardId, true)()
@@ -85,8 +85,8 @@ const getPositionGrid_action = (dashboardId, refresh) => {
   }
 }
 const getChartBusiness_action = (dashboardId) => {
-  return async function (dispatch, getState) {
-    const boardGridOrigin = store.getState().dashboard.boardGridOrigin
+  return async (dispatch, getState) => {
+    const boardGridOrigin = getState().dashboard.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
     if (chartIds && chartIds.length > 0) {
       const res = await getChartBusiness({
@@ -94,17 +94,17 @@ const getChartBusiness_action = (dashboardId) => {
         chartIds: chartIds.join(',')
       })
       if (res.code === "0") {
-        store.dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
+        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }
     }
   }
 }
 
 const getNavigationList_action = () => {
-  return async function (dispatch, getState) {
+  return async (dispatch, getState) => {
     const res = await navigationList()
     if (res.statusCode === 0 && res.success) {
-      store.dispatch({ type: types.GET_NAV_LIST, payload: res.data })
+      dispatch({ type: types.GET_NAV_LIST, payload: res.data })
     }
   }
 }
