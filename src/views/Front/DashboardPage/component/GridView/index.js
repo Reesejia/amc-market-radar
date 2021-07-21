@@ -8,6 +8,7 @@ import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 // import GridContentWraper from '@/views/Front/DashboardPage/HighComponent/GridContentWraper'
 import { PageHeader, Divider } from 'antd';
+import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
@@ -154,7 +155,7 @@ class GridView extends PureComponent {
               <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
               <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
             </div>
-            {component}
+            <WithLazyload id={widget.id}>{component}</WithLazyload>
           </div>
         );
       })

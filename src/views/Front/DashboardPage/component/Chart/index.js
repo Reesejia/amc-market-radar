@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import {connect} from 'react-redux'
-import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
 import * as echarts from 'echarts'
 class ChartComponent extends PureComponent {
   constructor() {
@@ -128,4 +127,4 @@ const mapStateToProps = (state, ownProps) => {
     businessData
   }
 }
-export default connect(mapStateToProps)(WithLazyload(ChartComponent))
+export default connect(mapStateToProps)(ChartComponent)

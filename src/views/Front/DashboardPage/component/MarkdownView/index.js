@@ -1,5 +1,4 @@
 import Markdown from './Markdown'
-import WithLazyload from '@/views/Front/DashboardPage/component/GridView/WithLazyload'
 const MarkdownView = (props) => {
   const data = props.widget.chartStyle.chart.datasourceDefine
   return (
@@ -10,4 +9,4 @@ const MarkdownView = (props) => {
   )
 }
 
-export default WithLazyload(MarkdownView)
+export default MarkdownView
