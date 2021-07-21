@@ -26,7 +26,6 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
             charsData: charsData,
             viewType: []
           }).parseLayout()
-          console.log('gridwidgets', gridwidgets)
         }
         store.dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
       }
@@ -37,7 +36,6 @@ const updateGridData_action = (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
   return async function (dispatch, getState) {
     const boardGridOrigin = store.getState().dashboard.boardGridOrigin;
-    console.log('boardGridOrigin', boardGridOrigin)
     const gridwidgets = boardGridOrigin[dashboardId].widgets.map(element => {
       if (element.id === "TABS-fbvOzXKTIc") {
         element.static = true
@@ -95,7 +93,6 @@ const getChartBusiness_action = (dashboardId) => {
         dashboardId,
         chartIds: chartIds.join(',')
       })
-      console.log('getChartBusiness res', res)
       if (res.code === "0") {
         store.dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }

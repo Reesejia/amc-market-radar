@@ -82,7 +82,6 @@ class DragLayout extends PureComponent {
   }
 
   render() {
-    console.log('this.props index', this.props)
     return (
       <div>
         <div style={{ background: '#fff', padding: '0 30px' }}>

@@ -26,9 +26,7 @@ class GridView extends PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    console.log('nextProps11', nextProps)
     const { widgets, chartsData } = nextProps
-    console.log('chartsData', chartsData)
 
     if (widgets.length > 0) {
       return {
@@ -52,7 +50,6 @@ class GridView extends PureComponent {
     let sideBarWidth = 0
     if ($sidebar && $sidebar.length) {
       sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-      console.log('sideBarWidth', sideBarWidth)
     }
     document.body.click()
     const full = window.document.querySelector(`#${id}`)
@@ -70,7 +67,6 @@ class GridView extends PureComponent {
   }
 
   closeFullScreen(id) {
-    console.log(this.height)
     document.body.click()
     this.isFullscreen = false
     const full = window.document.querySelector(`#${id}`)
@@ -102,7 +98,6 @@ class GridView extends PureComponent {
             )
             // component =  WithLazyload(<TableView widget={widget} />)
           } else {
-            // console.log('widget xxxxx', widget)
             component = (
               <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
               // component = (
@@ -142,7 +137,6 @@ class GridView extends PureComponent {
             <div key={widget.i}>{widget.i}</div>
           )
         }
-        // console.log('componentcomponent', component)
 
         // if (widget.type === 'CHART') {
 
@@ -151,12 +145,10 @@ class GridView extends PureComponent {
         //         <Chart widget={widget} />
         //       </WithLazyload>
         //     )
-        //     console.log('component333', component)
         //   }else {
         //     component = (
         //       <div>{widget.i}</div>
         //     )
-        //     console.log('component44', component)
         //   }
         // component = (
         //         <div key={widget.i}>{widget.i}</div>
@@ -187,7 +179,6 @@ class GridView extends PureComponent {
         })
       })
     })
-    console.log('onLayoutChange layouts11 widgets', this.state.widgets)
   }
 
   mergeLayout() {
@@ -200,7 +191,6 @@ class GridView extends PureComponent {
 
 
   render() {
-    console.log(' this.state.widgets', this.state.widgets)
     return (
       <ResponsiveReactGridLayout
         width={1200}

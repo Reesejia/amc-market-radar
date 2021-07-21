@@ -31,8 +31,6 @@ class ChartComponent extends PureComponent {
       const detailType = vizType
       const all = {}
       const { businessData } = nextProps
-      console.log('state.dashboard.chartsData nextProps', nextProps)
-      console.log('state.dashboard.chartsData', businessData)
       if(businessData){
         const list = businessData
         if (detailType === 'radar' || detailType === 'multiple-bar') { // 雷达图
@@ -102,7 +100,6 @@ class ChartComponent extends PureComponent {
         }
          else if (detailType === 'map') {
           option.series[0].data = list
-          console.log(JSON.parse(JSON.stringify(option)))
         }
       }
       return { option, id: widget.i, }

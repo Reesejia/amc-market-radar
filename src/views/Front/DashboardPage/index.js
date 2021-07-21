@@ -12,6 +12,7 @@ const { TabPane } = Tabs;
 const HeaderTab = (props) => {
   const [list, setList] = useState([])
   const [dashboardId, setDashboardId] = useState("")
+  const gridRef = useRef()
 
   const getGridsData = async (refresh) => {
     await props.getPositionGrid_action(dashboardId, refresh)
@@ -33,7 +34,7 @@ const HeaderTab = (props) => {
   }, [])
 
   useEffect(async () => {
-    getGridsData(true)
+    getGridsData(false)
   }, [dashboardId])
 
   const tabChange = (key) => {
@@ -71,6 +72,7 @@ const HeaderTab = (props) => {
               {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
+                    ref={gridRef}
                     widgets={props.boardGridOrigin[dashboardId].widgets}
                     dashboardId={item.dashboardId}
                   />

@@ -19,7 +19,6 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    console.log(config)
     if (config.headers.type === 'wbsApiNew') {
       config.url = `${config.url}?_=${config.data.name}`
       const configNew = wbsApiNew({
