@@ -106,9 +106,9 @@ const HeaderTab = (props) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    navList: state.dashboard.navList,
-    groupId: state.dashboard.groupId,
-    boardGridOrigin: state.dashboard.boardGridOrigin,
+    navList: state.dashboardStore.navList,
+    groupId: state.dashboardStore.groupId,
+    boardGridOrigin: state.dashboardStore.boardGridOrigin,
   }
 }
 export default connect(mapStateToProps, actions)(HeaderTab)

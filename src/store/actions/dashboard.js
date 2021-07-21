@@ -35,7 +35,7 @@ const onGetDashboardData_action = async (dashboardId, refresh) => {
 const updateGridData_action = async (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
   return async function (dispatch, getState) {
-    const boardGridOrigin = store.getState().dashboard.boardGridOrigin;
+    const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin;
     const gridwidgets = boardGridOrigin[dashboardId].widgets.map(element => {
       if (element.id === "TABS-fbvOzXKTIc") {
         element.static = true
@@ -59,7 +59,7 @@ const updateGridData_action = async (dashboardId) => {
 // 指定看板的数据
 const getPositionGrid_action =async (dashboardId, refresh) => {
   return async (dispatch, getState) => {
-    const dashboardStore = store.getState().dashboard;
+    const dashboardStore = store.getState().dashboardStore;
     if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
@@ -75,10 +75,10 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
           chartIds = chartIds.length > 0 && chartIds.flat(1)
           store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
         } else {
-          await onGetDashboardData_action(dashboardId, false)()
-          await updateGridData_action(dashboardId, true)()
-          await getPositionGrid_action(dashboardId, true)()
-          await getChartBusiness_action(dashboardId)()
+          await onGetDashboardData_action(dashboardId, false)
+          await updateGridData_action(dashboardId, true)
+          await getPositionGrid_action(dashboardId, true)
+          await getChartBusiness_action(dashboardId)
         }
       }
     }
@@ -86,7 +86,7 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
 }
 const getChartBusiness_action =async (dashboardId) => {
   return async function (dispatch, getState) {
-    const boardGridOrigin = store.getState().dashboard.boardGridOrigin
+    const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
     if (chartIds && chartIds.length > 0) {
       const res = await getChartBusiness({
