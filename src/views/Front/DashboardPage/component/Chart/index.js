@@ -122,7 +122,7 @@ class ChartComponent extends PureComponent {
 const mapStateToProps = (state, ownProps) => {
   let businessData = []
   if(ownProps.widget && ownProps.widget.id){
-    businessData =  state.dashboard.chartsData[ownProps.widget.id] && state.dashboard.chartsData[ownProps.widget.id].data
+    businessData =  state.dashboardStore.chartsData[ownProps.widget.id] && state.dashboardStore.chartsData[ownProps.widget.id].data
   }
   return {
     businessData

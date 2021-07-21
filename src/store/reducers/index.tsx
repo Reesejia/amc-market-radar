@@ -1,9 +1,9 @@
 import {combineReducers, ReducersMapObject, Reducer, AnyAction} from 'redux'
 import history from '@/Router/history'
-import dashboard from './dashboard'
+import dashboardStore from './dashboardStore'
 import {connectRouter} from 'connected-react-router'
 let reducers: ReducersMapObject = {
-    dashboard,
+    dashboardStore ,
     router: connectRouter(history)
 }
 export type TypeRootState = {
