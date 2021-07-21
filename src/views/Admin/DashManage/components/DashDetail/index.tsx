@@ -53,7 +53,6 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
           dispatch({ type: 'SET_EDIT_GROUP', payload: true })
         },
         onCancel() {
-          console.log('Cancel');
         }
       });
     } else {

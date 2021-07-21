@@ -88,11 +88,9 @@ export default class DragLayout extends PureComponent {
         }),
       },
     );
-    console.log('widgets', this.state.widgets)
   };
 
   onRemoveItem(i) {
-    console.log(this.state.widgets)
     this.setState({
       widgets: this.state.widgets.filter((item,index) => index !==i)
     });
@@ -100,8 +98,6 @@ export default class DragLayout extends PureComponent {
   }
 
   onLayoutChange(layout, layouts) {
-    console.log('layout00', layout)
-    console.log('layouts11', layouts)
     this.saveToLS("layouts", layouts);
     this.setState({ layouts });
   }

@@ -26,9 +26,7 @@ class GridView extends PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    console.log('nextProps11', nextProps)
     const { widgets, chartsData } = nextProps
-    console.log('chartsData', chartsData)
 
     if (widgets.length > 0) {
       return {
@@ -52,7 +50,6 @@ class GridView extends PureComponent {
     let sideBarWidth = 0
     if ($sidebar && $sidebar.length) {
       sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-      console.log('sideBarWidth', sideBarWidth)
     }
     document.body.click()
     const full = window.document.querySelector(`#${id}`)
@@ -70,7 +67,6 @@ class GridView extends PureComponent {
   }
 
   closeFullScreen(id) {
-    console.log(this.height)
     document.body.click()
     this.isFullscreen = false
     const full = window.document.querySelector(`#${id}`)
@@ -134,7 +130,6 @@ class GridView extends PureComponent {
             <div key={widget.i}>{widget.i}</div>
           )
         }
-        // console.log('componentcomponent', component)
 
         // if (widget.type === 'CHART') {
 
@@ -143,19 +138,17 @@ class GridView extends PureComponent {
         //         <Chart widget={widget} />
         //       </WithLazyload>
         //     )
-        //     console.log('component333', component)
         //   }else {
         //     component = (
         //       <div>{widget.i}</div>
         //     )
-        //     console.log('component44', component)
         //   }
         // component = (
         //         <div key={widget.i}>{widget.i}</div>
         //       )
 
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type}>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
             <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
             <div className='remove'>
               <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
@@ -178,7 +171,6 @@ class GridView extends PureComponent {
         })
       })
     })
-    console.log('onLayoutChange layouts11 widgets', this.state.widgets)
   }
 
   mergeLayout() {

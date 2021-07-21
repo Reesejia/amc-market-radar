@@ -30,7 +30,6 @@ const initialData = {
 };
 const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { groupData, getNavigationList } = props
-  console.log('GroupProps props', props)
   const [editStatus, changeEditStatus] = useState(false)
   const [data, setData] = useState<NavListInfo>(() => initialData)
   const { grounpListInfo } = useContext(DashContext)
@@ -49,8 +48,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     if(res.success && res.statusCode === 0){
       const {dashboardGroupMappings} = res.data
       // setData(dashboardGroupMappings)
-      console.log('res11', res)
-      console.log('onGenderChange', value, option)
       const { children } = option
       form.setFieldsValue({
         dashboardGroupName: children
@@ -68,8 +65,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
   const onFinish = async (values: { [x: string]: string; }) => {
-    console.log('values', values)
-    console.log('onFinish data', data)
     const keys = Object.keys(values)
     setData({
       ...data,
@@ -89,7 +84,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       changeEditStatus(false)
       getNavigationList()
     }
-    console.log('onFinish', values);
   };
 
   const onReset = () => {
@@ -97,7 +91,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
 
   const onFill = () => {
-    console.log('111', groupData.navigationName)
     form.setFieldsValue({
       navigationName: groupData.navigationName,
       dashboardGroupName: groupData.dashboardGroupName
@@ -109,12 +102,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       navGroup.key = navGroup.id
       return navGroup
     })
-    console.log('groupData data', data)
     setData(groupData)
   }
 
   useEffect(() => {
-    console.log('useEffect')
     onFill()
     fillTable()
   }, [])
@@ -208,7 +199,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const moveRow = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       const dragRow = data.navigationGroups[dragIndex];
-      console.log('dragRow', dragRow)
       const row = update(data.navigationGroups, {
         $splice: [
           [dragIndex, 1],
@@ -222,7 +212,6 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   );
 
 
-  console.log('grounpListInfo.content11', grounpListInfo.content)
   return (
     <div className="edit-group-form">
       <Form {...layout} form={form} onFinish={onFinish}>

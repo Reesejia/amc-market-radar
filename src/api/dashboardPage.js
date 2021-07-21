@@ -1,7 +1,6 @@
 import  _axios from '../utils/axios'
 const  baseURL = '/api/radar';
 export function getPostionOrigin(dashboardId){
-    console.log('Request', _axios)
     return _axios({
         url: `${baseURL}/dashboard/position?dashboardId=${dashboardId}`,
         method: 'get',
@@ -9,7 +8,6 @@ export function getPostionOrigin(dashboardId){
 }
 
 export function savePositionGrid(data){
-    console.log('Request', _axios)
     return _axios({
         url: `${baseURL}/dashboard/gridData`,
         method: 'post',
@@ -19,7 +17,6 @@ export function savePositionGrid(data){
 
 
 export function getPositionGrid(dashboardId){
-    console.log('Request', _axios)
     return _axios({
         url: `${baseURL}/dashboard/gridData?dashboardId=${dashboardId}`,
         method: 'get',
@@ -29,7 +26,6 @@ export function getPositionGrid(dashboardId){
 
 
 export function saveOriginBoardChartData(data){
-    console.log('Request', _axios)
     return _axios({
         url: `${baseURL}/dashboard/chartData`,
         method: 'post',

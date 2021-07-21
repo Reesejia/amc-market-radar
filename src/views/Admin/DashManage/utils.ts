@@ -25,8 +25,6 @@ type ACTION_TYPE = {
 };
 
 export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => {
-	console.log('dashReducer state', state);
-	console.log('dashReducer action', action);
 	switch (action.type) {
 		case 'CHAGE_GROUP_PARAMS':
 			return {

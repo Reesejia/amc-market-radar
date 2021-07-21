@@ -63,7 +63,6 @@ class DragLayout extends PureComponent {
   }
 
   componentDidMount() {
-    console.log('32333')
     // this.getGridsData(false)
   }
 
@@ -91,7 +90,6 @@ class DragLayout extends PureComponent {
   ge
 
   render() {
-    console.log('this.props index', this.props)
     return (
       <Layout>
         {/* <Header style={{ position: 'fixed', zIndex: 1, width: '100%', 'padding': '0 30px' }}> */}
