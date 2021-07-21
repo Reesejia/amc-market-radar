@@ -36,7 +36,7 @@ export default {
   updateGridData_action(dashboardId) {
     if (!dashboardId) message.error('请输入对应的看板id')
     return async (dispatch, getState) => {
-      const boardGridOrigin = getState().dashboard.boardGridOrigin;
+      const boardGridOrigin = getState().dashboardStore.boardGridOrigin;
       const gridwidgets = boardGridOrigin[dashboardId].widgets.map(element => {
         if (element.id === "TABS-fbvOzXKTIc") {
           element.static = true
@@ -59,7 +59,7 @@ export default {
   },
   getPositionGrid_action (dashboardId, refresh) {
     return async (dispatch, getState) => {
-      const dashboardStore = getState().dashboard;
+      const dashboardStore = getState().dashboardStore;
       if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
         const res = await getDashGrid(dashboardId, refresh)
         if (res.statusCode === 0 && res.success) {
@@ -86,7 +86,7 @@ export default {
   },
   getChartBusiness_action (dashboardId) {
     return async (dispatch, getState) => {
-      const boardGridOrigin = getState().dashboard.boardGridOrigin
+      const boardGridOrigin = getState().dashboardStore.boardGridOrigin
       const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
       if (chartIds && chartIds.length > 0) {
         const res = await getChartBusiness({
