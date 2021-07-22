@@ -35,8 +35,12 @@ export async function mount(props) {
   m.set('/amc/manage/amc-dashbi', 'n1');
   m.set('/amc/sub-app-radar', 'n1');
   m.set('/amc/sub-app-house', 'n2');
-  let boardId = m.get(props.routerBase)
-  store.dispatch({ type: types.GROUP_ID, payload: boardId})
+  let groupId = m.get(props.routerBase)
+  if(props.routerBase === '/amc/manage/amc-dashbi'){
+    let isEditDashboard = false
+  }
+  store.dispatch({ type: types.GROUP_ID, payload: groupId})
+  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: false})
   render(props);
 }
 

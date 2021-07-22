@@ -8,7 +8,8 @@ let initialState = {
   chartsData: {},
   navList: [],
   groupId: "n1",
-  updateActiveKey: ''
+  isEditDashBoard: true
+  // updateActiveKey: ''
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -61,6 +62,9 @@ export default function (state = initialState, action) {
       };
       return a
     case types.GROUP_ID:
+      return { ...state, groupId: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
+    case types.IS_EDIT_DASHBOARD:
+      return { ...state, isEditDashBoard: payload,...state.boardDataOrigin, ...state.boardGridOrigin};
       return { ...state, groupId: payload, ...state.boardDataOrigin,  ...state.boardGridOrigin};
       // case types.UPDATE_ACTIVE_KEY:
       //   return { ...state, chartsData: {...state.chartsData}}
