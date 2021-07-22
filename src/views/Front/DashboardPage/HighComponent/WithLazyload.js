@@ -1,3 +1,4 @@
+import { divide } from 'lodash'
 import  { PureComponent } from 'react'
 
 let tasks = []
@@ -65,11 +66,7 @@ class WithLazyload extends PureComponent {
 
     render() {
       return (
-        <>
-          {
-            this.state.show && this.props.children
-          }
-        </>
+        <div style={{flex: 'auto',width: "100%", height: "100%"}}>{this.state.show && this.props.children}</div>
       )
     }
   }

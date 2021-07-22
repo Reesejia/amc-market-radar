@@ -1,0 +1,30 @@
+.grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #fff;
+    margin: 15px;
+
+    &.grid-wrapper-showPage {
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .grid-header {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .remove {
+        position: absolute;
+        z-index: 10;
+        top: 20px;
+        right: 20px;
+
+        span {
+            margin-left: 10px;
+        }
+    }
+}

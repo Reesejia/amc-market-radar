@@ -1,14 +1,16 @@
 import React, { PureComponent } from 'react';
-import _ from "lodash";
+import _, { divide } from "lodash";
 import Feed from '@/views/Front/DashboardPage/component/Feed';
 import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
-// import GridContentWraper from '@/views/Front/DashboardPage/HighComponent/GridContentWraper'
+import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
 import { PageHeader, Divider } from 'antd';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
+import "./index.scss"
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
@@ -131,26 +133,9 @@ class GridView extends PureComponent {
             <div key={widget.i}>{widget.i}</div>
           )
         }
-
-        // if (widget.type === 'CHART') {
-
-        //     component = (
-        //       <WithLazyload  id={widget.id} >
-        //         <Chart widget={widget} />
-        //       </WithLazyload>
-        //     )
-        //   }else {
-        //     component = (
-        //       <div>{widget.i}</div>
-        //     )
-        //   }
-        // component = (
-        //         <div key={widget.i}>{widget.i}</div>
-        //       )
-
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
-            <span>{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</span>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static} className={`grid-wrapper ${this.props.isEditDashBoard?'':'grid-wrapper-showPage'} `}>
+            <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
             <div className='remove'>
               <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
               <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
@@ -185,22 +170,29 @@ class GridView extends PureComponent {
 
   render() {
     return (
-      <ResponsiveReactGridLayout
-        className="layout"
-        {...this.props}
-        layouts={this.state.widgets}
-        rowHeight={10}
-        onLayoutChange={(layout, layouts) => {
-          this.onLayoutChange(layout, layouts)
+      <>
+        {
+          this.props.isEditDashBoard ? (<ResponsiveReactGridLayout
+            className="layout"
+            {...this.props}
+            layouts={this.state.widgets}
+            rowHeight={10}
+            onLayoutChange={(layout, layouts) => {
+              this.onLayoutChange(layout, layouts)
+            }
+            }
+          >
+            {this.getChartDom()}
+          </ResponsiveReactGridLayout>) : (this.getChartDom())
         }
-        }
-      >
-        {this.getChartDom()}
-      </ResponsiveReactGridLayout>
+      </>
     );
   }
 }
 
-
-// export default GridContentWraper(GridView)
-export default GridView
+const mapStateToProps = (state, ownProps) => {
+  return {
+    isEditDashBoard: state.dashboardStore.isEditDashBoard
+  }
+}
+export default connect(mapStateToProps, actions)(GridView)
