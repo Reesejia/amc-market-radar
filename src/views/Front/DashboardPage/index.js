@@ -3,15 +3,20 @@ import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
+import { withKeepAlive } from '@/component/keepalive-react-component'
 import { Popconfirm, Button } from 'antd';
+import { useHistory } from 'react-router-dom'
 import store from '@/store'
+import { Switch, Route} from 'react-router-dom';
 import * as types from '@/store/action-types';
 
 const { TabPane } = Tabs;
 
 const HeaderTab = (props) => {
+  const history = useHistory()
   const [list, setList] = useState([])
   const [dashboardId, setDashboardId] = useState("")
+  const [routerList, setRouterList] = useState([])
   const gridRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -29,6 +34,15 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         setDashboardId(listArr[0] && listArr[0].dashboardId)
+        const l = listArr.map(item => {
+          return {
+            key: item.dashboardId,
+            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
+            // com: GridView
+          }
+        })
+        setRouterList(l)
+
       }
     }
   }, [props.navList, props.groupId])
@@ -38,11 +52,26 @@ const HeaderTab = (props) => {
     props.getNavigationList_action()
   }, [])
 
-  useEffect(async () => {
-    getGridsData(false)
+
+
+  useEffect(() => {
+    const cacheIds = []
+    // store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
+    for(let id in  props.boardGridOrigin){
+      if(props.boardGridOrigin[id].widgets.length > 0){
+        cacheIds.push(id)
+      }
+    }
+    console.log('cacheIds', cacheIds)
+    if(!cacheIds.includes(dashboardId)){
+      getGridsData(false)
+    }
   }, [dashboardId])
 
+
+
   const tabChange = (key) => {
+    history.push(`/dashboardPage/${key}`)
     setDashboardId(key)
   }
 
@@ -55,7 +84,6 @@ const HeaderTab = (props) => {
   }
 
   const onSavePositionGrid = async () => {
-    debugger
     if (gridRef.current) {
       console.log('gridRef.current', gridRef.current)
 
@@ -91,6 +119,7 @@ const HeaderTab = (props) => {
                   null
               }
             </div>
+
           </TabPane>
         ))
       }
@@ -108,6 +137,18 @@ const HeaderTab = (props) => {
         </Popconfirm>
       </div>
     }
+
+    <Switch>
+      {
+        routerList.length > 0 && routerList.map((item) => (
+          <Route key={item.key} path={`/dashboardPage/${item.key}`}
+           component={item.com}
+          >
+
+          </Route>
+        ))
+      }
+    </Switch>
   </div>
 
 }

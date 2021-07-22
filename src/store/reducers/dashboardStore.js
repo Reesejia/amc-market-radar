@@ -9,6 +9,7 @@ let initialState = {
   navList: [],
   groupId: "n1",
   isEditDashBoard: true
+  // updateActiveKey: ''
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -35,8 +36,8 @@ export default function (state = initialState, action) {
       const c = { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashId]: dashIdObj } };
       return c
 
-    case types.GET_BUSINESS_DATA:
-      return { ...state, chartsData: payload };
+      case types.GET_BUSINESS_DATA:
+        return { ...state, chartsData: {...state.chartsData,...payload }};
 
     case types.GET_NAV_LIST:
       payload.forEach(dashGroup => {
@@ -64,6 +65,9 @@ export default function (state = initialState, action) {
       return { ...state, groupId: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
     case types.IS_EDIT_DASHBOARD:
       return { ...state, isEditDashBoard: payload,...state.boardDataOrigin, ...state.boardGridOrigin};
+      return { ...state, groupId: payload, ...state.boardDataOrigin,  ...state.boardGridOrigin};
+      // case types.UPDATE_ACTIVE_KEY:
+      //   return { ...state, chartsData: {...state.chartsData}}
     default:
       return state;
   }

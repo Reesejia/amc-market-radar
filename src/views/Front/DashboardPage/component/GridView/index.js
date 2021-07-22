@@ -169,6 +169,7 @@ class GridView extends PureComponent {
 
 
   render() {
+    console.log("this.props333", this.props)
     return (
       <>
         {
@@ -191,7 +192,16 @@ class GridView extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('ownProp333s', ownProps)
+  let widgets =[]
+  if(ownProps.location){
+    const id = ownProps.location.pathname.split('/dashboardPage/')[1]
+    widgets =  state.dashboardStore.boardGridOrigin[id] &&  state.dashboardStore.boardGridOrigin[id].widgets
+  }else {
+    widgets = ownProps.widgets
+  }
   return {
+    widgets,
     isEditDashBoard: state.dashboardStore.isEditDashBoard
   }
 }

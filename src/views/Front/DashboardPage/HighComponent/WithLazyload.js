@@ -32,7 +32,7 @@ class WithLazyload extends PureComponent {
         let ele = document.getElementById(this.props.id)
         const ob = new IntersectionObserver((changes) => {
           changes.forEach(change => {
-            console.log('change', change)
+            // console.log('change', change)
             const { isIntersecting, target } = change
             if (!isIntersecting) {
               ob.unobserve(ele)

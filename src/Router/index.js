@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import DashManage from '@/views/Admin/DashManage'
 import DashboardPage from '@/views/Front/DashboardPage'
+import { KeepAliveProvider } from '@/component/keepalive-react-component'
 
 // const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
 // const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'../views/Front/DashboardPage'))
@@ -13,6 +14,7 @@ import DashboardPage from '@/views/Front/DashboardPage'
 // const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
 const routes = () => (
   <Router basename="/amc/manage/amc-dashbi">
+      <KeepAliveProvider>
     <Suspense fallback={<Spin />}>
       <div>
         <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
@@ -30,6 +32,7 @@ const routes = () => (
         </Switch>
       </div>
     </Suspense>
+    </KeepAliveProvider>
   </Router>
 );
 
