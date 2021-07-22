@@ -36,9 +36,22 @@ const HeaderTab = (props) => {
     props.getNavigationList_action()
   }, [])
 
-  useEffect(async () => {
-    getGridsData(false)
+
+
+  useEffect(() => {
+    const cacheIds = []
+    for(let id in  props.boardGridOrigin){
+      if(props.boardGridOrigin[id].widgets.length > 0){
+        cacheIds.push(id)
+      }
+    }
+    console.log('cacheIds', cacheIds)
+    if(!cacheIds.includes(dashboardId)){
+      getGridsData(false)
+    }
   }, [dashboardId])
+
+
 
   const tabChange = (key) => {
     setDashboardId(key)
