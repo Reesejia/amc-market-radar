@@ -23,45 +23,45 @@ class WithLazyload extends PureComponent {
     constructor(props) {
       super(props)
       this.state = {
-        show: true
+        show: false
       }
     }
-    // componentDidMount() {
-    //   if (this.props.id) {
-    //     let ele = document.getElementById(this.props.id)
-    //     const ob = new IntersectionObserver((changes) => {
-    //       changes.forEach(change => {
-    //         // console.log('change', change)
-    //         const { isIntersecting, target } = change
-    //         if (!isIntersecting) {
-    //           ob.unobserve(ele)
-    //           if(!this.state.show){
-    //             this.setState({
-    //               show: true
-    //             })
-    //             target.$task.remove()
-    //           }
-    //         }
-    //       })
-    //     }, {
-    //       threshold: [0]
-    //     })
-    //     ob.observe(ele)
-    //     if(!this.state.show){
-    //       const task = {
-    //         classComponent: this,
-    //         show: false,
-    //       }
-    //       task.remove = () =>{
-    //         tasks = tasks.filter(t => t !== task.classComponent)
-    //       }
-    //       ele.$task = task
+    componentDidMount() {
+      if (this.props.id) {
+        let ele = document.getElementById(this.props.id)
+        const ob = new IntersectionObserver((changes) => {
+          changes.forEach(change => {
+            // console.log('change', change)
+            const { isIntersecting, target } = change
+            if (!isIntersecting) {
+              ob.unobserve(ele)
+              if(!this.state.show){
+                this.setState({
+                  show: true
+                })
+                target.$task.remove()
+              }
+            }
+          })
+        }, {
+          threshold: [0]
+        })
+        ob.observe(ele)
+        if(!this.state.show){
+          const task = {
+            classComponent: this,
+            show: false,
+          }
+          task.remove = () =>{
+            tasks = tasks.filter(t => t !== task.classComponent)
+          }
+          ele.$task = task
 
-    //       tasks.push(task)
-    //     }
-    //   }
-    //   window.requestIdleCallback(myNonEssentialWork);
-    // }
+          tasks.push(task)
+        }
+      }
+      window.requestIdleCallback(myNonEssentialWork);
+    }
 
     render() {
       return (
