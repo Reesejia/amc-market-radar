@@ -7,7 +7,8 @@ let initialState = {
   chartIds: [],
   chartsData: {},
   navList: [],
-  groupId: "n1"
+  groupId: "n1",
+  updateActiveKey: ''
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -35,7 +36,7 @@ export default function (state = initialState, action) {
       return c
 
       case types.GET_BUSINESS_DATA:
-        return { ...state, chartsData: payload };
+        return { ...state, chartsData: {...state.chartsData,...payload }};
 
     case types.GET_NAV_LIST:
       payload.forEach(dashGroup => {
@@ -61,6 +62,8 @@ export default function (state = initialState, action) {
       return a
     case types.GROUP_ID:
       return { ...state, groupId: payload, ...state.boardDataOrigin,  ...state.boardGridOrigin};
+      case types.UPDATE_ACTIVE_KEY:
+        return { ...state, chartsData: {...state.chartsData}}
     default:
       return state;
   }

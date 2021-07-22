@@ -40,6 +40,7 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     const cacheIds = []
+    store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
     for(let id in  props.boardGridOrigin){
       if(props.boardGridOrigin[id].widgets.length > 0){
         cacheIds.push(id)

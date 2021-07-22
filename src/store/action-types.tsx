@@ -4,6 +4,7 @@ export const GET_BUSINESS_DATA = 'GET_BUSINESS_DATA'// 根据 chart id获取业�
 export const GET_DASH_ORIGIN_DATA = 'GET_DASH_ORIGIN_DATA'// 获取老接口dashboard positionJson charsData
 export const GET_NAV_LIST = 'GET_NAV_LIST'// 获取顶部tab
 export const GROUP_ID = 'GROUP_ID'// 获取顶部tab
+export const UPDATE_ACTIVE_KEY = 'UPDATE_ACTIVE_KEY'// key 改变
 
 
 
