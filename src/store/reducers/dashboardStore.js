@@ -62,8 +62,8 @@ export default function (state = initialState, action) {
       return a
     case types.GROUP_ID:
       return { ...state, groupId: payload, ...state.boardDataOrigin,  ...state.boardGridOrigin};
-      case types.UPDATE_ACTIVE_KEY:
-        return { ...state, chartsData: {...state.chartsData}}
+      // case types.UPDATE_ACTIVE_KEY:
+      //   return { ...state, chartsData: {...state.chartsData}}
     default:
       return state;
   }

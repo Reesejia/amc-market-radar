@@ -3,15 +3,20 @@ import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
+import { withKeepAlive } from '@/component/keepalive-react-component'
 import { Popconfirm, Button } from 'antd';
+import { useHistory } from 'react-router-dom'
 import store from '@/store'
+import { Switch, Route} from 'react-router-dom';
 import * as types from '@/store/action-types';
 
 const { TabPane } = Tabs;
 
 const HeaderTab = (props) => {
+  const history = useHistory()
   const [list, setList] = useState([])
   const [dashboardId, setDashboardId] = useState("")
+  const [routerList, setRouterList] = useState([])
   const gridRef = useRef()
 
   const getGridsData = async (refresh) => {
@@ -27,6 +32,15 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         setDashboardId(listArr[0] && listArr[0].dashboardId)
+        const l = listArr.map(item => {
+          return {
+            key: item.dashboardId,
+            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
+            // com: GridView
+          }
+        })
+        setRouterList(l)
+
       }
     }
   }, [props.navList,props.groupId])
@@ -40,7 +54,7 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     const cacheIds = []
-    store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
+    // store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
     for(let id in  props.boardGridOrigin){
       if(props.boardGridOrigin[id].widgets.length > 0){
         cacheIds.push(id)
@@ -55,6 +69,7 @@ const HeaderTab = (props) => {
 
 
   const tabChange = (key) => {
+    history.push(`/dashboardPage/${key}`)
     setDashboardId(key)
   }
 
@@ -88,22 +103,24 @@ const HeaderTab = (props) => {
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
-            <div style={{ background: '#fff', padding: 20, minHeight: 800 }}>
-              {
-                props.boardGridOrigin[dashboardId] ?
-                  <GridView
-                    ref={gridRef}
-                    widgets={props.boardGridOrigin[dashboardId].widgets}
-                    dashboardId={item.dashboardId}
-                  />
-                  :
-                  null
-              }
-            </div>
+
           </TabPane>
         ))
       }
     </Tabs>
+
+    <Switch>
+      {
+        routerList.length > 0 && routerList.map((item) => (
+          <Route key={item.key} path={`/dashboardPage/${item.key}`}
+           component={item.com}
+          >
+
+          </Route>
+        ))
+      }
+    </Switch>
+
     <div style={{
       position: 'absolute',
       top: '10px',

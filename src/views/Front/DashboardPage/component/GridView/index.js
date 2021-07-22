@@ -8,6 +8,8 @@ import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 // import GridContentWraper from '@/views/Front/DashboardPage/HighComponent/GridContentWraper'
 import { PageHeader, Divider } from 'antd';
+import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -184,6 +186,7 @@ class GridView extends PureComponent {
 
 
   render() {
+    console.log("this.props333", this.props)
     return (
       <ResponsiveReactGridLayout
         className="layout"
@@ -203,4 +206,18 @@ class GridView extends PureComponent {
 
 
 // export default GridContentWraper(GridView)
-export default GridView
+// export default GridView
+const mapStateToProps = (state, ownProps) => {
+  console.log('ownProp333s', ownProps)
+  let widgets =[]
+  if(ownProps.location){
+    const id = ownProps.location.pathname.split('/dashboardPage/')[1]
+    widgets =  state.dashboardStore.boardGridOrigin[id] &&  state.dashboardStore.boardGridOrigin[id].widgets
+  }else {
+    widgets = ownProps.widgets
+  }
+  return {
+    widgets
+  }
+}
+export default connect(mapStateToProps, actions)(GridView)
