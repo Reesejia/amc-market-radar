@@ -103,8 +103,7 @@ const HeaderTab = (props) => {
     }
     // }
   }
-  // style={{ width: "100%", padding: '0 30px', position: 'relative' }}
-  return <div>
+  return <div style={{ position: 'relative' }}>
     <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
