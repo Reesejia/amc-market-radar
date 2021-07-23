@@ -7,7 +7,7 @@ import { withKeepAlive } from '@/component/keepalive-react-component'
 import { Popconfirm, Button } from 'antd';
 import { useHistory } from 'react-router-dom'
 import store from '@/store'
-import { Switch, Route} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import * as types from '@/store/action-types';
 
 const { TabPane } = Tabs;
@@ -57,13 +57,13 @@ const HeaderTab = (props) => {
   useEffect(() => {
     const cacheIds = []
     // store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
-    for(let id in  props.boardGridOrigin){
-      if(props.boardGridOrigin[id].widgets.length > 0){
+    for (let id in props.boardGridOrigin) {
+      if (props.boardGridOrigin[id].widgets.length > 0) {
         cacheIds.push(id)
       }
     }
     console.log('cacheIds', cacheIds)
-    if(!cacheIds.includes(dashboardId)){
+    if (!cacheIds.includes(dashboardId)) {
       getGridsData(false)
     }
   }, [dashboardId])
@@ -84,22 +84,23 @@ const HeaderTab = (props) => {
   }
 
   const onSavePositionGrid = async () => {
-    if (gridRef.current) {
-      console.log('gridRef.current', gridRef.current)
+    // if (gridRef.current) {
+    console.log('gridRef.current', gridRef.current)
 
-      const { widgets } = gridRef.current.state
-      if (widgets) {
-        store.dispatch({
-          type: types.UPDATE_GRIDDATA,
-          payload: {
-            dashId: dashboardId,
-            gridwidgets: widgets
-          }
-        })
-        await props.updateGridData_action(dashboardId)
-        await props.getPositionGrid_action(dashboardId, true)
-      }
+    // const { widgets } = gridRef.current.state
+    const { widgets } = props.boardGridOrigin[dashboardId]
+    if (widgets) {
+      store.dispatch({
+        type: types.UPDATE_GRIDDATA,
+        payload: {
+          dashId: dashboardId,
+          gridwidgets: widgets
+        }
+      })
+      await props.updateGridData_action(dashboardId)
+      await props.getPositionGrid_action(dashboardId, true)
     }
+    // }
   }
   // style={{ width: "100%", padding: '0 30px', position: 'relative' }}
   return <div>
@@ -111,7 +112,6 @@ const HeaderTab = (props) => {
               {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
-                    ref={gridRef}
                     widgets={props.boardGridOrigin[dashboardId].widgets}
                     dashboardId={item.dashboardId}
                   />
@@ -142,7 +142,7 @@ const HeaderTab = (props) => {
       {
         routerList.length > 0 && routerList.map((item) => (
           <Route key={item.key} path={`/dashboardPage/${item.key}`}
-           component={item.com}
+            component={item.com}
           >
 
           </Route>
