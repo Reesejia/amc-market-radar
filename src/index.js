@@ -26,11 +26,11 @@ if (!window.__POWERED_BY_QIANKUN__) {
 }
 
 export async function bootstrap() {
-  console.log('[react16] react app bootstraped');
+  console.log(' react app bootstraped');
 }
 
 export async function mount(props) {
-  console.log('[react16] props from main framework', props);
+  console.log(' props from main framework', props);
   let m = new Map();
   m.set('/amc/manage/amc-dashbi', 'n1');
   m.set('/amc/sub-app-radar', 'n1');

@@ -7,8 +7,14 @@ import history from '@/Router/history';
 import { routerMiddleware } from 'connected-react-router';
 import { TypeRootState } from './reducers';
 
-let reduxTools =  process.env.NODE_ENV === 'development' ?  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() : null
-let store = applyMiddleware(promise, thunk, logger, routerMiddleware(history))(createStore)(reducers, reduxTools)
+let store;
+if (process.env.NODE_ENV === 'development') {
+  const reduxTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  store = applyMiddleware(promise, thunk, logger, routerMiddleware(history))(createStore)(reducers, reduxTools)
+} else {
+  store = applyMiddleware(promise, thunk, logger, routerMiddleware(history))(createStore)(reducers)
+}
+
 export default store;
 
 
