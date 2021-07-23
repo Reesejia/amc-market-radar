@@ -34,7 +34,7 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         const dashId = listArr[0] && listArr[0].dashboardId
-        setDashboardId(dashId)
+
         const l = listArr.map(item => {
           return {
             key: item.dashboardId,
@@ -43,7 +43,15 @@ const HeaderTab = (props) => {
           }
         })
         setRouterList(l)
-        history.push(`/dashboardPage/${dashId}`)
+        const p = history.location.pathname && history.location.pathname
+        const baseArr = p && p.split('/')
+        if (baseArr[2] && baseArr[2].length > 0) {
+          history.push(`/dashboardPage/${baseArr[2]}`)
+          setDashboardId(baseArr[2])
+        }else {
+          history.push(`/dashboardPage/${dashId}`)
+          setDashboardId(dashId)
+        }
       }
     }
   }, [props.navList, props.groupId])
@@ -104,7 +112,7 @@ const HeaderTab = (props) => {
     // }
   }
   return <div style={{ position: 'relative' }}>
-    <Tabs defaultActiveKey="1" onChange={tabChange} className="header-tab-wrapper" animated={false}>
+  { list.length > 0 &&  <Tabs defaultActiveKey={dashboardId} activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
@@ -124,6 +132,7 @@ const HeaderTab = (props) => {
         ))
       }
     </Tabs>
+    }
     {
       props.isEditDashBoard && <div style={{
         position: 'absolute',
