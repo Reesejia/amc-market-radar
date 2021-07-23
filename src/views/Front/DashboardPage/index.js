@@ -107,7 +107,7 @@ const HeaderTab = (props) => {
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
-            <div>
+            {/* <div>
               {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
@@ -118,7 +118,7 @@ const HeaderTab = (props) => {
                   :
                   null
               }
-            </div>
+            </div> */}
 
           </TabPane>
         ))
@@ -144,7 +144,6 @@ const HeaderTab = (props) => {
           <Route key={item.key} path={`/dashboardPage/${item.key}`}
            component={item.com}
           >
-
           </Route>
         ))
       }
