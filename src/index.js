@@ -40,7 +40,7 @@ export async function mount(props) {
     let isEditDashboard = false
   }
   store.dispatch({ type: types.GROUP_ID, payload: groupId})
-  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: false})
+  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: true})
   render(props);
 }
 

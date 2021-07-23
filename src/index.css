@@ -45,8 +45,11 @@ code {
 
 .react-grid-item {
   border: 1px solid #ececec;
+  background: #fff;
   padding: 15px;
   box-sizing: border-box;
+  display: flex;
+  overflow: scroll;
 }
 
 .react-grid-item:hover .remove {

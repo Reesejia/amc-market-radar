@@ -26,7 +26,7 @@ const TableView = (props) => {
     }
   }, [props.businessData])
 
-  return  <Table className="table-view-wraper" loading={loading} columns={columns} dataIndex="key" dataSource={data} />
+  return  <Table className="table-view-wraper" loading={loading} columns={columns} dataIndex="key" dataSource={data} scroll={{ y: 250 }}/>
 }
 
 const mapStateToProps = (state, ownProps) => {

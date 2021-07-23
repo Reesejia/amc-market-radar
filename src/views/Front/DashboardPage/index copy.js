@@ -85,7 +85,7 @@ class DragLayout extends PureComponent {
     return (
       <div>
         <div style={{ background: '#fff', padding: '0 30px' }}>
-          <HeaderTab></HeaderTab>
+          {/* <HeaderTab></HeaderTab> */}
           {/* <div style={{
             position: 'fixed',
             top: '10px',

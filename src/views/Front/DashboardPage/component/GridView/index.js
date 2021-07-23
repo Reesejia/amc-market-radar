@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import _, { divide } from "lodash";
+import _, { conformsTo, divide } from "lodash";
 import Feed from '@/views/Front/DashboardPage/component/Feed';
 import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import Chart from '@/views/Front/DashboardPage/component/Chart'
@@ -42,6 +42,14 @@ class GridView extends PureComponent {
 
   showFullScreen(id) {
     var ele = document.getElementById(id);
+    // var para = document.createElement("div");
+    // para.style.width = 'calc(100vw)'
+    // para.style.height = 'calc(100vh)'
+    // para.appendChild(ele)
+    // document.body.appendChild(para);
+    // console.log("zyy", ele)
+
+
     const { width, height, transform } = window.getComputedStyle(ele)
     let translate = transform.split('(')[1].split(')')[0].split(',')
     this.setState({
@@ -134,13 +142,15 @@ class GridView extends PureComponent {
           )
         }
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static} className={`grid-wrapper ${this.props.isEditDashBoard?'':'grid-wrapper-showPage'} `}>
-            <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
-            <div className='remove'>
-              <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-              <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
+            <div className={`grid-wrapper ${this.props.isEditDashBoard ? '' : 'grid-wrapper-showPage'}`}>
+              <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
+              <div className='remove'>
+                <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
+                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
+              </div>
+              <WithLazyload id={widget.id}>{component}</WithLazyload>
             </div>
-            <WithLazyload id={widget.id}>{component}</WithLazyload>
           </div>
         );
       })
@@ -171,33 +181,45 @@ class GridView extends PureComponent {
   render() {
     console.log("this.props333", this.props)
     return (
-      <>
-        {
-          this.props.isEditDashBoard ? (<ResponsiveReactGridLayout
-            className="layout"
-            {...this.props}
-            layouts={this.state.widgets}
-            rowHeight={10}
-            onLayoutChange={(layout, layouts) => {
-              this.onLayoutChange(layout, layouts)
-            }
-            }
-          >
-            {this.getChartDom()}
-          </ResponsiveReactGridLayout>) : (this.getChartDom())
+      // <>
+      //   {
+      //     this.props.isEditDashBoard ? (<ResponsiveReactGridLayout
+      //       className="layout"
+      //       {...this.props}
+      //       layouts={this.state.widgets}
+      //       rowHeight={10}
+      //       onLayoutChange={(layout, layouts) => {
+      //         this.onLayoutChange(layout, layouts)
+      //       }
+      //       }
+      //     >
+      //       {this.getChartDom()}
+      //     </ResponsiveReactGridLayout>) : (this.getChartDom())
+      //   }
+      // </>
+      <ResponsiveReactGridLayout
+        className="layout"
+        {...this.props}
+        layouts={this.state.widgets}
+        rowHeight={10}
+        onLayoutChange={(layout, layouts) => {
+          this.onLayoutChange(layout, layouts)
         }
-      </>
+        }
+      >
+        {this.getChartDom()}
+      </ResponsiveReactGridLayout>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   console.log('ownProp333s', ownProps)
-  let widgets =[]
-  if(ownProps.location){
+  let widgets = []
+  if (ownProps.location) {
     const id = ownProps.location.pathname.split('/dashboardPage/')[1]
-    widgets =  state.dashboardStore.boardGridOrigin[id] &&  state.dashboardStore.boardGridOrigin[id].widgets
-  }else {
+    widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
+  } else {
     widgets = ownProps.widgets
   }
   return {
