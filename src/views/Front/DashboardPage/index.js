@@ -33,7 +33,8 @@ const HeaderTab = (props) => {
       if (props.navList.length) {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
-        setDashboardId(listArr[0] && listArr[0].dashboardId)
+        const dashId = listArr[0] && listArr[0].dashboardId
+        setDashboardId(dashId)
         const l = listArr.map(item => {
           return {
             key: item.dashboardId,
@@ -42,7 +43,7 @@ const HeaderTab = (props) => {
           }
         })
         setRouterList(l)
-
+        history.push(`/dashboardPage/${dashId}`)
       }
     }
   }, [props.navList, props.groupId])
