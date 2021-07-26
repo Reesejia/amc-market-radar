@@ -12,8 +12,8 @@ import { KeepAliveProvider } from '@/component/keepalive-react-component'
 // import DragLayout from '../views/Front/DragLayout'
 // const DragLayout = lazy(() => import('../views/Front/DragLayout'))
 // const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
-const routes = () => (
-  <Router basename="/amc/manage/amc-dashbi">
+const routes = (props) => (
+ <Router basename={props.basename}>
       <KeepAliveProvider>
     <Suspense fallback={<Spin />}>
       <div>

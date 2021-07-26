@@ -47,7 +47,9 @@ class WithLazyload extends PureComponent {
         }, {
           threshold: [0]
         })
-        ob.observe(ele)
+        if(ele){
+          ob.observe(ele)
+        }
         if(!this.state.show){
           const task = {
             classComponent: this,
@@ -56,8 +58,9 @@ class WithLazyload extends PureComponent {
           task.remove = () =>{
             tasks = tasks.filter(t => t !== task.classComponent)
           }
-          ele.$task = task
-
+          if(ele){
+            ele.$task = task
+          }
           tasks.push(task)
         }
       }
