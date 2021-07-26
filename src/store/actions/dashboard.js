@@ -58,6 +58,7 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
         let { gridPositionData } = res.data
         if (gridPositionData && gridPositionData.length > 0) {
           gridPositionData = JSON.parse(gridPositionData)
+          // gridPositionData.
           let chartIds = gridPositionData && gridPositionData.map(chart => {
             if (chart.type === 'TABS') {
               return chart.ids

@@ -18,12 +18,17 @@
 
     .remove {
         position: absolute;
-        z-index: 99999;
+        z-index: 999;
         top: 0;
         right: 0;
+        display: none;
 
         span {
             margin-left: 10px;
         }
+    }
+
+    &.remove:hover {
+        display: block;
     }
 }
