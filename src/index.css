@@ -49,7 +49,7 @@ code {
   padding: 15px;
   box-sizing: border-box;
   display: flex;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .react-grid-item:hover .remove {
