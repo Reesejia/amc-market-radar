@@ -14,9 +14,10 @@ import './index.css';
 function render(props) {
   const { container } = props;
   const ret = container && container.querySelector('#root')
+  const basename = props.routerBase || '/amc/manage/amc-dashbi'
   ReactDOM.render(<Provider store={store}>
     <ConnectedRouter history={history}>
-    <Router />
+    <Router basename={basename}/>
     </ConnectedRouter>
   </Provider>, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
