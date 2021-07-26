@@ -17,14 +17,14 @@ const routes = (props) => (
       <KeepAliveProvider>
     <Suspense fallback={<Spin />}>
       <div>
-        <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
+        {/* <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
           <li>
             <Link to="/dashManage">DashManage</Link>
           </li>
           <li>
             <Link to="/dashboardPage">DashboardPage</Link>
           </li>
-        </ul>
+        </ul> */}
         <Switch>
           <Route path="/dashManage" component={DashManage} />
           <Route path="/dashboardPage" component={DashboardPage} />
