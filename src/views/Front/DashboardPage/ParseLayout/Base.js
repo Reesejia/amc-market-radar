@@ -50,6 +50,7 @@ class Base {
       type: node.type,
       chartStyle,
       w:width,
+      static: true,
       h: node.meta && node.meta.height / 5 || 1,
       x: 0,
       y: 2,
