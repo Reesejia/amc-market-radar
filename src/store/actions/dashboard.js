@@ -2,6 +2,7 @@ import * as types from '../action-types'
 import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
+import {changeStatic} from "@/store/reducers/dashboardStore"
 
 const onGetDashboardData_action = (dashboardId, refresh) => {
   return async (dispatch, getState) => {
@@ -36,6 +37,7 @@ const updateGridData_action = async (dashboardId) => {
   return async (dispatch, getState) => {
     const boardGridOrigin = getState().dashboardStore.boardGridOrigin;
     const gridwidgets = boardGridOrigin[dashboardId].widgets
+    changeStatic(gridwidgets, true)
     if (boardGridOrigin[dashboardId]) {
       const ret = await updateGridData({
         dashboardId,
@@ -59,9 +61,7 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
         if (gridPositionData && gridPositionData.length > 0) {
           gridPositionData = JSON.parse(gridPositionData)
           if(dashboardStore.isEditDashBoard) {
-            gridPositionData.forEach(element => {
-              element.static = false
-            });
+            changeStatic(gridPositionData, false)
           }
           let chartIds = gridPositionData && gridPositionData.map(chart => {
             if (chart.type === 'TABS') {
