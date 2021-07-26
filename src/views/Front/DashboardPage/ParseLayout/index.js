@@ -59,6 +59,7 @@ class ParseLayout extends Base {
       x: 0,
       y: 2,
       type: 'TABS',
+      static: true,
       isDraggable: false,
       isResizable:true,
       children: tabsInfo.tabsArr,
