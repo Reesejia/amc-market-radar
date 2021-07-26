@@ -55,7 +55,8 @@ class GridView extends PureComponent {
     minWrapper.style.right = '15px'
     minWrapper.style.top = "15px"
     minWrapper.style.zIndex = 9999
-    minWrapper.innerText = "min"
+    // <FullscreenExitOutlined></FullscreenExitOutlined>
+    minWrapper.innerHTML = "X"
 
     para.appendChild(minWrapper)
     para.style.width = 'calc(100vw)'
@@ -173,11 +174,11 @@ class GridView extends PureComponent {
           )
         }
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} data-static={widget.static}>
             <div className={`grid-wrapper ${this.props.isEditDashBoard ? '' : 'grid-wrapper-showPage'}`}>
               <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
               <div className='remove'>
-              <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
+              <span onClick={this.showFullScreen.bind(this, widget.id)}><FullscreenOutlined /></span>
                 {/* <FullscreenOutlined /> */}
                 {/* <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
               </div>

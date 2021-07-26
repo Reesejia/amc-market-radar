@@ -1,9 +1,5 @@
 import { TypeAction } from '@/typings/common';
 import * as types from '../action-types';
-
-
-
-
 let initialState = {
   boardDataOrigin: {},
   boardGridOrigin: {},
@@ -11,7 +7,7 @@ let initialState = {
   chartsData: {},
   navList: [],
   groupId: "n1",
-  isEditDashBoard: true
+  isEditDashBoard: false
   // updateActiveKey: ''
 };
 export default function (state = initialState, action) {
