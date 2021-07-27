@@ -20,7 +20,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
 
     useEffect(() => {
       let cacheState = cacheStates[cacheId]
-      console.log('cacheState33', cacheState)
+      console.log('cacheStates33', cacheStates)
       if (cacheState && cacheState.doms && cacheState.status !== CacheTypes.DESTROY) {
         let doms = cacheState.doms
         doms.forEach(dom => {
@@ -28,7 +28,6 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
         });
         if (scroll) {
           doms.forEach(dom => {
-            console.log('dom', dom)
             if (cacheState.scrolls[dom]) {
               dom.scrollTop = cacheState.scrolls[dom]
             }

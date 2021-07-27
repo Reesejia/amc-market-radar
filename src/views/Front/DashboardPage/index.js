@@ -17,13 +17,16 @@ const HeaderTab = (props) => {
   const [list, setList] = useState([])
   const [dashboardId, setDashboardId] = useState("")
   const [routerList, setRouterList] = useState([])
+  const [cacheIds, setCacheIds] = useState([])
   const gridRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
 
 
   const getGridsData = async (refresh) => {
-    await props.getPositionGrid_action(dashboardId, refresh)
-    await props.getChartBusiness_action(dashboardId)
+    if(dashboardId){
+      await props.getPositionGrid_action(dashboardId, refresh)
+      await props.getChartBusiness_action(dashboardId)
+    }
   }
 
 
@@ -36,11 +39,12 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         const dashId = listArr[0] && listArr[0].dashboardId
-
+        console.log('routerBase32',props.routerBase)
         const l = listArr.map(item => {
           return {
             // ${props.routerBase}-
-            key: item.dashboardId,
+            path: item.dashboardId,
+            key: `${props.routerBase}-item.dashboardId`,
             com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
             // com: GridView
           }
@@ -57,7 +61,7 @@ const HeaderTab = (props) => {
         }
       }
     }
-  }, [props.navList, props.groupId])
+  }, [props.navList,props.routerBase, props.groupId])
 
 
   useEffect(() => {
@@ -67,30 +71,19 @@ const HeaderTab = (props) => {
 
 
   useEffect(() => {
-    const cacheIds = []
-    // store.dispatch({type: 'UPDATE_ACTIVE_KEY',  payload: dashboardId})
     for (let id in props.boardGridOrigin) {
       if (props.boardGridOrigin[id].widgets.length > 0) {
-        cacheIds.push(id)
+        setCacheIds([...cacheIds,`${props.routerBase}-${id}`])
       }
     }
     console.log('cacheIds', cacheIds)
-    if (!cacheIds.includes(dashboardId)) {
+    if (!cacheIds.includes(`${props.routerBase}-${dashboardId}`)) {
       getGridsData(false)
     }
-  }, [dashboardId])
-
-
-  useEffect(() => {
-    if (dashboardId) {
-      // if (props.isEditDashBoard) {
-        props.getPositionGrid_action(dashboardId, false)
-      // } else {
-      //   props.getPositionGrid_action(dashboardId, false)
-      // }
+    if(props.navList.length > 0){
+      getGridsData(false)
     }
-  }, [props.isEditDashBoard, dashboardId])
-
+  }, [props.routerBase, dashboardId])
 
   const tabChange = (key) => {
     history.push(`/dashboardPage/${key}`)
@@ -106,10 +99,6 @@ const HeaderTab = (props) => {
   }
 
   const onSavePositionGrid = async () => {
-    // if (gridRef.current) {
-    console.log('gridRef.current', gridRef.current)
-
-    // const { widgets } = gridRef.current.state
     const { widgets } = props.boardGridOrigin[dashboardId]
     if (widgets) {
       store.dispatch({
@@ -119,18 +108,22 @@ const HeaderTab = (props) => {
           gridwidgets: widgets
         }
       })
-      await props.updateGridData_action(dashboardId)
-      await props.getPositionGrid_action(dashboardId, true)
+      if(dashboardId){
+        await props.updateGridData_action(dashboardId)
+        await props.getPositionGrid_action(dashboardId, true)
+      }
     }
     // }
   }
+
+
   return <div style={{ position: 'relative' }}>
-    {list.length > 0 && <Tabs defaultActiveKey={dashboardId} activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
+    {list.length > 0 && <Tabs  activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
-            {/* <div>
-              {
+            <div>
+              {/* {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
                     widgets={props.boardGridOrigin[dashboardId].widgets}
@@ -138,8 +131,8 @@ const HeaderTab = (props) => {
                   />
                   :
                   null
-              }
-            </div> */}
+              } */}
+            </div>
 
           </TabPane>
         ))
@@ -163,7 +156,7 @@ const HeaderTab = (props) => {
     <Switch>
       {
         routerList.length > 0 && routerList.map((item) => (
-          <Route key={item.key} path={`/dashboardPage/${item.key}`}
+          <Route key={item.key} path={`/dashboardPage/${item.path}`}
             component={item.com}
           >
           </Route>
@@ -179,7 +172,8 @@ const mapStateToProps = (state, ownProps) => {
     navList: state.dashboardStore.navList,
     groupId: state.dashboardStore.groupId,
     boardGridOrigin: state.dashboardStore.boardGridOrigin,
-    isEditDashBoard: state.dashboardStore.isEditDashBoard
+    isEditDashBoard: state.dashboardStore.isEditDashBoard,
+    routerBase: state.dashboardStore.routerBase
   }
 }
 export default connect(mapStateToProps, actions)(HeaderTab)
