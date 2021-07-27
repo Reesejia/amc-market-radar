@@ -33,8 +33,8 @@ export async function bootstrap() {
 export async function mount(props) {
   console.log('props from main framework', props);
   let m = new Map();
-  m.set('/amc/manage/editBoard/edit-sub-radar-board', {isEditDashboard: true, groupId: "n1"});
-  m.set('/amc/manage/editBoard/edit-sub-house-board', {isEditDashboard: true, groupId: "n2"});
+  m.set('/amc/editBoard/edit-sub-radar-board', {isEditDashboard: true, groupId: "n1"});
+  m.set('/amc/editBoard/edit-sub-house-board', {isEditDashboard: true, groupId: "n2"});
   m.set('/amc/sub-radar-board', {isEditDashboard: false, groupId: "n1"});
   m.set('/amc/sub-house-board',{isEditDashboard: false, groupId: "n2"});
   let {groupId, isEditDashboard} = m.get(props.routerBase)

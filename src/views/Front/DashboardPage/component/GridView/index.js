@@ -9,7 +9,7 @@ import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider } from 'antd';
+import { PageHeader, Divider, Dropdown } from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.scss"
@@ -178,7 +178,7 @@ class GridView extends PureComponent {
             <div className={`grid-wrapper ${this.props.isEditDashBoard ? '' : 'grid-wrapper-showPage'}`}>
               <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
               <div className='remove'>
-              <span onClick={this.showFullScreen.bind(this, widget.id)}><FullscreenOutlined /></span>
+                <span onClick={this.showFullScreen.bind(this, widget.id)}><FullscreenOutlined /></span>
                 {/* <FullscreenOutlined /> */}
                 {/* <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
               </div>

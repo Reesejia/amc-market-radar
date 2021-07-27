@@ -64,7 +64,6 @@ export default function (state = initialState, action) {
       return { ...state, groupId: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
     case types.IS_EDIT_DASHBOARD:
       return { ...state, isEditDashBoard: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
-      return { ...state, groupId: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
     // case types.UPDATE_ACTIVE_KEY:
     //   return { ...state, chartsData: {...state.chartsData}}
     default:
