@@ -7,7 +7,7 @@ let initialState = {
   chartsData: {},
   navList: [],
   groupId: "n1",
-  isEditDashBoard: false
+  isEditDashBoard: true
   // updateActiveKey: ''
 };
 export default function (state = initialState, action) {

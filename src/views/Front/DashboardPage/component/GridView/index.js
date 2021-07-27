@@ -12,7 +12,8 @@ import actions from '@/store/actions/dashboard'
 import { PageHeader, Divider, Dropdown } from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
-import "./index.scss"
+import "./index.css"
+import imgURL from './omit.png';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
@@ -43,37 +44,29 @@ class GridView extends PureComponent {
 
   showFullScreen(id) {
     var ele = document.getElementById(id);
+    ele.childNodes[0].childNodes[1].childNodes[0].style.display = "none"
     const { width, height, transform } = window.getComputedStyle(ele)
     let translate = transform.split('(')[1].split(')')[0].split(',')
     var eleParent = ele.parentNode
 
-    var para = document.createElement("div");
-    para.setAttribute("id", "gridWrapper")
-    ele.childNodes[0].childNodes[1].childNodes[0].style.display = "none"
+    var gridWrapper = document.createElement("div");
+    gridWrapper.setAttribute("id", "gridWrapper")
+    gridWrapper.setAttribute("class", "grid-wrap-other")
     var minWrapper = document.createElement("div");
-    minWrapper.style.position = "absolute"
-    minWrapper.style.right = '15px'
-    minWrapper.style.top = "15px"
-    minWrapper.style.zIndex = 9999
-    // <FullscreenExitOutlined></FullscreenExitOutlined>
-    minWrapper.innerHTML = "X"
-
-    para.appendChild(minWrapper)
-    para.style.width = 'calc(100vw)'
-    para.style.height = 'calc(100vh)'
-    para.style.position = 'fixed'
-    para.style.top = 0
-    para.style.zIndex = "9999"
+    minWrapper.setAttribute("class", "remove minWrapper")
+    // src='./assets/omit.png'
+    minWrapper.innerHTML = `<div class="img-wrapper"><img src='./omit.png' /></div><div class="action-item-wrapper">最小化</div>`
+    gridWrapper.appendChild(minWrapper)
 
     ele.style.width = "100%"
     ele.style.height = "100%"
     ele.style.zIndex = "999"
     ele.style.top = 0
     ele.style.transform = "none"
-    para.appendChild(ele)
-    document.body.insertBefore(para, document.body.firstChild);
+    gridWrapper.appendChild(ele)
+    document.body.insertBefore(gridWrapper, document.body.firstChild);
 
-    minWrapper.onclick = function () {
+    minWrapper.childNodes[1].onclick = function () {
       ele.childNodes[0].childNodes[1].childNodes[0].style.display = "block"
       document.getElementById("gridWrapper").remove()
       ele.style.width = width
@@ -175,12 +168,15 @@ class GridView extends PureComponent {
         }
         return (
           <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} data-static={widget.static}>
-            <div className={`grid-wrapper ${this.props.isEditDashBoard ? '' : 'grid-wrapper-showPage'}`}>
+            <div className="grid-wrapper">
               <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
               <div className='remove'>
-                <span onClick={this.showFullScreen.bind(this, widget.id)}><FullscreenOutlined /></span>
-                {/* <FullscreenOutlined /> */}
-                {/* <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
+                <div className="img-wrapper">
+                  <img src={imgURL} />
+                  </div>
+                <div className="action-item-wrapper" onClick={this.showFullScreen.bind(this, widget.id)}>
+                  最大化
+                </div>
               </div>
               <WithLazyload id={widget.id}>{component}</WithLazyload>
             </div>
