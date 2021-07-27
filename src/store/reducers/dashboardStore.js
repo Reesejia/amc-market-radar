@@ -7,37 +7,31 @@ let initialState = {
   chartsData: {},
   navList: [],
   groupId: "n1",
-  isEditDashBoard: false,
-  routerBase: ''
-  // updateActiveKey: ''
+  isEditDashBoard: true,
+  routerBase: '',
+  cacheIds: []
 };
 export default function (state = initialState, action) {
   const { payload } = action
   switch (action.type) {
     case types.GET_DASH_ORIGIN_DATA:
-      const { originDashId, charsData, dashboard } = payload
+      const { originDashId, dashboard } = payload
       return { ...state, boardDataOrigin: { ...state.boardDataOrigin, [originDashId]: dashboard } };
 
     case types.GET_GRID_DATA:
       let { dashboardId, gridPositionData, chartIds } = payload
-
       const dashGridObj = state.boardGridOrigin[dashboardId]
-
-        dashGridObj.widgets = gridPositionData
-        dashGridObj.chartIds = chartIds
-        return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashboardId]: dashGridObj } }
+      dashGridObj.widgets = gridPositionData
+      dashGridObj.chartIds = chartIds
+      return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashboardId]: dashGridObj } }
 
 
     case types.UPDATE_GRIDDATA:
       let { dashId, gridwidgets } = payload
       const dashIdObj = state.boardGridOrigin[dashId]
-
-      changeStatic(gridwidgets, true)
-      console.log('gridwidgets33', gridwidgets)
+      gridwidgets = changeStatic(gridwidgets, true)
       dashIdObj.widgets = gridwidgets
-      console.log(' dashIdObj.widgets', dashIdObj.widgets)
       return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashId]: dashIdObj } };
-
 
     case types.GET_BUSINESS_DATA:
       return { ...state, chartsData: { ...state.chartsData, ...payload } };
@@ -58,17 +52,19 @@ export default function (state = initialState, action) {
           }
         })
       });
+      return { ...state, navList: payload };
 
-      const a = {
-        ...state,
-        navList: payload
-      };
-      return a
     case types.GROUP_ID:
       return { ...state, groupId: payload };
+
     case types.IS_EDIT_DASHBOARD:
       console.log('payload IS_EDIT_DASHBOARD', payload)
       return { ...state, isEditDashBoard: payload };
+
+    case types.SET_CACHE_IDS:
+      console.log('payload SET_CACHE_IDS', payload)
+      return { ...state, cacheIds: [...state.cacheIds, payload] };
+
     case types.CLEAR_DASH_STORE:
       return {
         ...state,
@@ -77,7 +73,8 @@ export default function (state = initialState, action) {
         groupId: "n1",
         isEditDashBoard: false,
         routerBase: '',
-        navList: []
+        navList: [],
+        cacheIds: []
       };
 
     default:

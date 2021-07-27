@@ -17,14 +17,12 @@ const HeaderTab = (props) => {
   const [list, setList] = useState([])
   const [dashboardId, setDashboardId] = useState("")
   const [routerList, setRouterList] = useState([])
-  const [cacheIds, setCacheIds] = useState([])
-  const gridRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
 
 
   const getGridsData = async (refresh) => {
-    if(dashboardId){
-      await props.getPositionGrid_action(dashboardId, refresh)
+    if (dashboardId) {
+      await props.getPositionGrid_action(dashboardId, true)
       await props.getChartBusiness_action(dashboardId)
     }
   }
@@ -39,7 +37,7 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         const dashId = listArr[0] && listArr[0].dashboardId
-        console.log('routerBase32',props.routerBase)
+        console.log('routerBase32', props.routerBase)
         const l = listArr.map(item => {
           return {
             // ${props.routerBase}-
@@ -61,7 +59,7 @@ const HeaderTab = (props) => {
         }
       }
     }
-  }, [props.navList,props.routerBase, props.groupId])
+  }, [props.navList, props.routerBase, props.groupId])
 
 
   useEffect(() => {
@@ -71,16 +69,7 @@ const HeaderTab = (props) => {
 
 
   useEffect(() => {
-    for (let id in props.boardGridOrigin) {
-      if (props.boardGridOrigin[id].widgets.length > 0) {
-        setCacheIds([...cacheIds,`${props.routerBase}-${id}`])
-      }
-    }
-    console.log('cacheIds', cacheIds)
-    if (!cacheIds.includes(`${props.routerBase}-${dashboardId}`)) {
-      getGridsData(false)
-    }
-    if(props.navList.length > 0){
+    if (props.navList.length > 0 && !props.cacheIds.includes(dashboardId)) {
       getGridsData(false)
     }
   }, [props.routerBase, dashboardId])
@@ -108,7 +97,7 @@ const HeaderTab = (props) => {
           gridwidgets: widgets
         }
       })
-      if(dashboardId){
+      if (dashboardId) {
         await props.updateGridData_action(dashboardId)
         await props.getPositionGrid_action(dashboardId, true)
       }
@@ -118,7 +107,7 @@ const HeaderTab = (props) => {
 
 
   return <div style={{ position: 'relative' }}>
-    {list.length > 0 && <Tabs  activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
+    {list.length > 0 && <Tabs activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
@@ -173,7 +162,8 @@ const mapStateToProps = (state, ownProps) => {
     groupId: state.dashboardStore.groupId,
     boardGridOrigin: state.dashboardStore.boardGridOrigin,
     isEditDashBoard: state.dashboardStore.isEditDashBoard,
-    routerBase: state.dashboardStore.routerBase
+    routerBase: state.dashboardStore.routerBase,
+    cacheIds: state.dashboardStore.cacheIds
   }
 }
 export default connect(mapStateToProps, actions)(HeaderTab)

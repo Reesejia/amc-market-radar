@@ -25,14 +25,14 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
         if (positionJson) {
           positionJson = JSON.parse(positionJson)
           dashboard.positionJson = positionJson
-          store.dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
+          dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
           gridwidgets = new ParseLayout({
             parseLayoutJson: positionJson,
             charsData: charsData,
             viewType: []
           }).parseLayout()
         }
-        store.dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
+        dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
       }
     }
   }
@@ -65,11 +65,8 @@ const getPositionGrid_action = (dashboardId, refresh) => {
     return
   }
   return async (dispatch, getState) => {
-
-    const dashboardStore = store.getState().dashboardStore;
-    console.log("zyy1")
+    const dashboardStore = getState().dashboardStore;
     // if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
-    console.log("zyy2")
     const res = await getDashGrid(dashboardId, refresh)
     if (res.statusCode === 0 && res.success) {
       let { gridPositionData } = res.data
@@ -87,17 +84,17 @@ const getPositionGrid_action = (dashboardId, refresh) => {
           return chart.id
         })
         chartIds = chartIds.length > 0 && chartIds.flat(1)
-        store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
+        dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
+        dispatch({ type: types.SET_CACHE_IDS, payload: dashboardId })
       } else {
         if (dashboardId) {
           if (!dashboardId) {
             console.error('请输入对应的看板id action respose dashboardId dashboardId')
             return
           }
-          await onGetDashboardData_action(dashboardId, false)()
-          await updateGridData_action(dashboardId, true)()
-          await getPositionGrid_action(dashboardId, true)()
-          await getChartBusiness_action(dashboardId)()
+          await onGetDashboardData_action(dashboardId, false)(dispatch, getState)
+          await updateGridData_action(dashboardId, true)(dispatch, getState)
+          await getPositionGrid_action(dashboardId, true)(dispatch, getState)
         }
 
       }
@@ -116,7 +113,7 @@ const getChartBusiness_action = (dashboardId) => {
         chartIds: chartIds.join(',')
       })
       if (res.code === "0") {
-        store.dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
+        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }
     }
   }
@@ -126,7 +123,7 @@ const getNavigationList_action = () => {
   return async (dispatch, getState) => {
     const res = await navigationList()
     if (res.statusCode === 0 && res.success) {
-      store.dispatch({ type: types.GET_NAV_LIST, payload: res.data })
+      dispatch({ type: types.GET_NAV_LIST, payload: res.data })
     }
   }
 }
