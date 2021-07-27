@@ -22,7 +22,7 @@ const HeaderTab = (props) => {
 
   const getGridsData = async (refresh) => {
     if (dashboardId) {
-      await props.getPositionGrid_action(dashboardId, true)
+      await props.getPositionGrid_action(dashboardId, refresh)
       await props.getChartBusiness_action(dashboardId)
     }
   }
