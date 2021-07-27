@@ -2,10 +2,14 @@ import * as types from '../action-types'
 import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
-import {changeStatic} from "@/store/reducers/dashboardStore"
+import { changeStatic } from "@/store/reducers/dashboardStore"
 import store from '@/store/index';
 
 const onGetDashboardData_action = (dashboardId, refresh) => {
+  if (!dashboardId) {
+    console.error('请输入对应的看板id onGetDashboardData_action')
+    return
+  }
   return async (dispatch, getState) => {
     const res = await getDashboardData(dashboardId, refresh)
     if (res.code === "0") {
@@ -34,7 +38,10 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
   }
 }
 const updateGridData_action = (dashboardId) => {
-  if (!dashboardId) message.error('请输入对应的看板id')
+  if (!dashboardId) {
+    console.error('请输入对应的看板id updateGridData_action')
+    return
+  }
   return async (dispatch, getState) => {
     const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin;
     const gridwidgets = boardGridOrigin[dashboardId].widgets
@@ -53,41 +60,53 @@ const updateGridData_action = (dashboardId) => {
 }
 // 指定看板的数据
 const getPositionGrid_action = (dashboardId, refresh) => {
-
+  if (!dashboardId) {
+    console.error('请输入对应的看板id getPositionGrid_action')
+    return
+  }
   return async (dispatch, getState) => {
 
     const dashboardStore = store.getState().dashboardStore;
     console.log("zyy1")
     // if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
-      console.log("zyy2")
-      const res = await getDashGrid(dashboardId, refresh)
-      if (res.statusCode === 0 && res.success) {
-        let { gridPositionData } = res.data
-        if (gridPositionData && gridPositionData.length > 0) {
-          gridPositionData = JSON.parse(gridPositionData)
-          console.log("zyy", dashboardStore.isEditDashBoard)
-          if(dashboardStore.isEditDashBoard) {
-            changeStatic(gridPositionData, false)
+    console.log("zyy2")
+    const res = await getDashGrid(dashboardId, refresh)
+    if (res.statusCode === 0 && res.success) {
+      let { gridPositionData } = res.data
+      if (gridPositionData && gridPositionData.length > 0) {
+        gridPositionData = JSON.parse(gridPositionData)
+        console.log("zyy dashboardStore", dashboardStore)
+        if (dashboardStore.isEditDashBoard) {
+          gridPositionData = changeStatic(gridPositionData, false)
+        }
+        console.log('gridPositionData44', gridPositionData)
+        let chartIds = gridPositionData && gridPositionData.map(chart => {
+          if (chart.type === 'TABS') {
+            return chart.ids
           }
-          let chartIds = gridPositionData && gridPositionData.map(chart => {
-            if (chart.type === 'TABS') {
-              return chart.ids
-            }
-            return chart.id
-          })
-          chartIds = chartIds.length > 0 && chartIds.flat(1)
-          store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
-        } else {
+          return chart.id
+        })
+        chartIds = chartIds.length > 0 && chartIds.flat(1)
+        store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
+      } else {
+        if (dashboardId) {
+          if (!dashboardId) {
+            console.error('请输入对应的看板id action respose dashboardId dashboardId')
+            return
+          }
           await onGetDashboardData_action(dashboardId, false)()
           await updateGridData_action(dashboardId, true)()
           await getPositionGrid_action(dashboardId, true)()
           await getChartBusiness_action(dashboardId)()
         }
+
       }
+    }
     // }
   }
 }
 const getChartBusiness_action = (dashboardId) => {
+  if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
     const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;

@@ -44,6 +44,8 @@ export async function mount(props) {
 }
 
 export async function unmount(props) {
+  console.log('sub app unmount')
   const { container } = props;
-  ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
+  await store.dispatch({ type: types.CLEAR_DASH_STORE})
+  await ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }

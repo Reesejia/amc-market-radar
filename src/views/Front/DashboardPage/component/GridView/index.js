@@ -34,7 +34,7 @@ class GridView extends PureComponent {
   static getDerivedStateFromProps(nextProps) {
     const { widgets, chartsData } = nextProps
 
-    if (widgets.length > 0) {
+    if (widgets && widgets.length > 0) {
       return {
         widgets, chartsData,
       }

@@ -7,7 +7,8 @@ let initialState = {
   chartsData: {},
   navList: [],
   groupId: "n1",
-  isEditDashBoard: true
+  isEditDashBoard: false,
+  routerBase: ''
   // updateActiveKey: ''
 };
 export default function (state = initialState, action) {
@@ -21,17 +22,20 @@ export default function (state = initialState, action) {
       let { dashboardId, gridPositionData, chartIds } = payload
 
       const dashGridObj = state.boardGridOrigin[dashboardId]
-      dashGridObj.widgets = gridPositionData
-      dashGridObj.chartIds = chartIds
-      return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashboardId]: dashGridObj } }
+
+        dashGridObj.widgets = gridPositionData
+        dashGridObj.chartIds = chartIds
+        return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashboardId]: dashGridObj } }
+
 
     case types.UPDATE_GRIDDATA:
       let { dashId, gridwidgets } = payload
       const dashIdObj = state.boardGridOrigin[dashId]
 
       changeStatic(gridwidgets, true)
+      console.log('gridwidgets33', gridwidgets)
       dashIdObj.widgets = gridwidgets
-      console.log(' dashIdObj.widgets',  dashIdObj.widgets)
+      console.log(' dashIdObj.widgets', dashIdObj.widgets)
       return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashId]: dashIdObj } };
 
 
@@ -61,11 +65,21 @@ export default function (state = initialState, action) {
       };
       return a
     case types.GROUP_ID:
-      return { ...state, groupId: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
+      return { ...state, groupId: payload };
     case types.IS_EDIT_DASHBOARD:
-      return { ...state, isEditDashBoard: payload, ...state.boardDataOrigin, ...state.boardGridOrigin };
-    // case types.UPDATE_ACTIVE_KEY:
-    //   return { ...state, chartsData: {...state.chartsData}}
+      console.log('payload IS_EDIT_DASHBOARD', payload)
+      return { ...state, isEditDashBoard: payload };
+    case types.CLEAR_DASH_STORE:
+      return {
+        ...state,
+        boardGridOrigin: {},
+        boardDataOrigin: {},
+        groupId: "n1",
+        isEditDashBoard: false,
+        routerBase: '',
+        navList: []
+      };
+
     default:
       return state;
   }
@@ -73,12 +87,13 @@ export default function (state = initialState, action) {
 
 
 export function changeStatic(gridwidgets, bool) {
-  gridwidgets.forEach(widget => {
+  return gridwidgets.map(widget => {
     widget.static = bool
     if (widget.subTabs && widget.subTabs.length > 0) {
       changeStatic(widget.subTabs, bool)
     } else if (widget.children && widget.children.length > 0) {
       changeStatic(widget.children, bool)
     }
+    return widget
   })
 }
