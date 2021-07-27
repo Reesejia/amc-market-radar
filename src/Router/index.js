@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import DashManage from '@/views/Admin/DashManage'
 import DashboardPage from '@/views/Front/DashboardPage'
+import GridDemo from '@/views/Front/GridDemo/DragLayout'
 import { KeepAliveProvider } from '@/component/keepalive-react-component'
 
 // const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
@@ -13,25 +14,27 @@ import { KeepAliveProvider } from '@/component/keepalive-react-component'
 // const DragLayout = lazy(() => import('../views/Front/DragLayout'))
 // const DataPageManage = lazy(() => import('../views/Admin/DashManage/index'))
 const routes = (props) => (
- <Router basename={props.basename}>
-      <KeepAliveProvider>
-    <Suspense fallback={<Spin />}>
-      <div>
-        {/* <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
-          <li>
-            <Link to="/dashManage">DashManage</Link>
-          </li>
-          <li>
-            <Link to="/dashboardPage">DashboardPage</Link>
-          </li>
-        </ul> */}
-        <Switch>
-          <Route path="/dashManage" component={DashManage} />
-          <Route path="/dashboardPage" component={DashboardPage} />
-          <Route path="/" component={DashboardPage} />
-        </Switch>
-      </div>
-    </Suspense>
+  <Router basename={props.basename}>
+    <KeepAliveProvider>
+      <Suspense fallback={<Spin />}>
+        <div>
+          <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
+            <li>
+              <Link to="/gridDemo">GridDemo</Link>
+            </li>
+            <li>
+              <Link to="/dashboardPage">DashboardPage</Link>
+            </li>
+          </ul>
+          <Switch>
+
+            <Route path="/gridDemo" component={GridDemo} />
+            <Route path="/dashManage" component={DashManage} />
+            <Route path="/dashboardPage" component={DashboardPage} />
+            <Route path="/" component={DashboardPage} />
+          </Switch>
+        </div>
+      </Suspense>
     </KeepAliveProvider>
   </Router>
 );
