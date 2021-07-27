@@ -26,6 +26,8 @@ const HeaderTab = (props) => {
     await props.getChartBusiness_action(dashboardId)
   }
 
+
+
   useEffect(() => {
     console.log('groupId', props.groupId)
     let groupId = props.groupId || 'n1'
@@ -37,6 +39,7 @@ const HeaderTab = (props) => {
 
         const l = listArr.map(item => {
           return {
+            // ${props.routerBase}-
             key: item.dashboardId,
             com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
             // com: GridView
@@ -48,7 +51,7 @@ const HeaderTab = (props) => {
         if (baseArr[2] && baseArr[2].length > 0) {
           history.push(`/dashboardPage/${baseArr[2]}`)
           setDashboardId(baseArr[2])
-        }else {
+        } else {
           history.push(`/dashboardPage/${dashId}`)
           setDashboardId(dashId)
         }
@@ -77,6 +80,16 @@ const HeaderTab = (props) => {
     }
   }, [dashboardId])
 
+
+  useEffect(() => {
+    if (dashboardId) {
+      // if (props.isEditDashBoard) {
+        props.getPositionGrid_action(dashboardId, false)
+      // } else {
+      //   props.getPositionGrid_action(dashboardId, false)
+      // }
+    }
+  }, [props.isEditDashBoard, dashboardId])
 
 
   const tabChange = (key) => {
@@ -112,7 +125,7 @@ const HeaderTab = (props) => {
     // }
   }
   return <div style={{ position: 'relative' }}>
-  { list.length > 0 &&  <Tabs defaultActiveKey={dashboardId} activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
+    {list.length > 0 && <Tabs defaultActiveKey={dashboardId} activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
       {
         list.length > 0 && list.map((item) => (
           <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>

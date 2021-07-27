@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom'
 import _, { conformsTo, divide } from "lodash";
 import Feed from '@/views/Front/DashboardPage/component/Feed';
 import TabsView from '@/views/Front/DashboardPage/component/TabsView';
@@ -8,7 +9,8 @@ import TableView from '@/views/Front/DashboardPage/component/TableView'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider } from 'antd';
+import { PageHeader, Divider, Dropdown } from 'antd';
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.scss"
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -39,58 +41,88 @@ class GridView extends PureComponent {
     return {}
   }
 
-
   showFullScreen(id) {
     var ele = document.getElementById(id);
-    // var para = document.createElement("div");
-    // para.style.width = 'calc(100vw)'
-    // para.style.height = 'calc(100vh)'
-    // para.appendChild(ele)
-    // document.body.appendChild(para);
-    // console.log("zyy", ele)
-
-
     const { width, height, transform } = window.getComputedStyle(ele)
     let translate = transform.split('(')[1].split(')')[0].split(',')
-    this.setState({
-      curWidth: width,
-      curHeight: height,
-      curTransform: `translate(${translate[4]}px, ${translate[5]}px`
-    })
-    const $sidebar = document.getElementsByClassName('sidebar-container')
-    let sideBarWidth = 0
-    if ($sidebar && $sidebar.length) {
-      sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+    var eleParent = ele.parentNode
+
+    var para = document.createElement("div");
+    para.setAttribute("id", "gridWrapper")
+    ele.childNodes[0].childNodes[1].childNodes[0].style.display = "none"
+    var minWrapper = document.createElement("div");
+    minWrapper.style.position = "absolute"
+    minWrapper.style.right = '15px'
+    minWrapper.style.top = "15px"
+    minWrapper.style.zIndex = 9999
+    // <FullscreenExitOutlined></FullscreenExitOutlined>
+    minWrapper.innerHTML = "X"
+
+    para.appendChild(minWrapper)
+    para.style.width = 'calc(100vw)'
+    para.style.height = 'calc(100vh)'
+    para.style.position = 'fixed'
+    para.style.top = 0
+    para.style.zIndex = "9999"
+
+    ele.style.width = "100%"
+    ele.style.height = "100%"
+    ele.style.zIndex = "999"
+    ele.style.top = 0
+    ele.style.transform = "none"
+    para.appendChild(ele)
+    document.body.insertBefore(para, document.body.firstChild);
+
+    minWrapper.onclick = function () {
+      ele.childNodes[0].childNodes[1].childNodes[0].style.display = "block"
+      document.getElementById("gridWrapper").remove()
+      ele.style.width = width
+      ele.style.height = height
+      ele.style.transform = `translate(${translate[4]}px, ${translate[5]}px`
+      eleParent.appendChild(ele)
     }
-    document.body.click()
-    const full = window.document.querySelector(`#${id}`)
-    full.style.position = 'fixed'
-    full.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
-    full.style.height = 'calc(100vh)'
-    full.style.left = sideBarWidth
-    full.style.top = '0'
-    full.style.overflow = 'auto'
-    full.style.background = '#fff'
-    full.style.transform = 'none'
-    full.style['z-index'] = '1000'
-    // 防止body滚动
-    document.body.style.overflow = 'hidden'
+
+    // const { width, height, transform } = window.getComputedStyle(ele)
+    // let translate = transform.split('(')[1].split(')')[0].split(',')
+    // this.setState({
+    //   curWidth: width,
+    //   curHeight: height,
+    //   curTransform: `translate(${translate[4]}px, ${translate[5]}px`
+    // })
+    // const $sidebar = document.getElementsByClassName('sidebar-container')
+    // let sideBarWidth = 0
+    // if ($sidebar && $sidebar.length) {
+    //   sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+    // }
+    // document.body.click()
+    // const full = window.document.querySelector(`#${id}`)
+    // full.style.position = 'fixed'
+    // full.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+    // full.style.height = 'calc(100vh)'
+    // full.style.left = sideBarWidth
+    // full.style.top = '0'
+    // full.style.overflow = 'auto'
+    // full.style.background = '#fff'
+    // full.style.transform = 'none'
+    // full.style['z-index'] = '1000'
+    // // 防止body滚动
+    // document.body.style.overflow = 'hidden'
   }
 
-  closeFullScreen(id) {
-    document.body.click()
-    this.isFullscreen = false
-    const full = window.document.querySelector(`#${id}`)
-    full.style.position = 'absolute'
-    full.style.width = this.state.curWidth
-    full.style.height = this.state.curHeight
-    full.style.transform = this.state.curTransform
-    full.style.left = ''
-    full.style.top = ''
-    full.style.overflow = ''
-    full.style['z-index'] = ''
-    document.body.style.overflow = 'auto'
-  }
+  // closeFullScreen(id) {
+  //   document.body.click()
+  //   this.isFullscreen = false
+  //   const full = window.document.querySelector(`#${id}`)
+  //   full.style.position = 'absolute'
+  //   full.style.width = this.state.curWidth
+  //   full.style.height = this.state.curHeight
+  //   full.style.transform = this.state.curTransform
+  //   full.style.left = ''
+  //   full.style.top = ''
+  //   full.style.overflow = ''
+  //   full.style['z-index'] = ''
+  //   document.body.style.overflow = 'auto'
+  // }
 
   componentDidUpdate() {
 
@@ -142,12 +174,13 @@ class GridView extends PureComponent {
           )
         }
         return (
-          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} static={widget.static}>
+          <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} data-static={widget.static}>
             <div className={`grid-wrapper ${this.props.isEditDashBoard ? '' : 'grid-wrapper-showPage'}`}>
               <div className="grid-header">{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>
               <div className='remove'>
-                <span onClick={this.showFullScreen.bind(this, widget.id)}>max</span>
-                <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span>
+                <span onClick={this.showFullScreen.bind(this, widget.id)}><FullscreenOutlined /></span>
+                {/* <FullscreenOutlined /> */}
+                {/* <span onClick={this.closeFullScreen.bind(this, widget.id)}>min</span> */}
               </div>
               <WithLazyload id={widget.id}>{component}</WithLazyload>
             </div>
