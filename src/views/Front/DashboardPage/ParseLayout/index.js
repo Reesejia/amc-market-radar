@@ -1,5 +1,11 @@
 
 import Base from './Base'
+
+
+/**
+ * ParseLayout 类将superset 递归结构数据解析成grid格式对象数组结构，
+ * 为了首屏加载、懒加载、静默加载、缓存节点做准备
+ */
 class ParseLayout extends Base {
   constructor({ parseLayoutJson, viewType, charsData }) {
     super()
