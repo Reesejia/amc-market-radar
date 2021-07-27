@@ -2,6 +2,8 @@ import * as types from '../action-types'
 import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import { message } from 'antd'
+import {changeStatic} from "@/store/reducers/dashboardStore"
+import store from '@/store/index';
 
 const onGetDashboardData_action = (dashboardId, refresh) => {
   return async (dispatch, getState) => {
@@ -19,23 +21,24 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
         if (positionJson) {
           positionJson = JSON.parse(positionJson)
           dashboard.positionJson = positionJson
-          dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
+          store.dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
           gridwidgets = new ParseLayout({
             parseLayoutJson: positionJson,
             charsData: charsData,
             viewType: []
           }).parseLayout()
         }
-        dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
+        store.dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
       }
     }
   }
 }
-const updateGridData_action = async (dashboardId) => {
+const updateGridData_action = (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id')
   return async (dispatch, getState) => {
-    const boardGridOrigin = getState().dashboardStore.boardGridOrigin;
+    const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin;
     const gridwidgets = boardGridOrigin[dashboardId].widgets
+    changeStatic(gridwidgets, true)
     if (boardGridOrigin[dashboardId]) {
       const ret = await updateGridData({
         dashboardId,
@@ -49,15 +52,23 @@ const updateGridData_action = async (dashboardId) => {
   }
 }
 // 指定看板的数据
-const getPositionGrid_action =async (dashboardId, refresh) => {
+const getPositionGrid_action = (dashboardId, refresh) => {
+
   return async (dispatch, getState) => {
-    const dashboardStore = getState().dashboardStore;
-    if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
+
+    const dashboardStore = store.getState().dashboardStore;
+    console.log("zyy1")
+    // if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
+      console.log("zyy2")
       const res = await getDashGrid(dashboardId, refresh)
       if (res.statusCode === 0 && res.success) {
         let { gridPositionData } = res.data
         if (gridPositionData && gridPositionData.length > 0) {
           gridPositionData = JSON.parse(gridPositionData)
+          console.log("zyy", dashboardStore.isEditDashBoard)
+          if(dashboardStore.isEditDashBoard) {
+            changeStatic(gridPositionData, false)
+          }
           let chartIds = gridPositionData && gridPositionData.map(chart => {
             if (chart.type === 'TABS') {
               return chart.ids
@@ -65,7 +76,7 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
             return chart.id
           })
           chartIds = chartIds.length > 0 && chartIds.flat(1)
-          dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
+          store.dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
         } else {
           await onGetDashboardData_action(dashboardId, false)()
           await updateGridData_action(dashboardId, true)()
@@ -73,12 +84,12 @@ const getPositionGrid_action =async (dashboardId, refresh) => {
           await getChartBusiness_action(dashboardId)()
         }
       }
-    }
+    // }
   }
 }
 const getChartBusiness_action = (dashboardId) => {
   return async (dispatch, getState) => {
-    const boardGridOrigin = getState().dashboardStore.boardGridOrigin
+    const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
     if (chartIds && chartIds.length > 0) {
       const res = await getChartBusiness({
@@ -86,7 +97,7 @@ const getChartBusiness_action = (dashboardId) => {
         chartIds: chartIds.join(',')
       })
       if (res.code === "0") {
-        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
+        store.dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
       }
     }
   }
@@ -96,7 +107,7 @@ const getNavigationList_action = () => {
   return async (dispatch, getState) => {
     const res = await navigationList()
     if (res.statusCode === 0 && res.success) {
-      dispatch({ type: types.GET_NAV_LIST, payload: res.data })
+      store.dispatch({ type: types.GET_NAV_LIST, payload: res.data })
     }
   }
 }

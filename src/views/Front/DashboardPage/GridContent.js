@@ -122,16 +122,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   return bindActionCreators({
-//     onGetDashboardData_action:() =>dispatch(actions.onGetDashboardData_action),
-//     updateGridData_action: () =>dispatch(actions.updateGridData_action),
-//     getChartBusiness_action: () =>dispatch(actions.getChartBusiness_action),
-//     getPositionGrid_action: () =>dispatch(actions.getPositionGrid_action),
-//     onUpdateDridData: ({ dashId, gridwidgets}) => {
-//       dispatch({ type: types.UPDATE_GRIDDATA, payload: { dashId, gridwidgets} })
-//     }
-//   })
-// }
-// export default connect(mapStateToProps, actions)(DragLayout)
 export default DragLayout

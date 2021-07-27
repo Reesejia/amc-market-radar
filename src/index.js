@@ -31,17 +31,15 @@ export async function bootstrap() {
 }
 
 export async function mount(props) {
-  console.log(' props from main framework', props);
+  console.log('props from main framework', props);
   let m = new Map();
-  m.set('/amc/manage/amc-dashbi', 'n1');
-  m.set('/amc/sub-app-radar', 'n1');
-  m.set('/amc/sub-app-house', 'n2');
-  let groupId = m.get(props.routerBase)
-  if(props.routerBase === '/amc/manage/amc-dashbi'){
-    let isEditDashboard = false
-  }
+  m.set('/amc/editBoard/edit-sub-radar-board', {isEditDashboard: true, groupId: "n1"});
+  m.set('/amc/editBoard/edit-sub-house-board', {isEditDashboard: true, groupId: "n2"});
+  m.set('/amc/sub-radar-board', {isEditDashboard: false, groupId: "n1"});
+  m.set('/amc/sub-house-board',{isEditDashboard: false, groupId: "n2"});
+  let {groupId, isEditDashboard} = m.get(props.routerBase)
   store.dispatch({ type: types.GROUP_ID, payload: groupId})
-  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: true})
+  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: isEditDashboard})
   render(props);
 }
 
