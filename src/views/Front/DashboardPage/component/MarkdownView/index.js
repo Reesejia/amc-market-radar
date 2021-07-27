@@ -3,9 +3,8 @@ const MarkdownView = (props) => {
   const data = props.widget.chartStyle.chart.datasourceDefine
   return (
     <div>
-      <Markdown data={data} />
+      <div dangerouslySetInnerHTML={{__html: data}} />
     </div>
-
   )
 }
 
