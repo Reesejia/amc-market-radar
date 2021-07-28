@@ -1,6 +1,5 @@
 import { message } from 'antd';
 import axios from 'axios';
-import Qs from 'qs'
 
 axios.defaults.headers['Content-type'] = 'application/json'
 
