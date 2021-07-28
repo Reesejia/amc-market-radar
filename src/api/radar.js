@@ -1,47 +1,50 @@
-import _axios from '../utils/axios'
+import request from "@/utils/request"
 
-const baseURL = '/aap/api';
+const baseURL = '/radar';
 
 // old 根据board id获取对应的postion 数据和 charseData 和 业务数据
 export function getDashboardData(dashboardId, refresh) {
-    return _axios({
-        url: `/radar/dashboard?id=${dashboardId}&refresh=${refresh}`,
+    return request({
+        url: `/dashboard?id=${dashboardId}&refresh=${refresh}`,
         method: 'get',
+        baseURL
     })
 }
 
 
 // 指定看板grid数据
 export function getDashGrid(dashboardId, refresh) {
-    return _axios({
-        url: `${baseURL}/v1/blackcat/dashboard/grid?dashboardId=${dashboardId}&refresh=${refresh}`,
+    return request({
+        url: `/blackcat/dashboard/grid?dashboardId=${dashboardId}&refresh=${refresh}`,
         method: 'get',
     })
 }
 
 
 export function getChartBusiness(dashboardId, chartIds) {
-    return _axios({
-        url: `/radar/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,
+    return request({
+        url: `/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,
         method: 'get',
+        baseURL
     })
 }
 
 // 更新superset grid 信息，将原来的position JSON  更新为grid data
 export function updateGridData({ dashboardId, gridPositionData }) {
-    return _axios({
-        url: `/radar/dashboard/update`,
+    return request({
+        url: `/dashboard/update`,
         method: 'post',
-        data: { dashboardId, gridPositionData }
+        data: { dashboardId, gridPositionData },
+        baseURL
     })
 }
 
 // 获取顶部tab
 export function navigationList(data) {
-    return _axios({
-        url: `${baseURL}/v1/blackcat/dashboard/navigation/list`,
+    return request({
+        url: `/blackcat/dashboard/navigation/list`,
         method: 'GET',
-        params: data
+        params: data,
     })
 }
 

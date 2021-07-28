@@ -25,14 +25,12 @@ class LimitRequest {
 
   async splitChartIds() {
     this.reqArr.push(this.request(this.chartIds.slice(0, this.firstLimit)))
-    this.fetchData()
     if (this.chartIds.length > this.firstLimit) {
       for (let i = this.firstLimit; i < this.chartIds.length; i += this.limit) {
         this.reqArr.push(this.request(this.chartIds.slice(i, i + this.limit)))
       }
-      this.fetchData()
     }
-
+    this.fetchData()
   }
 
   async fetchData(){

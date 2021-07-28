@@ -1,33 +1,36 @@
-import  _axios from '../utils/axios'
-const  baseURL = '/api/radar';
+import  request from '@/utils/request'
+const  baseURL = '/radar';
 export function getPostionOrigin(dashboardId){
-    return _axios({
-        url: `${baseURL}/dashboard/position?dashboardId=${dashboardId}`,
+    return request({
+        url: `/dashboard/position?dashboardId=${dashboardId}`,
         method: 'get',
+        baseURL
     })
 }
 
 export function savePositionGrid(data){
-    return _axios({
-        url: `${baseURL}/dashboard/gridData`,
+    return request({
+        url: `/dashboard/gridData`,
         method: 'post',
-        data
+        data,
+        baseURL
     })
 }
 
 
 export function getPositionGrid(dashboardId){
-    return _axios({
-        url: `${baseURL}/dashboard/gridData?dashboardId=${dashboardId}`,
+    return request({
+        url: `/dashboard/gridData?dashboardId=${dashboardId}`,
         method: 'get',
+        baseURL
     })
 }
 
 
 
 export function saveOriginBoardChartData(data){
-    return _axios({
-        url: `${baseURL}/dashboard/chartData`,
+    return request({
+        url: `/dashboard/chartData`,
         method: 'post',
         data
     })

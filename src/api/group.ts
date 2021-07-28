@@ -1,5 +1,5 @@
 import {CreateGroup, NavListInfo} from '@/typing/Admin/groups'
-import request from "../utils/request"
+import request from "@/utils/request"
 
 // 获取组合列表
 export const getGroup = (params: unknown) => request({

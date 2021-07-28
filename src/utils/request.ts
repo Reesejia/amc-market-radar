@@ -23,12 +23,26 @@ service.interceptors.request.use(
 // Response interceptors
 service.interceptors.response.use(
 	(response) => {
+    console.log('response', response)
+    const {baseURL} = response.config
 		const resData = response.data;
-		const { statusCode } = resData;
-		if (statusCode !== 0) {
-      message.error(resData.errorMsg || 'Error')
-      Promise.reject(resData.errorMsg || 'Error');
+
+    if(baseURL=== '/aap/api/v1'){
+      const { statusCode } = resData;
+      if (statusCode !== 0) {
+        message.error(resData.errorMsg || 'Error')
+        Promise.reject(resData.errorMsg || 'Error');
+      }
     }
+
+    if(baseURL=== '/radar'){
+      const { code } = resData;
+      if (code !== '0') {
+        message.error(resData.errorMsg || 'Error')
+        Promise.reject(resData.errorMsg || 'Error');
+      }
+    }
+
 
 		return resData;
 	},
