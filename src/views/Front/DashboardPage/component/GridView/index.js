@@ -240,6 +240,7 @@ class GridView extends PureComponent {
         layouts={this.state.widgets}
         rowHeight={10}
         autoSize={true}
+        isBounded={true}
         containerPadding={[10, 10]}
         onLayoutChange={(layout, layouts) => {
           this.onLayoutChange(layout, layouts)
