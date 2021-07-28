@@ -37,22 +37,20 @@ const HeaderTab = (props) => {
         const listArr = props.navList.find(o => o.id === groupId).navigationGroups
         setList(listArr)
         const dashId = listArr[0] && listArr[0].dashboardId
-        console.log('routerBase32', props.routerBase)
         const l = listArr.map(item => {
           return {
-            // ${props.routerBase}-
             path: item.dashboardId,
             key: `${props.routerBase}-item.dashboardId`,
             com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
-            // com: GridView
           }
         })
         setRouterList(l)
+        const idList = listArr.map(item => item.dashboardId)
         const p = history.location.pathname && history.location.pathname
-        const baseArr = p && p.split('/')
-        if (baseArr[2] && baseArr[2].length > 0) {
-          history.push(`/dashboardPage/${baseArr[2]}`)
-          setDashboardId(baseArr[2])
+        const id = p && p.split('/')[2]
+        if (id && idList.includes(id)) {
+          history.push(`/dashboardPage/${id}`)
+          setDashboardId(id)
         } else {
           history.push(`/dashboardPage/${dashId}`)
           setDashboardId(dashId)

@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import DashManage from '@/views/Admin/DashManage'
 import DashboardPage from '@/views/Front/DashboardPage'
-import GridDemo from '@/views/Front/GridDemo/DragLayout'
+// import GridDemo from '@/views/Front/GridDemo/DragLayout'
 import { KeepAliveProvider } from '@/component/keepalive-react-component'
 
 // const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
@@ -18,17 +18,17 @@ const routes = (props) => (
     <KeepAliveProvider>
       <Suspense fallback={<Spin />}>
         <div>
-          <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
+          {/* <ul style={{ position: 'fixed', right: '10px', top: '100px', zIndex: 1000 }}>
             <li>
               <Link to="/gridDemo">GridDemo</Link>
             </li>
             <li>
               <Link to="/dashboardPage">DashboardPage</Link>
             </li>
-          </ul>
+          </ul> */}
           <Switch>
 
-            <Route path="/gridDemo" component={GridDemo} />
+            {/* <Route path="/gridDemo" component={GridDemo} /> */}
             <Route path="/dashManage" component={DashManage} />
             <Route path="/dashboardPage" component={DashboardPage} />
             <Route path="/" component={DashboardPage} />
