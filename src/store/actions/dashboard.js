@@ -1,6 +1,7 @@
 import * as types from '../action-types'
 import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
+import LimitRequest from '@/views/Front/DashboardPage/HighComponent/LimitRequest'
 import { message } from 'antd'
 import { changeStatic } from "@/store/reducers/dashboardStore"
 import store from '@/store/index';
@@ -72,17 +73,16 @@ const getPositionGrid_action = (dashboardId, refresh) => {
       let { gridPositionData } = res.data
       if (gridPositionData && gridPositionData.length > 0) {
         gridPositionData = JSON.parse(gridPositionData)
-        console.log("zyy dashboardStore", dashboardStore)
         if (dashboardStore.isEditDashBoard) {
           gridPositionData = changeStatic(gridPositionData, false)
         }
-        console.log('gridPositionData44', gridPositionData)
         let chartIds = gridPositionData && gridPositionData.map(chart => {
           if (chart.type === 'TABS') {
             return chart.ids
           }
           return chart.id
         })
+        console.log(`gridPositionData ${dashboardId}-看板数据`, gridPositionData)
         chartIds = chartIds.length > 0 && chartIds.flat(1)
         dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
         dispatch({ type: types.SET_CACHE_IDS, payload: dashboardId })
@@ -96,10 +96,8 @@ const getPositionGrid_action = (dashboardId, refresh) => {
           await updateGridData_action(dashboardId, true)(dispatch, getState)
           await getPositionGrid_action(dashboardId, true)(dispatch, getState)
         }
-
       }
     }
-    // }
   }
 }
 const getChartBusiness_action = (dashboardId) => {
@@ -107,14 +105,9 @@ const getChartBusiness_action = (dashboardId) => {
   return async (dispatch, getState) => {
     const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
+    const getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
     if (chartIds && chartIds.length > 0) {
-      const res = await getChartBusiness({
-        dashboardId,
-        chartIds: chartIds.join(',')
-      })
-      if (res.code === "0") {
-        dispatch({ type: types.GET_BUSINESS_DATA, payload: res.resp })
-      }
+      new LimitRequest({ chartIds, limit: 35, firstLimit: 5, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }
   }
 }

@@ -20,7 +20,7 @@ export function getDashGrid(dashboardId, refresh) {
 }
 
 
-export function getChartBusiness({ dashboardId, chartIds }) {
+export function getChartBusiness(dashboardId, chartIds) {
     return _axios({
         url: `/radar/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,
         method: 'get',
