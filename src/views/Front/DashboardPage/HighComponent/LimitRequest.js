@@ -4,16 +4,17 @@ class LimitRequest {
    * @param {*} chartIds 请求chartIds 数组
    * @param {*} request 请求 对应chartid 的方法 promise
    * @param {*} limit 请求的图表数量
-   * @param {*} firstLimit 第一次请求的图表数量，正常 firstLimit < limit
+   * @param {*} firstLimit 第一次请求的图表数量，正常 firstLimit < limit,
+   * 如果limit请求和firstLimit请求时间差不多的话 firstLimit = limit
    * @param {*} pool 请求并发限制
    * @param {*} dispatch store dispatch
    * @param {*} types store types
    */
   constructor({ chartIds, request, limit, firstLimit, pool, dispatch, types }) {
     this.chartIds = chartIds
-    this.limit = limit || 3
-    this.firstLimit = chartIds.length < limit ? limit : firstLimit || 10
-    this.pool = pool || 1
+    this.limit = limit || 15
+    this.firstLimit = chartIds.length < limit ? limit : firstLimit || limit
+    this.pool = pool || 3
     this.dispatch = dispatch
     this.types = types
     this.request = request
@@ -24,27 +25,34 @@ class LimitRequest {
   }
 
   async splitChartIds() {
-    this.reqArr.push(this.request(this.chartIds.slice(0, this.firstLimit)))
+    this.pushTask(this.request(this.chartIds.slice(0, this.firstLimit)))
     if (this.chartIds.length > this.firstLimit) {
       for (let i = this.firstLimit; i < this.chartIds.length; i += this.limit) {
-        this.reqArr.push(this.request(this.chartIds.slice(i, i + this.limit)))
+        this.pushTask(this.request(this.chartIds.slice(i, i + this.limit)))
       }
     }
-    this.fetchData()
   }
 
-  async fetchData(){
+  pushTask(task) {
+    this.reqArr.push(task)
+    this.next()
+  }
+
+  async next() {
     while (this.reqArr.length > 0 && this.running <= this.pool) {
       let task = this.reqArr.shift()
       this.running++
-      const ret = await task
-      if (ret.code === "0") {
-        this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: ret.resp })
-        this.results.push(ret.resp)
+      try {
+        const ret = await task
+        if (ret.code === "0") {
+          this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: ret.resp })
+          this.results.push(ret.resp)
+        }
+      } finally {
+        this.next()
+        this.running--
       }
-      this.running--
     }
-    console.log('reqArr his.results', this.results)
   }
 }
 

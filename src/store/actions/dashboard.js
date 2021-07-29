@@ -107,7 +107,7 @@ const getChartBusiness_action = (dashboardId) => {
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
     const getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
     if (chartIds && chartIds.length > 0) {
-      new LimitRequest({ chartIds, limit: 35, firstLimit: 5, request: getChartBusinessBind, dispatch, types, pool: 3 })
+      new LimitRequest({ chartIds, limit: 35, firstLimit: 10, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }
   }
 }
