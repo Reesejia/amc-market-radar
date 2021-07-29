@@ -48,6 +48,8 @@ class LimitRequest {
           this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: ret.resp })
           this.results.push(ret.resp)
         }
+      } catch(err){
+        console.error('LimitRequest err', err)
       } finally {
         this.next()
         this.running--
