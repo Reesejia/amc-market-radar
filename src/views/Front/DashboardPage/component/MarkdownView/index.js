@@ -1,4 +1,3 @@
-import Markdown from './Markdown'
 const MarkdownView = (props) => {
   let data = ""
   if(props.widget && props.widget.chartStyle && props.widget.chartStyle.chart&& props.widget.chartStyle.chart.datasourceDefine){
