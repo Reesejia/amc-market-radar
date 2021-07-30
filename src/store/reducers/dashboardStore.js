@@ -1,15 +1,21 @@
-import { TypeAction } from '@/typings/common';
 import * as types from '../action-types';
+
 let initialState = {
   boardDataOrigin: {},
   boardGridOrigin: {},
   chartIds: [],
   chartsData: {},
   navList: [],
-  groupId: "n1",
+  groupId: "n2",
   isEditDashBoard: true,
   routerBase: '',
-  cacheIds: []
+  cacheIds: [],
+  routerBaseMap: new Map([
+    ['/amc/editBoard/edit-sub-radar-board', { isEditDashboard: true, groupId: "n1", isAmc: false }],
+    ['/amc/editBoard/edit-sub-house-board', { isEditDashboard: true, groupId: "n2", isAmc: false }],
+    ['/amc/sub-radar-board', { isEditDashboard: false, groupId: "n1", isAmc: true }],
+    ['/amc/sub-house-board', { isEditDashboard: false, groupId: "n2", isAmc: true }],
+  ])
 };
 export default function (state = initialState, action) {
   const { payload } = action
@@ -61,10 +67,13 @@ export default function (state = initialState, action) {
       console.log('payload IS_EDIT_DASHBOARD', payload)
       return { ...state, isEditDashBoard: payload };
 
+    case types.SET_ROUTER_BASE:
+      console.log('payload SET_ROUTER_BASE', payload)
+      return { ...state, routerBase: payload };
+
     case types.SET_CACHE_IDS:
       console.log('payload SET_CACHE_IDS', payload)
       return { ...state, cacheIds: [...state.cacheIds, payload] };
-
     case types.CLEAR_DASH_STORE:
       return {
         ...state,

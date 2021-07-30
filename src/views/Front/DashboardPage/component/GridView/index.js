@@ -99,8 +99,8 @@ class GridView extends PureComponent {
             )
           } else {
             component = (
-              // <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
-              <div key={widget.i}>{widget.i}</div>
+              <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
+              // <div key={widget.i}>{widget.i}</div>
             )
           }
         } else if (widget.type === 'MARKDOWN') {

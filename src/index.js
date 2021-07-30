@@ -10,19 +10,21 @@ import history from '@/Router/history';
 import 'default-passive-events'
 import './index.css';
 
+const defaultRouterBase = '/amc/manage/amc-dashbi'
 
 function render(props) {
   const { container } = props;
-  const basename = props.routerBase || '/amc/manage/amc-dashbi'
+
   ReactDOM.render(<Provider store={store}>
     <ConnectedRouter history={history}>
-      <Router basename={basename} />
+      <Router basename={props.routerBase} />
     </ConnectedRouter>
   </Provider>, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 
 if (!window.__POWERED_BY_QIANKUN__) {
-  render({});
+  render({ routerBase: defaultRouterBase });
+  store.dispatch({ type: types.SET_ROUTER_BASE, payload: defaultRouterBase })
 }
 
 export async function bootstrap() {
@@ -31,22 +33,25 @@ export async function bootstrap() {
 
 export async function mount(props) {
   console.log('props from main framework', props);
-  let m = new Map();
-  m.set('/amc/editBoard/edit-sub-radar-board', { isEditDashboard: true, groupId: "n1" });
-  m.set('/amc/editBoard/edit-sub-house-board', { isEditDashboard: true, groupId: "n2" });
-  m.set('/amc/sub-radar-board', { isEditDashboard: false, groupId: "n1" });
-  m.set('/amc/sub-house-board', { isEditDashboard: false, groupId: "n2" });
-  if(m.has(props.routerBase)){
-    let { groupId, isEditDashboard } = m.get(props.routerBase)
+  if (!props.routerBase) {
+    props.routerBase = defaultRouterBase
+  }
+  const routerBaseMap = store.getState().dashboardStore.routerBaseMap
+  if (routerBaseMap.has(props.routerBase)) {
+    let { groupId, isEditDashboard } = routerBaseMap.get(props.routerBase)
     store.dispatch({ type: types.GROUP_ID, payload: groupId })
     store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: isEditDashboard })
+    store.dispatch({ type: types.SET_ROUTER_BASE, payload: props.routerBase })
   }
   render(props);
 }
 
 export async function unmount(props) {
-  console.log('sub app unmount')
+  console.log('sub app unmount', props)
   const { container } = props;
-  await store.dispatch({ type: types.CLEAR_DASH_STORE })
+  const routerBaseMap = store.getState().dashboardStore.routerBaseMap
+  if (routerBaseMap.has(props.routerBase)) {
+    await store.dispatch({ type: types.CLEAR_DASH_STORE })
+  }
   await ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }

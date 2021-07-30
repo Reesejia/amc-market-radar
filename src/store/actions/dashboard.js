@@ -1,5 +1,5 @@
 import * as types from '../action-types'
-import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList } from '@/api/radar'
+import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import LimitRequest from '@/views/Front/DashboardPage/HighComponent/LimitRequest'
 import { message } from 'antd'
@@ -88,7 +88,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
           }
           return chart.id
         })
-        console.log(`gridPositionData ${dashboardId}-看板数据`, gridPositionData)
+        console.log(`step4 gridPositionData ${dashboardId}-看板数据`, gridPositionData)
         chartIds = chartIds.length > 0 && chartIds.flat(1)
         dispatch({ type: types.GET_GRID_DATA, payload: { gridPositionData, chartIds, dashboardId } })
         dispatch({ type: types.SET_CACHE_IDS, payload: dashboardId })
@@ -109,9 +109,17 @@ const getPositionGrid_action = (dashboardId, refresh) => {
 const getChartBusiness_action = (dashboardId) => {
   if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
-    const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin
+    const {boardGridOrigin,routerBaseMap, routerBase } = store.getState().dashboardStore
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
-    const getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    const routerBaseInfo = routerBaseMap.get(routerBase)
+    console.log('routerBaseInfo', routerBaseInfo)
+    let getChartBusinessBind;
+    // if(routerBaseInfo && routerBaseInfo.isAmc){
+    //   getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId)
+    // }else {
+    //   getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    // }
+    getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
     if (chartIds && chartIds.length > 0) {
       new LimitRequest({ chartIds, limit: 35, firstLimit: 10, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }

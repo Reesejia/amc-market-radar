@@ -20,7 +20,15 @@ export function getDashGrid(dashboardId, refresh) {
     })
 }
 
+// amc 根据chart id 获取业务数据
+export function getChartBusinessAmc(dashboardId, chartIds, refresh = false) {
+  return request({
+      url: `/blackcat/dashboard/chart/ids?dashboardId=${dashboardId}&chartIds=${chartIds}&refresh=${refresh}`,
+      method: 'get'
+  })
+}
 
+// superset 根据chart id 获取业务数据
 export function getChartBusiness(dashboardId, chartIds) {
     return request({
         url: `/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,

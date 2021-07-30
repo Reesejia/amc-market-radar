@@ -155,6 +155,7 @@ const HeaderTab = (props) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('state33', state)
   return {
     navList: state.dashboardStore.navList,
     groupId: state.dashboardStore.groupId,
