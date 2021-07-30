@@ -87,14 +87,20 @@ class GridView extends PureComponent {
       .map((widget, index) => {
         let component;
         if (widget.type === 'CHART') {
-          const { vizType, title } = widget.chartStyle.chart
+          let vizType, title;
+          if (widget.chartStyle && widget.chartStyle.chart) {
+            vizType = widget.chartStyle.chart.vizType
+            title = widget.chartStyle.chart.title
+          }
+
           if (vizType === 'table') {
             component = (
               <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
             )
           } else {
             component = (
-              <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
+              // <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
+              <div key={widget.i}>{widget.i}</div>
             )
           }
         } else if (widget.type === 'MARKDOWN') {
@@ -170,7 +176,6 @@ class GridView extends PureComponent {
 
 
   render() {
-    console.log("this.props333", this.props)
     return (
       <ResponsiveReactGridLayout
         className="layout"
@@ -192,7 +197,6 @@ class GridView extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('ownProp333s', ownProps)
   let widgets = []
   if (ownProps.location) {
     const id = ownProps.location.pathname.split('/dashboardPage/')[1]

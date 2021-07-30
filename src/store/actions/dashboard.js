@@ -14,6 +14,7 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
   return async (dispatch, getState) => {
     const res = await getDashboardData(dashboardId, refresh)
     if (res.code === "0") {
+      console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
       const { charsData, dashboard } = res.resp
       if (charsData) {
         for (let key in charsData) {
@@ -23,8 +24,11 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
       if (dashboard) {
         let { positionJson } = dashboard
         let gridwidgets = []
-        if (positionJson) {
+        if (positionJson && Object.keys(positionJson).length > 0) {
           positionJson = JSON.parse(positionJson)
+          console.log(`step2  positionJson 看板 - ${dashboardId}`, positionJson)
+          console.log(`step2 charsData 看板 - ${dashboardId}`, charsData)
+
           dashboard.positionJson = positionJson
           dispatch({ type: types.GET_DASH_ORIGIN_DATA, payload: { originDashId: dashboardId, dashboard } })
           gridwidgets = new ParseLayout({
@@ -32,8 +36,8 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
             charsData: charsData,
             viewType: []
           }).parseLayout()
+          dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
         }
-        dispatch({ type: types.UPDATE_GRIDDATA, payload: { gridwidgets, dashId: dashboardId } })
       }
     }
   }
@@ -45,8 +49,9 @@ const updateGridData_action = (dashboardId) => {
   }
   return async (dispatch, getState) => {
     const boardGridOrigin = store.getState().dashboardStore.boardGridOrigin;
-    const gridwidgets = boardGridOrigin[dashboardId].widgets
-    changeStatic(gridwidgets, true)
+    let gridwidgets = boardGridOrigin[dashboardId].widgets
+    gridwidgets = changeStatic(gridwidgets, true)
+    console.log(`step3 updateGridData_action gridwidgets 看板 - ${dashboardId}`, gridwidgets)
     if (boardGridOrigin[dashboardId]) {
       const ret = await updateGridData({
         dashboardId,
@@ -70,6 +75,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
     // if (Object.prototype.hasOwnProperty.call(dashboardStore.boardGridOrigin, dashboardId)) {
     const res = await getDashGrid(dashboardId, refresh)
     if (res.statusCode === 0 && res.success) {
+      console.log(`step4 getPositionGrid_action  看板 - ${dashboardId}`, res.data)
       let { gridPositionData } = res.data
       if (gridPositionData && gridPositionData.length > 0) {
         gridPositionData = JSON.parse(gridPositionData)
