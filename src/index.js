@@ -36,9 +36,11 @@ export async function mount(props) {
   m.set('/amc/editBoard/edit-sub-house-board', { isEditDashboard: true, groupId: "n2" });
   m.set('/amc/sub-radar-board', { isEditDashboard: false, groupId: "n1" });
   m.set('/amc/sub-house-board', { isEditDashboard: false, groupId: "n2" });
-  let { groupId, isEditDashboard } = m.get(props.routerBase)
-  store.dispatch({ type: types.GROUP_ID, payload: groupId })
-  store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: isEditDashboard })
+  if(m.has(props.routerBase)){
+    let { groupId, isEditDashboard } = m.get(props.routerBase)
+    store.dispatch({ type: types.GROUP_ID, payload: groupId })
+    store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: isEditDashboard })
+  }
   render(props);
 }
 
