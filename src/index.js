@@ -10,7 +10,9 @@ import history from '@/Router/history';
 import 'default-passive-events'
 import './index.css';
 
-const defaultRouterBase = '/amc/manage/amc-dashbi'
+// const defaultRouterBase = '/amc/manage/amc-dashbi'
+const defaultRouterBase = '/amc/sub-house-board'
+
 
 function render(props) {
   const { container } = props;

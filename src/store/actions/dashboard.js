@@ -106,7 +106,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
     }
   }
 }
-const getChartBusiness_action = (dashboardId) => {
+const getChartBusiness_action = (dashboardId, refresh = false) => {
   if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
     const {boardGridOrigin,routerBaseMap, routerBase } = store.getState().dashboardStore
@@ -115,9 +115,9 @@ const getChartBusiness_action = (dashboardId) => {
     console.log('routerBaseInfo', routerBaseInfo)
     let getChartBusinessBind;
     if(routerBaseInfo && routerBaseInfo.isAmc){
-      getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId)
+      getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId, refresh)
     }else {
-      getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+      getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh)
     }
     // getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
     if (chartIds && chartIds.length > 0) {

@@ -21,7 +21,7 @@ export function getDashGrid(dashboardId, refresh) {
 }
 
 // amc 根据chart id 获取业务数据
-export function getChartBusinessAmc(dashboardId, chartIds, refresh = false) {
+export function getChartBusinessAmc(dashboardId,  refresh = false, chartIds) {
   return request({
       url: `/blackcat/dashboard/chart/ids?dashboardId=${dashboardId}&ids=${chartIds}&refresh=${refresh}`,
       method: 'get'
@@ -29,9 +29,9 @@ export function getChartBusinessAmc(dashboardId, chartIds, refresh = false) {
 }
 
 // superset 根据chart id 获取业务数据
-export function getChartBusiness(dashboardId, chartIds) {
+export function getChartBusiness(dashboardId,refresh = false,  chartIds) {
     return request({
-        url: `/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}`,
+        url: `/dashboard/chart/ids?id=${dashboardId}&chartIds=${chartIds}&refresh=${refresh}`,
         method: 'get',
         baseURL
     })

@@ -9,10 +9,9 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const Demo = () => {
   const [form] = Form.useForm();
 
-  const onGenderChange = (value: string) => {
+  const onGenderChange = (value) => {
     switch (value) {
       case 'male':
         form.setFieldsValue({ note: 'Hi, man!' });
@@ -25,7 +24,7 @@ const Demo = () => {
     }
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = (values) => {
     console.log(values);
   };
 
@@ -83,4 +82,4 @@ const Filter = () =>{
   )
 }
 
-export default Filter;
+export default Filter
