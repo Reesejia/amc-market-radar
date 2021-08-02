@@ -10,6 +10,7 @@ let initialState = {
   isEditDashBoard: true,
   routerBase: '',
   cacheIds: [],
+  isAmc: false,
   routerBaseMap: new Map([
     ['/amc/editBoard/edit-sub-radar-board', { isEditDashboard: true, groupId: "n1", isAmc: false }],
     ['/amc/editBoard/edit-sub-house-board', { isEditDashboard: true, groupId: "n2", isAmc: false }],
@@ -69,7 +70,8 @@ export default function (state = initialState, action) {
 
     case types.SET_ROUTER_BASE:
       console.log('payload SET_ROUTER_BASE', payload)
-      return { ...state, routerBase: payload };
+      const isAmc = state.routerBaseMap.has(payload)
+      return { ...state, routerBase: payload, isAmc };
 
     case types.SET_CACHE_IDS:
       console.log('payload SET_CACHE_IDS', payload)

@@ -1,5 +1,5 @@
 import * as types from '../action-types'
-import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
+import { getChartBusiness,getDashboardDataAmc, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import LimitRequest from '@/views/Front/DashboardPage/HighComponent/LimitRequest'
 import { message } from 'antd'
@@ -12,7 +12,13 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
     return
   }
   return async (dispatch, getState) => {
-    const res = await getDashboardData(dashboardId, refresh)
+    const isAmc = store.getState().dashboardStore.isAmc
+    let res;
+    if(isAmc){
+      res = await getDashboardDataAmc(dashboardId, refresh)
+    } else {
+      res = await getDashboardData(dashboardId, refresh)
+    }
     if (res.code === "0") {
       console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
       const { charsData, dashboard } = res.resp
@@ -109,12 +115,10 @@ const getPositionGrid_action = (dashboardId, refresh) => {
 const getChartBusiness_action = (dashboardId, refresh = false) => {
   if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
-    const {boardGridOrigin,routerBaseMap, routerBase } = store.getState().dashboardStore
+    const {boardGridOrigin,isAmc } = getState().dashboardStore
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
-    const routerBaseInfo = routerBaseMap.get(routerBase)
-    console.log('routerBaseInfo', routerBaseInfo)
     let getChartBusinessBind;
-    if(routerBaseInfo && routerBaseInfo.isAmc){
+    if(isAmc){
       getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId, refresh)
     }else {
       getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh)

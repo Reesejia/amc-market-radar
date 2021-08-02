@@ -48,13 +48,22 @@ export function updateGridData({ dashboardId, gridPositionData }) {
 }
 
 // old 根据board id获取对应的postion 数据和 charseData 和 业务数据
-export function getDashboardData(dashboardId, refresh) {
+export function getDashboardData(dashboardId, refresh = false) {
   return request({
       url: `/dashboard?id=${dashboardId}&refresh=${refresh}`,
       method: 'get',
       baseURL
   })
 }
+
+// old 根据board id获取对应的postion 数据和 charseData 和 业务数据
+export function getDashboardDataAmc(dashboardId, refresh = false) {
+  return request({
+      url: `/blackcat/dashboard?dashboardId=${dashboardId}&refresh=${refresh}`,
+      method: 'get'
+  })
+}
+
 
 
 

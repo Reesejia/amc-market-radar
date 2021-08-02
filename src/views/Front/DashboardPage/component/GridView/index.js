@@ -5,6 +5,7 @@ import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
+import Filter from '@/views/Front/DashboardPage/component/Filter'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
@@ -129,7 +130,11 @@ class GridView extends PureComponent {
           component = (
             <Divider />
           )
-        } else {
+        } else if (widget.type === 'FILTER') {
+          component = (
+            <Filter  widget={widget}/>
+          )
+        }  else {
           component = (
             <div key={widget.i}>{widget.i}</div>
           )
