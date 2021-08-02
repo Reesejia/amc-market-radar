@@ -44,9 +44,16 @@ class LimitRequest {
       this.running++
       try {
         const ret = await task
-        if (ret.code === "0") {
+        console.log('next ret', ret)
+        if (ret.code && ret.code === "0" ) {
           this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: ret.resp })
           this.results.push(ret.resp)
+        }
+
+        if (Object.hasOwnProperty.call(ret, 'statusCode') && (ret.statusCode === 0)) {
+          console.log('next ret2', ret)
+          this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: ret.data })
+          this.results.push(ret.data)
         }
       } catch(err){
         console.error('LimitRequest err', err)

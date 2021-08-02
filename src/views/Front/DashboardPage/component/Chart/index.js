@@ -26,6 +26,7 @@ class ChartComponent extends PureComponent {
       }catch(e){
         console.error('chart final',e)
         final = {}
+        return option = {}
       }
       const detailType = vizType
       const all = {}

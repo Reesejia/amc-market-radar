@@ -23,7 +23,7 @@ export function getDashGrid(dashboardId, refresh) {
 // amc 根据chart id 获取业务数据
 export function getChartBusinessAmc(dashboardId, chartIds, refresh = false) {
   return request({
-      url: `/blackcat/dashboard/chart/ids?dashboardId=${dashboardId}&chartIds=${chartIds}&refresh=${refresh}`,
+      url: `/blackcat/dashboard/chart/ids?dashboardId=${dashboardId}&ids=${chartIds}&refresh=${refresh}`,
       method: 'get'
   })
 }

@@ -114,14 +114,14 @@ const getChartBusiness_action = (dashboardId) => {
     const routerBaseInfo = routerBaseMap.get(routerBase)
     console.log('routerBaseInfo', routerBaseInfo)
     let getChartBusinessBind;
-    // if(routerBaseInfo && routerBaseInfo.isAmc){
-    //   getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId)
-    // }else {
-    //   getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
-    // }
-    getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    if(routerBaseInfo && routerBaseInfo.isAmc){
+      getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId)
+    }else {
+      getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    }
+    // getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
     if (chartIds && chartIds.length > 0) {
-      new LimitRequest({ chartIds, limit: 35, firstLimit: 10, request: getChartBusinessBind, dispatch, types, pool: 3 })
+      new LimitRequest({ chartIds, limit: 35, firstLimit: 35, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }
   }
 }
