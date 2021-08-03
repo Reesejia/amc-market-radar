@@ -87,3 +87,6 @@ code {
 .header-tab-wrapper .ant-tabs-tab {
   padding: 12px;
 }
+* {
+  touch-action: pan-y;
+}

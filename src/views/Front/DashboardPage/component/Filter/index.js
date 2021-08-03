@@ -86,6 +86,7 @@ const Filter = (props) => {
 
 
   const onAreaChange = (value) => {
+    window.addEventListener('MouseDown', () =>{}, {passive: false})
     console.log('onAreaChange value', value)
     console.log('subObj value', subObj)
     console.log('subObj[value]', subObj[value])
@@ -133,7 +134,7 @@ const Filter = (props) => {
           allowClear
         >
           {
-            areaList.map(city => <Option value={city.value} key={city.key}>{city.label}</Option>)
+            areaList.map(city => <Option value={city.value} key={`${city.label}-${city.key}`}>{city.label}</Option>)
           }
 
         </Select>

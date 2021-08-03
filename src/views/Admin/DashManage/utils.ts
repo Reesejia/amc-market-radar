@@ -1,10 +1,10 @@
 import { useEffect, useReducer, createContext, Dispatch } from 'react';
-import { dashboardList } from '@/api/group';
+import { dashboardList, navigationList } from '@/api/group';
 
 const initialState = {
 	status: false,
 	grounpListInfo: { content: [], totalElements: 0 },
-	groupId: '',
+	groupId: { id: '' },
 	isCreate: false,
 	isEditGroup: false,
 	dashList: [],
@@ -14,8 +14,14 @@ const initialState = {
 		size: 20,
 		sortField: '',
 		direction: ''
-	}
-
+	},
+	navList: [{
+		id: '',
+		navigationName: '',
+		dashboardGroupName: '',
+		dashboardGroupId: '',
+		navigationGroups: []
+	}]
 };
 
 type ACTION_TYPE = {
@@ -66,6 +72,11 @@ export const dashReducer = (state: typeof initialState, action: ACTION_TYPE) => 
 				...state,
 				showGroup: action.payload
 			};
+		case 'FETCH_NAV_LIST':
+			return {
+				...state,
+				navList: action.payload
+			};
 		default:
 			throw new Error();
 	}
@@ -90,6 +101,14 @@ export const useDashApi = (fetchApi: Function) => {
 		}
 	};
 
+	// navigationList
+	const getNavigationList = async () => {
+		const res = await navigationList();
+		if (res.statusCode === 0 && res.success) {
+			dispatch({ type: 'FETCH_NAV_LIST', payload: res.data });
+		}
+	};
+
 	useEffect(() => {
 		fetchData();
 	}, [groupParams]);
@@ -97,12 +116,13 @@ export const useDashApi = (fetchApi: Function) => {
 	useEffect(() => {
 		getDashboardList();
 	}, []);
-	return { ...state, dispatch, fetchData };
+	return { ...state, dispatch, fetchData, getNavigationList };
 };
 
 const dispatch: Dispatch<ACTION_TYPE> = (params: ACTION_TYPE) => { };
 const fetchData = () => { };
-export const DashContext = createContext({ ...initialState, dispatch, fetchData });
+const getNavigationList = () => { };
+export const DashContext = createContext({ ...initialState, dispatch, fetchData, getNavigationList });
 
 export const labelStyle = { color: '#999', fontSize: '14px' };
 export const contentStyle = { color: '#000', fontSize: '18px' };
