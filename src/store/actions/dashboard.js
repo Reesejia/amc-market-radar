@@ -1,27 +1,23 @@
 import * as types from '../action-types'
-import { getChartBusiness,getDashboardDataAmc, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
+import { getChartBusiness, getDashboardDataAmc, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import LimitRequest from '@/views/Front/DashboardPage/HighComponent/LimitRequest'
 import { message } from 'antd'
 import { changeStatic } from "@/store/reducers/dashboardStore"
 import store from '@/store/index';
 
-const onGetDashboardData_action = (dashboardId, refresh) => {
+const onGetDashboardData_action = (dashboardId, refresh = false) => {
   if (!dashboardId) {
     console.error('请输入对应的看板id onGetDashboardData_action')
     return
   }
   return async (dispatch, getState) => {
     const isAmc = store.getState().dashboardStore.isAmc
-    let res;
-    if(isAmc){
-      res = await getDashboardDataAmc(dashboardId, refresh)
-    } else {
-      res = await getDashboardData(dashboardId, refresh)
-    }
-    if (res.code === "0") {
+    const res = await getDashboardData(dashboardId, refresh, isAmc)
+    if (res.code === "0" || res.statusCode === 0) {
       console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
-      const { charsData, dashboard } = res.resp
+      let data = res.resp || res.data
+      const { charsData, dashboard } = data
       if (charsData) {
         for (let key in charsData) {
           delete charsData[key].data
@@ -113,17 +109,12 @@ const getPositionGrid_action = (dashboardId, refresh) => {
   }
 }
 const getChartBusiness_action = (dashboardId, refresh = false) => {
+  console.log('getChartBusiness_action dashboardId', dashboardId)
   if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
-    const {boardGridOrigin,isAmc } = getState().dashboardStore
+    const { boardGridOrigin, isAmc } = getState().dashboardStore
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
-    let getChartBusinessBind;
-    if(isAmc){
-      getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId, refresh)
-    }else {
-      getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh)
-    }
-    // getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    const getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh, isAmc)
     if (chartIds && chartIds.length > 0) {
       new LimitRequest({ chartIds, limit: 35, firstLimit: 35, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }
@@ -139,8 +130,26 @@ const getNavigationList_action = () => {
   }
 }
 
+const onFilterGetDashboardData_action = (dashboardId, refresh = false) => {
+  if (!dashboardId) {
+    console.error('请输入对应的看板id onGetDashboardData_action')
+    return
+  }
+  return async (dispatch, getState) => {
+    const isAmc = store.getState().dashboardStore.isAmc
+    const res = await getDashboardData(dashboardId, refresh, isAmc)
+    if (res.code === "0" || res.statusCode === 0) {
+      let data = res.resp || res.data
+      const { charsData } = data
+      dispatch({ type: 'GET_BUSINESS_DATA', payload: charsData })
+      console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
+    }
+  }
+}
+
 export default {
   onGetDashboardData_action,
+  onFilterGetDashboardData_action,
   updateGridData_action,
   getPositionGrid_action,
   getChartBusiness_action,

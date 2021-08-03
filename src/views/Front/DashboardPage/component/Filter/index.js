@@ -1,10 +1,13 @@
 import { Form, Input, Button, Select, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
 import { getDashboardDataAmc, getDashboardData } from '@/api/radar'
 import { title } from 'process';
+import { useDispatch } from 'react-redux'
 const { Option } = Select;
 const Filter = (props) => {
+  const dispatch = useDispatch()
   console.log('Filter props', props)
   const [subObj, setSubObj] = useState({})
   const [cityList, setCityList] = useState([])
@@ -13,7 +16,7 @@ const Filter = (props) => {
 
   const formatSublist = (sublist) => {
     const subAreaList = []
-    const subAreaObj = sublist.reduce((prev, cur,index) => {
+    const subAreaObj = sublist.reduce((prev, cur, index) => {
       console.log('prev', prev, cur)
       const [key, value] = getBoardKey(cur.title)
       if (Object.hasOwnProperty.call(prev, key)) {
@@ -86,15 +89,19 @@ const Filter = (props) => {
 
 
   const onAreaChange = (value) => {
-    window.addEventListener('MouseDown', () =>{}, {passive: false})
+    window.addEventListener('MouseDown', () => { }, { passive: false })
     console.log('onAreaChange value', value)
     console.log('subObj value', subObj)
     console.log('subObj[value]', subObj[value])
     setCityList(subObj[value])
-    form.setFieldsValue({city: subObj[value].value})
+    form.setFieldsValue({ city: subObj[value].value })
   };
 
-  const onGenderChange = (value) => {
+  const onCityChange = async (value) => {
+    // await props.getChartBusiness_action(value)
+    await props.onFilterGetDashboardData_action(value);
+    await dispatch({ type: "SET_FILTER_STYLE", payload: { dashCityId: 9, bool: false } })
+    console.log('onCityChange value', value)
     // switch (value) {
     //   case 'male':
     //     form.setFieldsValue({ note: 'Hi, man!' });
@@ -110,20 +117,6 @@ const Filter = (props) => {
   const onFinish = (values) => {
     console.log(values);
   };
-
-  const onReset = () => {
-    form.resetFields();
-  };
-
-  const onFill = () => {
-    form.setFieldsValue({
-      note: 'Hello world!',
-      gender: 'male',
-    });
-  };
-
-
-
 
   return (
     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
@@ -142,7 +135,7 @@ const Filter = (props) => {
       <Form.Item name="city" rules={[{ required: true, message: '请选择城市' }]}>
         <Select
           placeholder="请选择城市"
-          onChange={onGenderChange}
+          onChange={onCityChange}
           allowClear
         >
           {
@@ -150,29 +143,6 @@ const Filter = (props) => {
           }
 
         </Select>
-      </Form.Item>
-      <Form.Item
-        noStyle
-        shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-      >
-        {({ getFieldValue }) =>
-          getFieldValue('gender') === 'other' ? (
-            <Form.Item name="customizeGender" label="Customize Gender" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-          ) : null
-        }
-      </Form.Item>
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Submit
-      </Button>
-        {/* <Button htmlType="button" onClick={onReset}>
-          Reset
-      </Button>
-        <Button type="link" htmlType="button" onClick={onFill}>
-          Fill form
-      </Button> */}
       </Form.Item>
     </Form>
   )
@@ -185,4 +155,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Filter)
+export default connect(mapStateToProps, actions)(Filter)

@@ -86,6 +86,9 @@ class GridView extends PureComponent {
   getChartDom = () => {
     return this.state.widgets
       .map((widget, index) => {
+        if (!this.props.canUse && this.props.chartsData[widget.id]) {
+          widget.chartStyle.chart = this.props.chartsData[widget.id].chart
+        }
         let component;
         if (widget.type === 'CHART') {
           let vizType, title;
@@ -132,9 +135,9 @@ class GridView extends PureComponent {
           )
         } else if (widget.type === 'FILTER') {
           component = (
-            <Filter  widget={widget}/>
+            <Filter widget={widget} />
           )
-        }  else {
+        } else {
           component = (
             <div key={widget.i}>{widget.i}</div>
           )
@@ -203,14 +206,18 @@ class GridView extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   let widgets = []
+  let canUse = false
   if (ownProps.location) {
     const id = ownProps.location.pathname.split('/dashboardPage/')[1]
     widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
+    canUse = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].canUse
   } else {
     widgets = ownProps.widgets
   }
   return {
+    canUse,
     widgets,
+    chartsData: state.dashboardStore.chartsData,
     isEditDashBoard: state.dashboardStore.isEditDashBoard
   }
 }

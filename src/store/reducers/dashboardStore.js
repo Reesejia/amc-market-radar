@@ -54,7 +54,8 @@ export default function (state = initialState, action) {
           if (!Object.prototype.hasOwnProperty.call(state.boardGridOrigin, nav.dashboardId)) {
             state.boardGridOrigin[nav.dashboardId] = {
               widgets: [],
-              chartIds: []
+              chartIds: [],
+              canUse: true
             }
           }
         })
@@ -72,6 +73,13 @@ export default function (state = initialState, action) {
       console.log('payload SET_ROUTER_BASE', payload)
       const isAmc = state.routerBaseMap.has(payload)
       return { ...state, routerBase: payload, isAmc };
+
+    case types.SET_FILTER_STYLE:
+      console.log('payload CLEAR_FILTER_STYLE', payload)
+      const { dashCityId, bool } = payload
+      const dashGridFilter = state.boardGridOrigin[dashCityId]
+      dashGridFilter.canUse = bool
+      return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashCityId]: dashGridFilter } }
 
     case types.SET_CACHE_IDS:
       console.log('payload SET_CACHE_IDS', payload)
