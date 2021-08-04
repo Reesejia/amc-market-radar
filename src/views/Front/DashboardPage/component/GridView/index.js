@@ -135,7 +135,7 @@ class GridView extends PureComponent {
           )
         } else if (widget.type === 'FILTER') {
           component = (
-            <Filter widget={widget} />
+            <Filter widget={widget} dashboardId={this.props.id}/>
           )
         } else {
           component = (

@@ -88,5 +88,5 @@ code {
   padding: 12px;
 }
 * {
-  touch-action: pan-y;
+  touch-action: none;
 }

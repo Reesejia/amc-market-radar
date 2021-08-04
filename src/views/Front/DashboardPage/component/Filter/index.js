@@ -1,20 +1,19 @@
-import { Form, Input, Button, Select, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { Form, Select } from 'antd';
+import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import { getDashboardDataAmc, getDashboardData } from '@/api/radar'
-import { title } from 'process';
+import { getDashboardData } from '@/api/radar'
 import { useDispatch } from 'react-redux'
 const { Option } = Select;
 const Filter = (props) => {
   const dispatch = useDispatch()
-  console.log('Filter props', props)
   const [subObj, setSubObj] = useState({})
   const [cityList, setCityList] = useState([])
   const [areaList, setAreaList] = useState([])
   const [loading, setLoading] = useState(false)
-
   const [form] = Form.useForm();
+  const areaRef = useRef()
+  const cityRef = useRef()
 
   const formatSublist = (sublist) => {
     const subAreaList = []
@@ -69,18 +68,30 @@ const Filter = (props) => {
 
   useEffect(() => {
     fetchSublist()
-  }, [])
+    window.addEventListener('mouseDown', () => { }, { passive: false })
+  }, [props.dashboardId])
 
   const layout = {
     wrapperCol: { offset: 3, span: 18 },
   };
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
 
+  const onDropdownArea = (open) => {
+    if (open) {
+      if (areaRef.current) {
+        areaRef.current.blur()
+      }
+    }
+  }
+
+  const onDropdownCity = (open) => {
+    if (open) {
+      if (cityRef.current) {
+        cityRef.current.blur()
+      }
+    }
+  }
 
   const onAreaChange = (value) => {
-    console.log('onAreaChange value', value)
     if (value && subObj[value] && subObj[value]) {
       setCityList(subObj[value])
       const city = subObj[value][0] && subObj[value][0].value
@@ -97,24 +108,12 @@ const Filter = (props) => {
       if (value) {
         setLoading(true)
         await props.onFilterGetDashboardData_action(value);
-        await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: 9, bool: true } })
+        await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: props.dashboardId, bool: true } })
         setLoading(false)
       }
     } catch (e) {
       setLoading(false)
     }
-
-
-    // switch (value) {
-    //   case 'male':
-    //     form.setFieldsValue({ note: 'Hi, man!' });
-    //     return;
-    //   case 'female':
-    //     form.setFieldsValue({ note: 'Hi, lady!' });
-    //     return;
-    //   case 'other':
-    //     form.setFieldsValue({ note: 'Hi there!' });
-    // }
   };
 
   const onFinish = (values) => {
@@ -129,13 +128,13 @@ const Filter = (props) => {
     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
       <Form.Item name="area" rules={[{ required: true, message: '请选择地区' }]}>
         <Select
+          ref={areaRef}
           showSearch
           placeholder="请选择地区"
           onChange={onAreaChange}
           allowClear
+          onDropdownVisibleChange={onDropdownArea}
           filterOption={(input, option) => {
-            console.log('input', input)
-            console.log('option', option)
             return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
           }
@@ -149,13 +148,21 @@ const Filter = (props) => {
       </Form.Item>
       <Form.Item name="city" rules={[{ required: true, message: '请选择城市' }]}>
         <Select
+          showSearch
           placeholder="请选择城市"
           onChange={onCityChange}
+          onDropdownVisibleChange={onDropdownCity}
+          ref={cityRef}
           allowClear
           loading={loading}
+          filterOption={(input, option) => {
+            return option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          }
+          onSearch={onSearch}
         >
           {
-            cityList.map(city => <Option value={city.value} key={city.id}>{city.label}</Option>)
+            cityList.map(city => <Option value={city.value} key={city.label + city.value}>{city.label}</Option>)
           }
 
         </Select>
@@ -164,9 +171,7 @@ const Filter = (props) => {
   )
 }
 const mapStateToProps = (state) => {
-  const dashboardId = state.router.location.pathname.split('/dashboardPage/')[1]
   return {
-    dashboardId,
     isAmc: state.dashboardStore.isAmc
   }
 }
