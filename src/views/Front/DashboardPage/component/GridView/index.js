@@ -206,14 +206,13 @@ class GridView extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   let widgets = []
-  let disable = false
+  const id = state.router.location.pathname.split('/dashboardPage/')[1]
   if (ownProps.location) {
-    const id = ownProps.location.pathname.split('/dashboardPage/')[1]
     widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
-    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   } else {
     widgets = ownProps.widgets
   }
+  const  disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   return {
     disable,
     widgets,
