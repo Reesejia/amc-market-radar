@@ -1,4 +1,4 @@
-import React, { createRef, PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
+import React, {useState, useEffect} from 'react'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
@@ -137,11 +137,10 @@ const HeaderTab = (props) => {
         }
       })
       if (dashboardId) {
-        await props.updateGridData_action(dashboardId)
+        await props.updateGridData_action(dashboardId, true)
         await props.getPositionGrid_action(dashboardId, true)
       }
     }
-    // }
   }
 
 

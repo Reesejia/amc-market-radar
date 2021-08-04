@@ -101,13 +101,12 @@ code {
 }
 
 .header-btn {
-  /* flex: 1; */
-  /* position: absolute;
-  z-index: 99; */
-  /* display: flex;
-  justify-content: flex-end; */
   position: absolute;
   top: 10px;
   right: 20px;
   z-index: 999;
+}
+
+* {
+  touch-action: none;
 }

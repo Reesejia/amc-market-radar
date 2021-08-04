@@ -5,6 +5,7 @@ import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
+import Filter from '@/views/Front/DashboardPage/component/Filter'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
@@ -86,6 +87,9 @@ class GridView extends PureComponent {
   getChartDom = () => {
     return this.state.widgets
       .map((widget, index) => {
+        if (this.props.disable && this.props.chartsData[widget.id]) {
+          widget.chartStyle.chart = this.props.chartsData[widget.id].chart
+        }
         let component;
         if (widget.type === 'CHART') {
           let vizType, title;
@@ -115,7 +119,7 @@ class GridView extends PureComponent {
         }
         else if (widget.type === 'TABS') {
           component = (
-            <TabsView widget={widget} />
+            <TabsView widget={widget} dashboardId={this.props.id}/>
           )
         } else if (widget.type === 'HEADER') {
           component = (
@@ -129,6 +133,10 @@ class GridView extends PureComponent {
         } else if (widget.type === 'DIVIDER') {
           component = (
             <Divider />
+          )
+        } else if (widget.type === 'FILTER') {
+          component = (
+            <Filter widget={widget} dashboardId={this.props.id}/>
           )
         } else {
           component = (
@@ -180,6 +188,7 @@ class GridView extends PureComponent {
 
 
   render() {
+    console.log("this.context", this.props)
     return (
       <div className="grid-con-wrap">
         <div className="grid-con">
@@ -206,14 +215,23 @@ class GridView extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   let widgets = []
+  let disable = false
+  let id;
   if (ownProps.location) {
-    const id = ownProps.location.pathname.split('/dashboardPage/')[1]
+    id = ownProps.location.pathname.split('/dashboardPage/')[1]
     widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
+    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   } else {
     widgets = ownProps.widgets
+    id = ownProps.dashboardId
+    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   }
+
   return {
+    id,
+    disable,
     widgets,
+    chartsData: state.dashboardStore.chartsData,
     isEditDashBoard: state.dashboardStore.isEditDashBoard
   }
 }

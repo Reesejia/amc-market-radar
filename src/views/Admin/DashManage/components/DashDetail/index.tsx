@@ -21,7 +21,8 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
     lastModifiedTime: '',
     createTime: '',
     dashboardGroupName: '',
-    used: false
+    used: false,
+    initValue: false
   }
   const [boardDetail, setBoardDetail] = useState<BoardDetail>(initalBoard);
 
@@ -30,8 +31,9 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
   }, [groupId]);
 
   const onBoardDetail = async () => {
-    if (groupId) {
-      const res = await getBoardDetail(groupId);
+    const id = groupId.id
+    if (id) {
+      const res = await getBoardDetail(id);
       if (res.statusCode === 0 && res.success) {
         setBoardDetail(res.data);
       }
@@ -76,11 +78,12 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
           layout="vertical"
           size={'small'}
           extra={
-            !isEditGroup && (
+            !isEditGroup ? boardDetail.initValue ? <Button disabled>
+              编辑
+            </Button> :
               <Button type="primary" onClick={() => handleEditGroup(boardDetail.used)}>
                 编辑
-              </Button>
-            )
+              </Button>: ""
           }
         >
           <Descriptions.Item label="修改人">{isCreate ? '-' : boardDetail.updateByName || '-'}</Descriptions.Item>
@@ -94,35 +97,35 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
             onBoardDetail={onBoardDetail}
           />
         ) : (
-            <div className="groupInfo">
-              <Descriptions
-                labelStyle={infoLabelStyle}
-                contentStyle={infoContentStyle}
-                column={1}
-                layout="vertical"
-                size={'middle'}
-              >
-                <Descriptions.Item label="组合名称">
-                  {boardDetail.dashboardGroupName}
-                </Descriptions.Item>
-                <Descriptions.Item label="已选看板">
-                  {boardDetail.dashboardGroupMappings.map((item: DashItem) => (
-                    <Tag key={item.id}>{item.dashboardName}</Tag>
-                  ))}
-                </Descriptions.Item>
+          <div className="groupInfo">
+            <Descriptions
+              labelStyle={infoLabelStyle}
+              contentStyle={infoContentStyle}
+              column={1}
+              layout="vertical"
+              size={'middle'}
+            >
+              <Descriptions.Item label="组合名称">
+                {boardDetail.dashboardGroupName}
+              </Descriptions.Item>
+              <Descriptions.Item label="已选看板">
+                {boardDetail.dashboardGroupMappings.map((item: DashItem) => (
+                  <Tag key={item.id}>{item.dashboardName}</Tag>
+                ))}
+              </Descriptions.Item>
 
-                <Descriptions.Item label="备注">{boardDetail.comment}</Descriptions.Item>
+              <Descriptions.Item label="备注">{boardDetail.comment}</Descriptions.Item>
 
-                <Descriptions.Item label="组合状态">
-                  {
-                    boardDetail.used ?
-                      (<Tag color="blue">已启用</Tag>) :
-                      (<Tag color="volcano">未启用</Tag>)
-                  }
-                </Descriptions.Item>
-              </Descriptions>
-            </div>
-          )}
+              <Descriptions.Item label="组合状态">
+                {
+                  boardDetail.used ?
+                    (<Tag color="blue">已启用</Tag>) :
+                    (<Tag color="volcano">未启用</Tag>)
+                }
+              </Descriptions.Item>
+            </Descriptions>
+          </div>
+        )}
       </Drawer>
 
     </div>

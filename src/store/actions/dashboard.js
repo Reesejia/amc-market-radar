@@ -6,16 +6,18 @@ import { message } from 'antd'
 import { changeStatic } from "@/store/reducers/dashboardStore"
 import store from '@/store/index';
 
-const onGetDashboardData_action = (dashboardId, refresh) => {
+const onGetDashboardData_action = (dashboardId, refresh = false) => {
   if (!dashboardId) {
     console.error('请输入对应的看板id onGetDashboardData_action')
     return
   }
   return async (dispatch, getState) => {
-    const res = await getDashboardData(dashboardId, refresh)
-    if (res.code === "0") {
+    const isAmc = store.getState().dashboardStore.isAmc
+    const res = await getDashboardData(dashboardId, refresh, isAmc)
+    if (res.code === "0" || res.statusCode === 0) {
       console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
-      const { charsData, dashboard } = res.resp
+      let data = res.resp || res.data
+      const { charsData, dashboard } = data
       if (charsData) {
         for (let key in charsData) {
           delete charsData[key].data
@@ -42,7 +44,7 @@ const onGetDashboardData_action = (dashboardId, refresh) => {
     }
   }
 }
-const updateGridData_action = (dashboardId) => {
+const updateGridData_action = (dashboardId, showMsg = false) => {
   if (!dashboardId) {
     console.error('请输入对应的看板id updateGridData_action')
     return
@@ -57,8 +59,8 @@ const updateGridData_action = (dashboardId) => {
         dashboardId,
         gridPositionData: JSON.stringify(gridwidgets)
       })
-      if (ret.statusCode === 0 && ret.success) {
-        message.success('数据初始化成功')
+      if (ret.code === "0" && showMsg) {
+        message.success('操作成功')
       }
     }
 
@@ -99,7 +101,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
             return
           }
           await onGetDashboardData_action(dashboardId, false)(dispatch, getState)
-          await updateGridData_action(dashboardId, true)(dispatch, getState)
+          await updateGridData_action(dashboardId, false)(dispatch, getState)
           await getPositionGrid_action(dashboardId, true)(dispatch, getState)
         }
       }
@@ -107,19 +109,12 @@ const getPositionGrid_action = (dashboardId, refresh) => {
   }
 }
 const getChartBusiness_action = (dashboardId, refresh = false) => {
+  console.log('getChartBusiness_action dashboardId', dashboardId)
   if (!dashboardId) message.error('请输入对应的看板id getChartBusiness_action')
   return async (dispatch, getState) => {
-    const {boardGridOrigin,routerBaseMap, routerBase } = store.getState().dashboardStore
+    const { boardGridOrigin, isAmc } = getState().dashboardStore
     const chartIds = boardGridOrigin[dashboardId] && boardGridOrigin[dashboardId].chartIds;
-    const routerBaseInfo = routerBaseMap.get(routerBase)
-    console.log('routerBaseInfo', routerBaseInfo)
-    let getChartBusinessBind;
-    if(routerBaseInfo && routerBaseInfo.isAmc){
-      getChartBusinessBind = getChartBusinessAmc.bind(null, dashboardId, refresh)
-    }else {
-      getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh)
-    }
-    // getChartBusinessBind = getChartBusiness.bind(null, dashboardId)
+    const getChartBusinessBind = getChartBusiness.bind(null, dashboardId, refresh, isAmc)
     if (chartIds && chartIds.length > 0) {
       new LimitRequest({ chartIds, limit: 35, firstLimit: 35, request: getChartBusinessBind, dispatch, types, pool: 3 })
     }
@@ -135,8 +130,26 @@ const getNavigationList_action = () => {
   }
 }
 
+const onFilterGetDashboardData_action = (dashboardId, refresh = false) => {
+  if (!dashboardId) {
+    console.error('请输入对应的看板id onGetDashboardData_action')
+    return
+  }
+  return async (dispatch, getState) => {
+    const isAmc = store.getState().dashboardStore.isAmc
+    const res = await getDashboardData(dashboardId, refresh, isAmc)
+    if (res.code === "0" || res.statusCode === 0) {
+      let data = res.resp || res.data
+      const { charsData } = data
+      dispatch({ type: 'GET_BUSINESS_DATA', payload: charsData })
+      console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
+    }
+  }
+}
+
 export default {
   onGetDashboardData_action,
+  onFilterGetDashboardData_action,
   updateGridData_action,
   getPositionGrid_action,
   getChartBusiness_action,

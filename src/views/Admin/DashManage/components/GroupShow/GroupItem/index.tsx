@@ -32,7 +32,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   const { groupData, getNavigationList } = props
   const [editStatus, changeEditStatus] = useState(false)
   const [data, setData] = useState<NavListInfo>(() => initialData)
-  const { grounpListInfo } = useContext(DashContext)
+  const { grounpListInfo, fetchData } = useContext(DashContext)
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 8 },
@@ -43,10 +43,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
   };
   const { Option } = Select;
 
-  const onGenderChange = async(value: string, option: any) => {
+  const onGenderChange = async (value: string, option: any) => {
     const res = await getBoardDetail(value)
-    if(res.success && res.statusCode === 0){
-      const {dashboardGroupMappings} = res.data
+    if (res.success && res.statusCode === 0) {
+      const { dashboardGroupMappings } = res.data
       // setData(dashboardGroupMappings)
       const { children } = option
       form.setFieldsValue({
@@ -68,8 +68,8 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     const keys = Object.keys(values)
     setData({
       ...data,
-      navigationGroups: data.navigationGroups.map((item,index) =>{
-        if(keys.includes(item.id)){
+      navigationGroups: data.navigationGroups.map((item, index) => {
+        if (keys.includes(item.id)) {
           item.displayName = values[item.id]
           item.id = ""
         }
@@ -83,6 +83,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
       message.success('修改成功')
       changeEditStatus(false)
       getNavigationList()
+      fetchData()
     }
   };
 
@@ -110,6 +111,10 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     fillTable()
   }, [])
 
+  useEffect(() => {
+    fillTable()
+  }, [props.groupData])
+
   const columns = [
     {
       title: '排序',
@@ -136,6 +141,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           rules={[
             {
               required: true,
+              whitespace: true,
               message: `看板展示名称是必填项`,
             },
           ]}
@@ -211,6 +217,11 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
     [data],
   );
 
+  const reback = () => {
+    changeEditStatus(false)
+    onFill()
+    fillTable()
+  }
 
   return (
     <div className="edit-group-form">
@@ -244,7 +255,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
                 >
                   {
                     grounpListInfo.content.map((group: CreateGroup) => {
-                      return <Option value={group.id as string} >{group.dashboardGroupName}</Option>
+                      return <Option key={group.id} value={group.id as string} >{group.dashboardGroupName}</Option>
                     })
                   }
                 </Select>
@@ -288,7 +299,7 @@ const GroupItem: FC<GroupProps> = (props: GroupProps) => {
           editStatus ?
             <Row justify="center" align="middle">
               <Form.Item {...tailLayout}>
-                <Button onClick={() => changeEditStatus(false)} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
+                <Button onClick={reback} style={{ marginRight: '20px', marginTop: '20px' }}>返回</Button>
                 <Button type="primary" htmlType="submit">确认</Button>
               </Form.Item>
             </Row>

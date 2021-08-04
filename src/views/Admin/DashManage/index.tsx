@@ -9,11 +9,13 @@ import { GroupItem, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
 import './index.scss'
 import { SearchOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 export interface Props {
   test: string
 }
 
 const DataPageManage: FC = () => {
+  const [curGrounId, setCurGrounpId] = useState("")
   const reduderObj = useDashApi(getGroup)
   const { grounpListInfo, dispatch, fetchData, groupParams } = reduderObj
   const showDrawer = () => {
@@ -62,7 +64,7 @@ const DataPageManage: FC = () => {
       render: (text: string, record: GroupItem) => {
         return (<a style={{ padding: '10px', paddingLeft: 0 }} onClick={() => {
           dispatch({ type: 'CHANGE_STATUS', payload: true })
-          dispatch({ type: 'CHANGE_GROUPID', payload: record.id })
+          dispatch({ type: 'CHANGE_GROUPID', payload:{id:record.id }})
           dispatch({ type: 'SET_EDIT_GROUP', payload: false })
           dispatch({ type: 'CHANGE_ISCREATE', payload: false })
         }}>{text}</a>)
@@ -94,15 +96,15 @@ const DataPageManage: FC = () => {
       )
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       dataIndex: 'action',
       render: (text: string, record: GroupItem) => {
-        const { used } = record
+        const { used, initValue } = record
         return (
           <Space size="middle">
             {
-              used ? '-' :
+               initValue || (!initValue && used) ? '-' :
                 <Popconfirm placement="leftTop" title="确认删除 ？" onConfirm={() => onDeleteGroup(record.id)} okText="删除" cancelText="取消">
                   <a style={{ padding: '10px', paddingLeft: 0 }}>删除</a>
                 </Popconfirm>

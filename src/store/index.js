@@ -5,7 +5,6 @@ import logger from 'redux-logger';
 import reducers from './reducers';
 import history from '@/Router/history';
 import { routerMiddleware } from 'connected-react-router';
-import { TypeRootState } from './reducers';
 
 let store;
 if (process.env.NODE_ENV === 'development') {

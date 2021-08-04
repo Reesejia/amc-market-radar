@@ -1,26 +1,117 @@
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Select } from 'antd';
+import { useEffect, useState, useRef } from 'react';
+import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
+import { getDashboardData } from '@/api/radar'
+import { useDispatch } from 'react-redux'
 const { Option } = Select;
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
+const Filter = (props) => {
+  const dispatch = useDispatch()
+  const [subObj, setSubObj] = useState({})
+  const [cityList, setCityList] = useState([])
+  const [areaList, setAreaList] = useState([])
+  const [loading, setLoading] = useState(false)
   const [form] = Form.useForm();
+  const areaRef = useRef()
+  const cityRef = useRef()
 
-  const onGenderChange = (value) => {
-    switch (value) {
-      case 'male':
-        form.setFieldsValue({ note: 'Hi, man!' });
-        return;
-      case 'female':
-        form.setFieldsValue({ note: 'Hi, lady!' });
-        return;
-      case 'other':
-        form.setFieldsValue({ note: 'Hi there!' });
+  const formatSublist = (sublist) => {
+    const subAreaList = []
+    const subAreaObj = sublist.reduce((prev, cur, index) => {
+      const [key, value] = getBoardKey(cur.title)
+      if (Object.hasOwnProperty.call(prev, key)) {
+        prev[key].push({
+          label: value,
+          value: cur.id,
+        })
+
+      } else {
+        prev[key] = [{
+          label: value,
+          value: cur.id
+        }]
+        subAreaList.push({
+          label: key,
+          value: key,
+          key: index
+        })
+      }
+      return prev
+    }, {})
+    console.log('subAreaObj', subAreaObj)
+    return { subAreaObj, subAreaList }
+  }
+
+  const getBoardKey = (title) => {
+    if (title) {
+      return title.split('-')
+    }
+    return []
+  }
+
+  const fetchSublist = async () => {
+    let areaObj = {}
+    const res = await getDashboardData(props.dashboardId, false, props.isAmc)
+    if (res.statusCode === 0 || res.code === '0') {
+      const data = res.data || res.resp
+      if (data) {
+        const { dashboard } = data
+        if (dashboard && dashboard.subDashboardList) {
+          areaObj = formatSublist(dashboard.subDashboardList)
+          const { subAreaObj, subAreaList } = areaObj
+          setAreaList(subAreaList)
+          setSubObj(subAreaObj)
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchSublist()
+  }, [props.dashboardId])
+
+  const layout = {
+    wrapperCol: { offset: 3, span: 18 },
+  };
+
+  const onDropdownArea = (open) => {
+    if (open) {
+      if (areaRef.current) {
+        areaRef.current.blur()
+      }
+    }
+  }
+
+  const onDropdownCity = (open) => {
+    if (open) {
+      if (cityRef.current) {
+        cityRef.current.blur()
+      }
+    }
+  }
+
+  const onAreaChange = (value) => {
+    if (value && subObj[value] && subObj[value]) {
+      setCityList(subObj[value])
+      const city = subObj[value][0] && subObj[value][0].value
+      if (city) {
+        form.setFieldsValue({ city })
+        onCityChange(city)
+      }
+    }
+  };
+
+  const onCityChange = async (value) => {
+    try {
+      console.log('onCityChange value', value)
+      if (value) {
+        setLoading(true)
+        await props.onFilterGetDashboardData_action(value);
+        await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: props.dashboardId, bool: true } })
+        setLoading(false)
+      }
+    } catch (e) {
+      setLoading(false)
     }
   };
 
@@ -28,58 +119,60 @@ const tailLayout = {
     console.log(values);
   };
 
-  const onReset = () => {
-    form.resetFields();
-  };
+  function onSearch(val) {
+    console.log('search:', val);
+  }
 
-  const onFill = () => {
-    form.setFieldsValue({
-      note: 'Hello world!',
-      gender: 'male',
-    });
-  };
-const Filter = () =>{
   return (
     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-    <Form.Item name="note" label="Note" rules={[{ required: true }]}>
-      <Input />
-    </Form.Item>
-    <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-      <Select
-        placeholder="Select a option and change input text above"
-        onChange={onGenderChange}
-        allowClear
-      >
-        <Option value="male">male</Option>
-        <Option value="female">female</Option>
-        <Option value="other">other</Option>
-      </Select>
-    </Form.Item>
-    <Form.Item
-      noStyle
-      shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-    >
-      {({ getFieldValue }) =>
-        getFieldValue('gender') === 'other' ? (
-          <Form.Item name="customizeGender" label="Customize Gender" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        ) : null
-      }
-    </Form.Item>
-    <Form.Item {...tailLayout}>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-      <Button htmlType="button" onClick={onReset}>
-        Reset
-      </Button>
-      <Button type="link" htmlType="button" onClick={onFill}>
-        Fill form
-      </Button>
-    </Form.Item>
-  </Form>
+      <Form.Item name="area" rules={[{ required: true, message: '请选择地区' }]}>
+        <Select
+          ref={areaRef}
+          showSearch
+          placeholder="请选择地区"
+          onChange={onAreaChange}
+          allowClear
+          onDropdownVisibleChange={onDropdownArea}
+          filterOption={(input, option) => {
+            return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          }
+          onSearch={onSearch}
+        >
+          {
+            areaList.map(city => <Option value={city.value} key={`${city.label}-${city.key}`}>{city.label}</Option>)
+          }
+
+        </Select>
+      </Form.Item>
+      <Form.Item name="city" rules={[{ required: true, message: '请选择城市' }]}>
+        <Select
+          showSearch
+          placeholder="请选择城市"
+          onChange={onCityChange}
+          onDropdownVisibleChange={onDropdownCity}
+          ref={cityRef}
+          allowClear
+          loading={loading}
+          filterOption={(input, option) => {
+            return option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          }
+          onSearch={onSearch}
+        >
+          {
+            cityList.map(city => <Option value={city.value} key={city.label + city.value}>{city.label}</Option>)
+          }
+
+        </Select>
+      </Form.Item>
+    </Form>
   )
 }
+const mapStateToProps = (state) => {
+  return {
+    isAmc: state.dashboardStore.isAmc
+  }
+}
 
-export default Filter
+export default connect(mapStateToProps, actions)(Filter)
