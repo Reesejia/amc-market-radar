@@ -118,7 +118,7 @@ class GridView extends PureComponent {
         }
         else if (widget.type === 'TABS') {
           component = (
-            <TabsView widget={widget} />
+            <TabsView widget={widget} dashboardId={this.props.id}/>
           )
         } else if (widget.type === 'HEADER') {
           component = (
@@ -184,6 +184,7 @@ class GridView extends PureComponent {
 
 
   render() {
+    console.log("this.context", this.props)
     return (
       <ResponsiveReactGridLayout
         className="layout"
@@ -206,14 +207,20 @@ class GridView extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   let widgets = []
-  const id = state.router.location.pathname.split('/dashboardPage/')[1]
+  let disable = false
+  let id;
   if (ownProps.location) {
+    id = ownProps.location.pathname.split('/dashboardPage/')[1]
     widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
+    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   } else {
     widgets = ownProps.widgets
+    id = ownProps.dashboardId
+    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   }
-  const  disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
+
   return {
+    id,
     disable,
     widgets,
     chartsData: state.dashboardStore.chartsData,

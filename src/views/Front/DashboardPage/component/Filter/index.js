@@ -19,7 +19,6 @@ const Filter = (props) => {
   const formatSublist = (sublist) => {
     const subAreaList = []
     const subAreaObj = sublist.reduce((prev, cur, index) => {
-      console.log('prev', prev, cur)
       const [key, value] = getBoardKey(cur.title)
       if (Object.hasOwnProperty.call(prev, key)) {
         prev[key].push({
@@ -53,19 +52,19 @@ const Filter = (props) => {
 
   const fetchSublist = async () => {
     let areaObj = {}
-      const res = await getDashboardData(props.dashboardId, false, props.isAmc)
-      if (res.statusCode === 0 || res.code === '0') {
-        const data = res.data || res.resp
-        if(data){
-          const { dashboard } = data
-          if (dashboard && dashboard.subDashboardList) {
-            areaObj = formatSublist(dashboard.subDashboardList)
-            const { subAreaObj, subAreaList } = areaObj
-            setAreaList(subAreaList)
-            setSubObj(subAreaObj)
-          }
+    const res = await getDashboardData(props.dashboardId, false, props.isAmc)
+    if (res.statusCode === 0 || res.code === '0') {
+      const data = res.data || res.resp
+      if (data) {
+        const { dashboard } = data
+        if (dashboard && dashboard.subDashboardList) {
+          areaObj = formatSublist(dashboard.subDashboardList)
+          const { subAreaObj, subAreaList } = areaObj
+          setAreaList(subAreaList)
+          setSubObj(subAreaObj)
         }
       }
+    }
   }
 
   useEffect(() => {
@@ -94,9 +93,9 @@ const Filter = (props) => {
 
   const onCityChange = async (value) => {
     try {
-      setLoading(true)
       console.log('onCityChange value', value)
       if (value) {
+        setLoading(true)
         await props.onFilterGetDashboardData_action(value);
         await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: 9, bool: true } })
         setLoading(false)

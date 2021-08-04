@@ -100,7 +100,6 @@ const HeaderTab = (props) => {
         await props.getPositionGrid_action(dashboardId, true)
       }
     }
-    // }
   }
 
 

@@ -59,8 +59,8 @@ const updateGridData_action = (dashboardId) => {
         dashboardId,
         gridPositionData: JSON.stringify(gridwidgets)
       })
-      if (ret.statusCode === 0 && ret.success) {
-        message.success('数据初始化成功')
+      if (ret.code === "0") {
+        message.success('操作成功')
       }
     }
 
