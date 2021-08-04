@@ -86,7 +86,7 @@ class GridView extends PureComponent {
   getChartDom = () => {
     return this.state.widgets
       .map((widget, index) => {
-        if (!this.props.canUse && this.props.chartsData[widget.id]) {
+        if (this.props.disable && this.props.chartsData[widget.id]) {
           widget.chartStyle.chart = this.props.chartsData[widget.id].chart
         }
         let component;
@@ -206,16 +206,16 @@ class GridView extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   let widgets = []
-  let canUse = false
+  let disable = false
   if (ownProps.location) {
     const id = ownProps.location.pathname.split('/dashboardPage/')[1]
     widgets = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].widgets
-    canUse = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].canUse
+    disable = state.dashboardStore.boardGridOrigin[id] && state.dashboardStore.boardGridOrigin[id].disable
   } else {
     widgets = ownProps.widgets
   }
   return {
-    canUse,
+    disable,
     widgets,
     chartsData: state.dashboardStore.chartsData,
     isEditDashBoard: state.dashboardStore.isEditDashBoard

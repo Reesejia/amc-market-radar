@@ -100,7 +100,7 @@ const Filter = (props) => {
   const onCityChange = async (value) => {
     // await props.getChartBusiness_action(value)
     await props.onFilterGetDashboardData_action(value);
-    await dispatch({ type: "SET_FILTER_STYLE", payload: { dashCityId: 9, bool: false } })
+    await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: 9, bool: true } })
     console.log('onCityChange value', value)
     // switch (value) {
     //   case 'male':

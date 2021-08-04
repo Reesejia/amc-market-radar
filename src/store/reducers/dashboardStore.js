@@ -55,7 +55,7 @@ export default function (state = initialState, action) {
             state.boardGridOrigin[nav.dashboardId] = {
               widgets: [],
               chartIds: [],
-              canUse: true
+              disable: false
             }
           }
         })
@@ -74,11 +74,11 @@ export default function (state = initialState, action) {
       const isAmc = state.routerBaseMap.has(payload)
       return { ...state, routerBase: payload, isAmc };
 
-    case types.SET_FILTER_STYLE:
+    case types.DISABLE_FILTER_STYLE:
       console.log('payload CLEAR_FILTER_STYLE', payload)
       const { dashCityId, bool } = payload
       const dashGridFilter = state.boardGridOrigin[dashCityId]
-      dashGridFilter.canUse = bool
+      dashGridFilter.disable = bool
       return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashCityId]: dashGridFilter } }
 
     case types.SET_CACHE_IDS:
