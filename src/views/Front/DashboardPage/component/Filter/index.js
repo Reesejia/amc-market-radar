@@ -68,7 +68,6 @@ const Filter = (props) => {
 
   useEffect(() => {
     fetchSublist()
-    window.addEventListener('mouseDown', () => { }, { passive: false })
   }, [props.dashboardId])
 
   const layout = {
