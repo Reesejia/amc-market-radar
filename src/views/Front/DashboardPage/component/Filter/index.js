@@ -12,6 +12,8 @@ const Filter = (props) => {
   const [subObj, setSubObj] = useState({})
   const [cityList, setCityList] = useState([])
   const [areaList, setAreaList] = useState([])
+  const [loading, setLoading] = useState(false)
+
   const [form] = Form.useForm();
 
   const formatSublist = (sublist) => {
@@ -51,29 +53,19 @@ const Filter = (props) => {
 
   const fetchSublist = async () => {
     let areaObj = {}
-    if (props.isAmc) {
-      const res = await getDashboardDataAmc(props.dashboardId)
-      if (res.statusCode === 0) {
-        const { dashboard } = res.data
-        if (dashboard && dashboard.subDashboardList) {
-          areaObj = formatSublist(dashboard.subDashboardList)
+      const res = await getDashboardData(props.dashboardId, false, props.isAmc)
+      if (res.statusCode === 0 || res.code === '0') {
+        const data = res.data || res.resp
+        if(data){
+          const { dashboard } = data
+          if (dashboard && dashboard.subDashboardList) {
+            areaObj = formatSublist(dashboard.subDashboardList)
+            const { subAreaObj, subAreaList } = areaObj
+            setAreaList(subAreaList)
+            setSubObj(subAreaObj)
+          }
         }
       }
-    } else {
-      const res = await getDashboardData(props.dashboardId)
-      if (res.code === '0') {
-        const { dashboard } = res.data
-        if (dashboard && dashboard.subDashboardList) {
-          areaObj = formatSublist(dashboard.subDashboardList)
-        }
-      }
-    }
-    console.log('subObj areaObj', areaObj)
-    const { subAreaObj, subAreaList } = areaObj
-    setAreaList(subAreaList)
-    setSubObj(subAreaObj)
-    console.log('subObj', subObj)
-    console.log('subObj subAreaList', subAreaList)
   }
 
   useEffect(() => {
@@ -89,19 +81,31 @@ const Filter = (props) => {
 
 
   const onAreaChange = (value) => {
-    window.addEventListener('MouseDown', () => { }, { passive: false })
     console.log('onAreaChange value', value)
-    console.log('subObj value', subObj)
-    console.log('subObj[value]', subObj[value])
-    setCityList(subObj[value])
-    form.setFieldsValue({ city: subObj[value].value })
+    if (value && subObj[value] && subObj[value]) {
+      setCityList(subObj[value])
+      const city = subObj[value][0] && subObj[value][0].value
+      if (city) {
+        form.setFieldsValue({ city })
+        onCityChange(city)
+      }
+    }
   };
 
   const onCityChange = async (value) => {
-    // await props.getChartBusiness_action(value)
-    await props.onFilterGetDashboardData_action(value);
-    await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: 9, bool: true } })
-    console.log('onCityChange value', value)
+    try {
+      setLoading(true)
+      console.log('onCityChange value', value)
+      if (value) {
+        await props.onFilterGetDashboardData_action(value);
+        await dispatch({ type: "DISABLE_FILTER_STYLE", payload: { dashCityId: 9, bool: true } })
+        setLoading(false)
+      }
+    } catch (e) {
+      setLoading(false)
+    }
+
+
     // switch (value) {
     //   case 'male':
     //     form.setFieldsValue({ note: 'Hi, man!' });
@@ -118,13 +122,25 @@ const Filter = (props) => {
     console.log(values);
   };
 
+  function onSearch(val) {
+    console.log('search:', val);
+  }
+
   return (
     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
       <Form.Item name="area" rules={[{ required: true, message: '请选择地区' }]}>
         <Select
+          showSearch
           placeholder="请选择地区"
           onChange={onAreaChange}
           allowClear
+          filterOption={(input, option) => {
+            console.log('input', input)
+            console.log('option', option)
+            return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          }
+          onSearch={onSearch}
         >
           {
             areaList.map(city => <Option value={city.value} key={`${city.label}-${city.key}`}>{city.label}</Option>)
@@ -137,6 +153,7 @@ const Filter = (props) => {
           placeholder="请选择城市"
           onChange={onCityChange}
           allowClear
+          loading={loading}
         >
           {
             cityList.map(city => <Option value={city.value} key={city.id}>{city.label}</Option>)
