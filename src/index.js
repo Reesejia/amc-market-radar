@@ -45,6 +45,18 @@ export async function mount(props) {
     store.dispatch({ type: types.IS_EDIT_DASHBOARD, payload: isEditDashboard })
     store.dispatch({ type: types.SET_ROUTER_BASE, payload: props.routerBase })
   }
+  props.onGlobalStateChange((state, prev) => {
+    // state: 变更后的状态; prev 变更前的状态
+    // const bol = Object.prototype.hasOwnProperty.call(state, 'sidebar_status')
+    // if (bol) {
+      // console.log('sidebar ==> changed', state, prev)
+      // var myEvent = new Event('resize');
+      // console.log("changjian1", myEvent)
+      // setTimeout(() => {
+      //   window.dispatchEvent(myEvent);
+      // },800)
+    // }
+  })
   render(props);
 }
 

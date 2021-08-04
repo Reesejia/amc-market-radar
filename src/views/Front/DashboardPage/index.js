@@ -62,6 +62,43 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     props.getNavigationList_action()
+
+    // const $sidebar = document.getElementsByClassName('sidebar-container')
+    // console.log("zyy sidebar", $sidebar)
+    // let sideBarWidth = 0
+    // if ($sidebar && $sidebar.length) {
+    //   sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+    //   console.log('sideBarWidth', sideBarWidth)
+    // }
+    // const pagehw = document.getElementsByClassName('page-header-wrapper')
+    // const pageId = document.getElementById('page-header-wrapper')
+    // console.log("zyy1", pagehw[0].outerHTML)
+    // console.log("zyy2", pageId)
+
+    // pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+
+
+    const resizeObserver = new ResizeObserver(entries => {
+      console.log("zy listen")
+      var myEvent = new Event('resize');
+      window.dispatchEvent(myEvent);
+
+      const $sidebar = document.getElementsByClassName('sidebar-container')
+      console.log("zyy sidebar", $sidebar)
+      let sideBarWidth = 0
+      if ($sidebar && $sidebar.length) {
+        sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+        console.log('sideBarWidth', sideBarWidth)
+      }
+      const pagehw = document.getElementsByClassName('page-header-wrapper')
+      const pageId = document.getElementById('page-header-wrapper')
+      console.log("zyy1", pagehw[0].outerHTML)
+      console.log("zyy2", pageId)
+      pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+    });
+
+    document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
+
   }, [])
 
 
@@ -78,11 +115,15 @@ const HeaderTab = (props) => {
   }
 
   const setInit = async () => {
-    setIsLoading(true)
-    await props.onGetDashboardData_action(dashboardId, true)
-    await props.updateGridData_action(dashboardId)
-    await getGridsData(true)
-    setIsLoading(false)
+    try {
+      setIsLoading(true)
+      await props.onGetDashboardData_action(dashboardId, true)
+      await props.updateGridData_action(dashboardId)
+      await getGridsData(true)
+      setIsLoading(false)
+    } catch (error) {
+      setIsLoading(false)
+    }
   }
 
   const onSavePositionGrid = async () => {
@@ -104,13 +145,15 @@ const HeaderTab = (props) => {
   }
 
 
-  return <div style={{ position: 'relative' }}>
-    {list.length > 0 && <Tabs activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
-      {
-        list.length > 0 && list.map((item) => (
-          <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
-            <div>
-              {/* {
+  return <div style={{ position: 'relative',overflow:'auto' }}>
+    <div className="page-header-wrapper" id="page-header-wrapper">
+      {/* <div className="page-header"> */}
+      {list.length > 0 && <Tabs activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
+        {
+          list.length > 0 && list.map((item) => (
+            <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
+              <div>
+                {/* {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
                     widgets={props.boardGridOrigin[dashboardId].widgets}
@@ -119,26 +162,23 @@ const HeaderTab = (props) => {
                   :
                   null
               } */}
-            </div>
+              </div>
 
-          </TabPane>
-        ))
+            </TabPane>
+          ))
+        }
+      </Tabs>
       }
-    </Tabs>
-    }
-    {
-      props.isEditDashBoard && <div style={{
-        position: 'absolute',
-        top: '10px',
-        right: '20px',
-        zIndex: '999'
-      }}>
-        <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => onSavePositionGrid()}>保存数据</Button>
-        <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => setInit()} okText={"初始化"} cancelText="算了">
-          <Button type="primary" style={{ 'marginRight': '7px' }} loading={isLoading}>初始化数据</Button>
-        </Popconfirm>
-      </div>
-    }
+      {
+        props.isEditDashBoard && <div className="header-btn">
+          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => onSavePositionGrid()}>保存数据</Button>
+          <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => setInit()} okText={"初始化"} cancelText="算了">
+            <Button type="primary" style={{ 'marginRight': '7px' }} loading={isLoading}>初始化数据</Button>
+          </Popconfirm>
+        </div>
+      }
+      {/* </div> */}
+    </div>
 
     <Switch>
       {
