@@ -1,5 +1,5 @@
 import * as types from '../action-types'
-import { getChartBusiness, getDashboardDataAmc, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
+import { getChartBusiness, getDashboardData, updateGridData, getDashGrid, navigationList, getChartBusinessAmc } from '@/api/radar'
 import ParseLayout from '@/views/Front/DashboardPage/ParseLayout'
 import LimitRequest from '@/views/Front/DashboardPage/HighComponent/LimitRequest'
 import { message } from 'antd'

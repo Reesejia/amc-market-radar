@@ -6,11 +6,12 @@ let initialState = {
   chartIds: [],
   chartsData: {},
   navList: [],
-  groupId: "n2",
+  groupId: "n1",
   isEditDashBoard: true,
   routerBase: '',
   cacheIds: [],
   isAmc: false,
+  noDataCharts: ['HEADER', 'DIVIDER'],
   routerBaseMap: new Map([
     ['/amc/editBoard/edit-sub-radar-board', { isEditDashboard: true, groupId: "n1", isAmc: false }],
     ['/amc/editBoard/edit-sub-house-board', { isEditDashboard: true, groupId: "n2", isAmc: false }],
@@ -29,6 +30,7 @@ export default function (state = initialState, action) {
       let { dashboardId, gridPositionData, chartIds } = payload
       const dashGridObj = state.boardGridOrigin[dashboardId]
       dashGridObj.widgets = gridPositionData
+      chartIds = chartIds.filter(id => !state.noDataCharts.includes(id.split('-')[0]))
       dashGridObj.chartIds = chartIds
       return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashboardId]: dashGridObj } }
 
@@ -66,23 +68,19 @@ export default function (state = initialState, action) {
       return { ...state, groupId: payload };
 
     case types.IS_EDIT_DASHBOARD:
-      console.log('payload IS_EDIT_DASHBOARD', payload)
       return { ...state, isEditDashBoard: payload };
 
     case types.SET_ROUTER_BASE:
-      console.log('payload SET_ROUTER_BASE', payload)
       const isAmc = state.routerBaseMap.has(payload)
       return { ...state, routerBase: payload, isAmc };
 
     case types.DISABLE_FILTER_STYLE:
-      console.log('payload CLEAR_FILTER_STYLE', payload)
       const { dashCityId, bool } = payload
       const dashGridFilter = state.boardGridOrigin[dashCityId]
       dashGridFilter.disable = bool
       return { ...state, boardGridOrigin: { ...state.boardGridOrigin, [dashCityId]: dashGridFilter } }
 
     case types.SET_CACHE_IDS:
-      console.log('payload SET_CACHE_IDS', payload)
       return { ...state, cacheIds: [...state.cacheIds, payload] };
     case types.CLEAR_DASH_STORE:
       return {
@@ -107,6 +105,9 @@ export function changeStatic(gridwidgets, bool) {
     widget.static = bool
     if (widget.subTabs && widget.subTabs.length > 0) {
       changeStatic(widget.subTabs, bool)
+      if(widget.children && widget.children.tabsArr && widget.children.tabsArr.length > 0){
+        changeStatic(widget.children.tabsArr, bool)
+      }
     } else if (widget.children && widget.children.length > 0) {
       changeStatic(widget.children, bool)
     }
