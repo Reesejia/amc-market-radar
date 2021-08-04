@@ -44,7 +44,7 @@ const onGetDashboardData_action = (dashboardId, refresh = false) => {
     }
   }
 }
-const updateGridData_action = (dashboardId) => {
+const updateGridData_action = (dashboardId, showMsg = false) => {
   if (!dashboardId) {
     console.error('请输入对应的看板id updateGridData_action')
     return
@@ -59,7 +59,7 @@ const updateGridData_action = (dashboardId) => {
         dashboardId,
         gridPositionData: JSON.stringify(gridwidgets)
       })
-      if (ret.code === "0") {
+      if (ret.code === "0" && showMsg) {
         message.success('操作成功')
       }
     }
@@ -101,7 +101,7 @@ const getPositionGrid_action = (dashboardId, refresh) => {
             return
           }
           await onGetDashboardData_action(dashboardId, false)(dispatch, getState)
-          await updateGridData_action(dashboardId, true)(dispatch, getState)
+          await updateGridData_action(dashboardId, false)(dispatch, getState)
           await getPositionGrid_action(dashboardId, true)(dispatch, getState)
         }
       }
