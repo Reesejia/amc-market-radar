@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
@@ -63,19 +63,15 @@ const HeaderTab = (props) => {
   useEffect(() => {
     props.getNavigationList_action()
     const resizeObserver = new ResizeObserver(entries => {
-      console.log("zy listen")
       var myEvent = new Event('resize');
       window.dispatchEvent(myEvent);
 
       const $sidebar = document.getElementsByClassName('sidebar-container')
-      console.log("zyy sidebar", $sidebar)
       let sideBarWidth = 0
       if ($sidebar && $sidebar.length) {
         sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-        console.log('sideBarWidth', sideBarWidth)
       }
       const pageId = document.getElementById('page-header-wrapper')
-      console.log("zyy2", pageId)
       pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
     });
 
@@ -126,7 +122,7 @@ const HeaderTab = (props) => {
   }
 
 
-  return <div style={{ position: 'relative',overflow:'auto' }}>
+  return <div style={{ position: 'relative', overflow: 'auto' }}>
     <div className="page-header-wrapper" id="page-header-wrapper">
       {/* <div className="page-header"> */}
       {list.length > 0 && <Tabs activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
