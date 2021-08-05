@@ -62,22 +62,6 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     props.getNavigationList_action()
-
-    // const $sidebar = document.getElementsByClassName('sidebar-container')
-    // console.log("zyy sidebar", $sidebar)
-    // let sideBarWidth = 0
-    // if ($sidebar && $sidebar.length) {
-    //   sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-    //   console.log('sideBarWidth', sideBarWidth)
-    // }
-    // const pagehw = document.getElementsByClassName('page-header-wrapper')
-    // const pageId = document.getElementById('page-header-wrapper')
-    // console.log("zyy1", pagehw[0].outerHTML)
-    // console.log("zyy2", pageId)
-
-    // pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
-
-
     const resizeObserver = new ResizeObserver(entries => {
       console.log("zy listen")
       var myEvent = new Event('resize');
@@ -90,9 +74,7 @@ const HeaderTab = (props) => {
         sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
         console.log('sideBarWidth', sideBarWidth)
       }
-      const pagehw = document.getElementsByClassName('page-header-wrapper')
       const pageId = document.getElementById('page-header-wrapper')
-      console.log("zyy1", pagehw[0].outerHTML)
       console.log("zyy2", pageId)
       pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
     });

@@ -52,6 +52,15 @@ class GridView extends PureComponent {
     gridWrapper.setAttribute("class", "grid-wrap-other")
     var minWrapper = document.createElement("div");
     minWrapper.setAttribute("class", "remove minWrapper")
+
+    const $sidebar = document.getElementsByClassName('sidebar-container')
+    let sideBarWidth = 0
+    if ($sidebar && $sidebar.length) {
+      sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+      console.log('sideBarWidth', sideBarWidth)
+    }
+    gridWrapper.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+    gridWrapper.style.left = sideBarWidth
     const minContent = () => {
       return (
         <>
@@ -119,7 +128,7 @@ class GridView extends PureComponent {
         }
         else if (widget.type === 'TABS') {
           component = (
-            <TabsView widget={widget} dashboardId={this.props.id}/>
+            <TabsView widget={widget} dashboardId={this.props.id} />
           )
         } else if (widget.type === 'HEADER') {
           component = (
@@ -136,7 +145,7 @@ class GridView extends PureComponent {
           )
         } else if (widget.type === 'FILTER') {
           component = (
-            <Filter widget={widget} dashboardId={this.props.id}/>
+            <Filter widget={widget} dashboardId={this.props.id} />
           )
         } else {
           component = (
@@ -186,7 +195,10 @@ class GridView extends PureComponent {
     })
   }
 
-
+  componentWillUnmount() {
+    // 点击了最大化后没有最小化直接切换菜单栏
+    document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
+  }
   render() {
     console.log("this.context", this.props)
     return (
