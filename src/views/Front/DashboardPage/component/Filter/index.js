@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import { getDashboardData } from '@/api/radar'
 import { useDispatch } from 'react-redux'
+import { WidthProvider } from 'react-grid-layout';
+import './index.scss'
 const { Option } = Select;
 const Filter = (props) => {
   const dispatch = useDispatch()
@@ -124,50 +126,52 @@ const Filter = (props) => {
   }
 
   return (
-    <div style={{display: "flex", alignItems: "center", height: "100%"}}>
-      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-        <Form.Item name="area" rules={[{ required: true, message: '请选择地区' }]}>
-          <Select
-            ref={areaRef}
-            showSearch
-            placeholder="请选择地区"
-            onChange={onAreaChange}
-            allowClear
-            onDropdownVisibleChange={onDropdownArea}
-            filterOption={(input, option) => {
-              return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            }
-            onSearch={onSearch}
-          >
-            {
-              areaList.map(city => <Option value={city.value} key={`${city.label}-${city.key}`}>{city.label}</Option>)
-            }
+    <div className="filter-wrap">
+      <div>
+        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+          <Form.Item name="area" rules={[{ required: true, message: '请选择地区' }]}>
+            <Select
+              ref={areaRef}
+              showSearch
+              placeholder="请选择地区"
+              onChange={onAreaChange}
+              allowClear
+              onDropdownVisibleChange={onDropdownArea}
+              filterOption={(input, option) => {
+                return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              }
+              onSearch={onSearch}
+            >
+              {
+                areaList.map(city => <Option value={city.value} key={`${city.label}-${city.key}`}>{city.label}</Option>)
+              }
 
-          </Select>
-        </Form.Item>
-        <Form.Item name="city" rules={[{ required: true, message: '请选择城市' }]}>
-          <Select
-            showSearch
-            placeholder="请选择城市"
-            onChange={onCityChange}
-            onDropdownVisibleChange={onDropdownCity}
-            ref={cityRef}
-            allowClear
-            loading={loading}
-            filterOption={(input, option) => {
-              return option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            }
-            onSearch={onSearch}
-          >
-            {
-              cityList.map(city => <Option value={city.value} key={city.label + city.value}>{city.label}</Option>)
-            }
+            </Select>
+          </Form.Item>
+          <Form.Item name="city" rules={[{ required: true, message: '请选择城市' }]}>
+            <Select
+              showSearch
+              placeholder="请选择城市"
+              onChange={onCityChange}
+              onDropdownVisibleChange={onDropdownCity}
+              ref={cityRef}
+              allowClear
+              loading={loading}
+              filterOption={(input, option) => {
+                return option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              }
+              onSearch={onSearch}
+            >
+              {
+                cityList.map(city => <Option value={city.value} key={city.label + city.value}>{city.label}</Option>)
+              }
 
-          </Select>
-        </Form.Item>
-      </Form>
+            </Select>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   )
 }
