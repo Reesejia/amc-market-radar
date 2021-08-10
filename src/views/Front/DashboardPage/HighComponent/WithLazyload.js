@@ -15,7 +15,10 @@ function myNonEssentialWork(deadline) {
     }
   }
   if (tasks.length > 0) {
-    requestIdleCallback(myNonEssentialWork);
+    window.requestIdleCallback(myNonEssentialWork);
+  }
+  if (this.tasks.length === 0) {
+    window.cancelIdleCallback(this.loadTaskImg)
   }
 }
 
