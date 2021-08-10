@@ -96,7 +96,7 @@ class GridView extends PureComponent {
   getChartDom = () => {
     return this.state.widgets
       .map((widget, index) => {
-        if (this.props.disable && this.props.chartsData[widget.id]) {
+        if (this.props.chartsData[widget.id] && this.props.chartsData[widget.id].chart) {
           widget.chartStyle.chart = this.props.chartsData[widget.id].chart
         }
         let component;
