@@ -68,15 +68,6 @@ const HeaderTab = (props) => {
         window.dispatchEvent(myEvent)
       }
       debounce(emitResize, 100, false)()
-
-
-      const $sidebar = document.getElementsByClassName('sidebar-container')
-      let sideBarWidth = 0
-      if ($sidebar && $sidebar.length) {
-        sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-      }
-      const pageId = document.getElementById('page-header-wrapper')
-      pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
     });
 
     document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
