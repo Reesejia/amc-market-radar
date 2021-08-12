@@ -10,8 +10,7 @@ const MarkdownView = (props) => {
     const resizeObserver = new ResizeObserver(entries => {
       let curChart = props.widget && props.widget.id && document.getElementById(props.widget.id)
       if (!curChart) return
-      // 75标题高度
-      setWrapHeight(curChart.offsetHeight - 75)
+      setWrapHeight(curChart.offsetHeight)
     });
     document.getElementById(props.widget.id) && resizeObserver.observe(document.getElementById(props.widget.id))
   }, [props.widget])
