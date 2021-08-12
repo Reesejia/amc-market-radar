@@ -60,22 +60,14 @@ const HeaderTab = (props) => {
     }
   }, [props.navList, props.routerBase, props.groupId])
 
-  const resizeFunc = () => {
-
-
-  }
-
   useEffect(() => {
     props.getNavigationList_action()
     const resizeObserver = new ResizeObserver(entries => {
-      // console.log('resize11 entries', entries)
       const emitResize = function emitResize() {
         var myEvent = new Event('resize');
         window.dispatchEvent(myEvent)
-        console.log('resize11 emitResize')
-        return 'ret222'
       }
-      debounce(emitResize, 200, true)()
+      debounce(emitResize, 100, false)()
 
 
       const $sidebar = document.getElementsByClassName('sidebar-container')
@@ -88,7 +80,7 @@ const HeaderTab = (props) => {
     });
 
     document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
-  }, [])
+  }, [dashboardId])
 
 
 
