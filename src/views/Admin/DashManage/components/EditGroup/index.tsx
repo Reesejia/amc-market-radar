@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect, useContext } from 'react';
 import { Form, Input, Button, Transfer, message } from 'antd';
 import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/groups';
 import { DashContext } from '@/views/Admin/DashManage/utils'
-import './index.scss';
+import './index.less';
 interface chidProps {
   boardDetail: BoardDetail
   onBoardDetail: Function

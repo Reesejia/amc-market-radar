@@ -1,3 +1,6 @@
+@import '~react-grid-layout/css/styles.css';
+@import '~react-resizable/css/styles.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -36,47 +39,11 @@ code {
     monospace;
 }
 
-
-@import '~antd/dist/antd.css';
-@import '~react-grid-layout/css/styles.css';
-@import '~react-resizable/css/styles.css';
-
-/* .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-} */
 .page-header-wrapper {
   position: fixed;
   width: 100%;
   z-index: 9;
 }
-
-/* .page-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-} */
 
 .react-grid-item {
   border: 1px solid #ececec;
@@ -84,7 +51,6 @@ code {
   padding: 15px;
   box-sizing: border-box;
   display: flex;
-  /* overflow: scroll; */
 }
 
 .react-grid-item:hover .remove {
@@ -103,17 +69,7 @@ code {
   font-size: 20px;
 }
 
-/* .header-tab-wrapper {
-  flex: 75% 0 0;
-} */
-
-.header-tab-wrapper .ant-tabs-content-holder {
-  /* margin-top: 50px; */
-}
-
 .header-tab-wrapper .ant-tabs-nav {
-  /* position: fixed;
-  z-index: 9; */
   width: 100%;
   height: auto;
   background: #fff;

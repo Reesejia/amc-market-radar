@@ -1,7 +1,7 @@
 import React, { PureComponent, useState, useEffect, useMemo, useRef, useReducer } from 'react'
 import { Tabs } from 'antd';
 import GridView from '@/views/Front/DashboardPage/component/GridView'
-import "./index.scss"
+import "./index.less"
 
 const { TabPane } = Tabs;
 

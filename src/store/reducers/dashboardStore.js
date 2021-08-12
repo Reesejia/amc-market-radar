@@ -6,7 +6,7 @@ let initialState = {
   chartIds: [],
   chartsData: {},
   navList: [],
-  groupId: "n2",
+  groupId: "n1",
   isEditDashBoard: true,
   routerBase: '',
   cacheIds: [],

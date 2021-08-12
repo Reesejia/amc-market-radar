@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from 'rehype-raw'
 import gfm from 'remark-gfm'
-import "./index.scss"
+import "./index.less"
 const Markdown = (props) => {
     return (
         <div className="markdown-wrap">

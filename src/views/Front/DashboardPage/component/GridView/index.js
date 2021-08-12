@@ -108,9 +108,10 @@ class GridView extends PureComponent {
           }
 
           if (vizType === 'table') {
-            component = (
-              <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
-            )
+              component = (
+                <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
+              )
+
           } else {
             component = (
               <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
@@ -154,7 +155,7 @@ class GridView extends PureComponent {
         }
         return (
           <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} data-static={widget.static}>
-            <div className={['grid-wrapper', widget.type === 'MARKDOWN' || widget.type === 'FEED' ? 'feed-markdown' : ''].join(' ')}>
+            <div className="grid-wrapper">
               {widget.type !== 'MARKDOWN' && <div className="grid-header" >{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>}
               {
                 widget.type === 'CHART' && <div className='remove'>

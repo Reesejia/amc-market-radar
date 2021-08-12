@@ -4,7 +4,7 @@ import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
 import { DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle } from '@/views/Admin/DashManage/utils';
 import { BoardDetail, DashItem } from '@/typing/Admin/groups';
 import { getBoardDetail } from '@/api/group';
-import './index.scss';
+import './index.less';
 
 const { confirm } = Modal;
 
