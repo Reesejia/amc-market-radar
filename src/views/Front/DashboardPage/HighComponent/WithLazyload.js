@@ -1,4 +1,3 @@
-import { divide } from 'lodash'
 import { PureComponent } from 'react'
 
 let tasks = []
@@ -15,7 +14,10 @@ function myNonEssentialWork(deadline) {
     }
   }
   if (tasks.length > 0) {
-    requestIdleCallback(myNonEssentialWork);
+    window.requestIdleCallback(myNonEssentialWork);
+  }
+  if (tasks.length === 0) {
+    window.cancelIdleCallback(myNonEssentialWork)
   }
 }
 

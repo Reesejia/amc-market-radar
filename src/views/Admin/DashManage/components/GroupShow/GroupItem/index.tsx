@@ -6,7 +6,7 @@ import { updateNavigation, getBoardDetail } from '@/api/group'
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
-import "./index.scss"
+import "./index.less"
 interface GroupProps {
   groupData: NavListInfo;
   getNavigationList: Function
