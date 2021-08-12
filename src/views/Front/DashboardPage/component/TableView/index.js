@@ -8,8 +8,10 @@ const TableView = (props) => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState([])
   const [tableHeight, setTableHeight] = useState()
+  const [columns, setColumns] = useState([])
 
-  let columns = useMemo(() => {
+  // let columns = useMemo(() => {
+  useEffect(() => {
     let { vizDataBase } = props.widget.chartStyle.chart
     let deal = (val) => {
       //以下涨幅需要带%和改变颜色
@@ -42,7 +44,8 @@ const TableView = (props) => {
     }
     const vizDataBase1 = eval(vizDataBase)
     const vizDataBase2 = deal(vizDataBase1)
-    return vizDataBase2
+    // return vizDataBase2
+    setColumns(vizDataBase2)
   }, [props.widget])
 
 
