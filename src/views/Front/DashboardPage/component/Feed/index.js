@@ -9,13 +9,16 @@ const Feed = (props) => {
   }
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver(() => {
       let curChart = props.widget && props.widget.id && document.getElementById(props.widget.id)
-      if (!curChart) return
+      if(!curChart) return
       // 75标题高度
       setWrapHeight(curChart.offsetHeight - 75)
     });
     document.getElementById(props.widget.id) && resizeObserver.observe(document.getElementById(props.widget.id))
+    return () => {
+      document.getElementById(props.widget.id) && resizeObserver.unobserve(document.getElementById(props.widget.id))
+    }
   }, [props.widget])
 
   return (

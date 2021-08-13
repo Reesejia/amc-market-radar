@@ -2,17 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { Table } from 'antd';
 import { connect } from 'react-redux'
 import "./index.less"
-import { color } from 'echarts';
 
 const TableView = (props) => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState([])
   const [tableHeight, setTableHeight] = useState()
-  const [columns, setColumns] = useState([])
 
-  // let columns = useMemo(() => {
-  useEffect(() => {
+  let columns = useMemo(() => {
     let { vizDataBase } = props.widget.chartStyle.chart
+    console.log("table vizDataBase", vizDataBase)
     let deal = (val) => {
       //以下涨幅需要带%和改变颜色
       const needChangeColor = ["t4yrange", "t41profit", "t1r", "t2r", "t3r", "range"]
@@ -44,8 +42,7 @@ const TableView = (props) => {
     }
     const vizDataBase1 = eval(vizDataBase)
     const vizDataBase2 = deal(vizDataBase1)
-    // return vizDataBase2
-    setColumns(vizDataBase2)
+    return vizDataBase2
   }, [props.widget])
 
 
@@ -57,6 +54,7 @@ const TableView = (props) => {
       setTableHeight(tableDiv.offsetHeight - 75 - theadHeight)
     });
     document.getElementById(props.widget.id) && resizeObserver.observe(document.getElementById(props.widget.id))
+    return () => { document.getElementById(props.widget.id) && resizeObserver.unobserve(document.getElementById(props.widget.id)) }
   }, [props.widget])
 
 

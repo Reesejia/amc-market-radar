@@ -550,8 +550,8 @@ module.exports = function (webpackEnv) {
                   lessOptions: { // 如果使用less-loader@5，请移除 lessOptions 这一级直接配置选项。
                     modifyVars: {
                       'primary-color': '#6C1389',
-                      'link-color': '#1DA57A',
-                      'border-radius-base': '2px',
+                      // 'link-color': '#1DA57A',
+                      // 'border-radius-base': '2px',
                     },
                     javascriptEnabled: true,
                   },
