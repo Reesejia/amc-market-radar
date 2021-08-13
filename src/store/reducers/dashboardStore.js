@@ -102,7 +102,10 @@ export default function (state = initialState, action) {
 
 export function changeStatic(gridwidgets, bool) {
   return gridwidgets.map(widget => {
+
     widget.static = bool
+    widget.isResizable = !bool
+
     if (widget.subTabs && widget.subTabs.length > 0) {
       changeStatic(widget.subTabs, bool)
       if(widget.children && widget.children.tabsArr && widget.children.tabsArr.length > 0){

@@ -7,6 +7,7 @@ import { withKeepAlive } from '@/component/keepalive-react-component'
 import { Popconfirm, Button } from 'antd';
 import { useHistory } from 'react-router-dom'
 import store from '@/store'
+import { debounce } from '@/utils/com-methods'
 import { Switch, Route } from 'react-router-dom';
 import * as types from '@/store/action-types';
 
@@ -59,28 +60,20 @@ const HeaderTab = (props) => {
     }
   }, [props.navList, props.routerBase, props.groupId])
 
-
   useEffect(() => {
     props.getNavigationList_action()
     const resizeObserver = new ResizeObserver(entries => {
-      var myEvent = new Event('resize');
-      window.dispatchEvent(myEvent);
-
-      const $sidebar = document.getElementsByClassName('sidebar-container')
-      let sideBarWidth = 0
-      if ($sidebar && $sidebar.length) {
-        sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+      const emitResize = function emitResize() {
+        var myEvent = new Event('resize');
+        window.dispatchEvent(myEvent)
       }
-      const pageId = document.getElementById('page-header-wrapper')
-      if (pageId) {
-        pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
-      }
+      debounce(emitResize, 100, false)()
     });
     document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
     return () => {
       document.getElementById('sidebar-container') && resizeObserver.unobserve(document.getElementById('sidebar-container'))
     }
-  }, [])
+  }, [dashboardId])
 
 
 
