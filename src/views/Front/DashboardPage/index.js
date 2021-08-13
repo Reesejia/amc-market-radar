@@ -72,11 +72,14 @@ const HeaderTab = (props) => {
         sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
       }
       const pageId = document.getElementById('page-header-wrapper')
-      pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+      if (pageId) {
+        pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
+      }
     });
-
     document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
-
+    return () => {
+      document.getElementById('sidebar-container') && resizeObserver.unobserve(document.getElementById('sidebar-container'))
+    }
   }, [])
 
 
