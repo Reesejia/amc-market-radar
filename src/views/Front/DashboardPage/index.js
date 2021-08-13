@@ -69,8 +69,10 @@ const HeaderTab = (props) => {
       }
       debounce(emitResize, 100, false)()
     });
-
     document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
+    return () => {
+      document.getElementById('sidebar-container') && resizeObserver.unobserve(document.getElementById('sidebar-container'))
+    }
   }, [dashboardId])
 
 
