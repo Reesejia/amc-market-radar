@@ -298,10 +298,10 @@ module.exports = function (webpackEnv) {
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
-        maxSize: 2500000,
-        chunks: "initial",         // 代码块类型 必须三选一： "initial"（初始化） | "all"(默认就是all) | "async"（动态加载）
-        minSize: 100000,              // 最小尺寸，默认0
-        minSize: 120000,           // 最小 chunk ，默认1
+        maxSize: 1700000,
+        chunks: "async",         // 代码块类型 必须三选一： "initial"（初始化） | "all"(默认就是all) | "async"（动态加载）
+        minSize: 80000,              // 最小尺寸，默认0
+        minSize: 80000,           // 最小 chunk ，默认1
         maxAsyncRequests: 30,       // 最大异步请求数， 默认1
         maxInitialRequests: 30,
         name: () => {},
