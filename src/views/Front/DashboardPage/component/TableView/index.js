@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Table } from 'antd';
 import { connect } from 'react-redux'
+import { throttle } from '@/utils/com-methods'
 import "./index.less"
 
 const TableView = (props) => {
@@ -47,11 +48,15 @@ const TableView = (props) => {
 
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const emitResize = throttle(() => {
       let tableDiv = props.widget && props.widget.id && document.getElementById(props.widget.id)
       if (!tableDiv) return
       const theadHeight = window.getComputedStyle(document.querySelector(`#${props.widget.id} .ant-table-thead`)).height.slice(0, -2)
       setTableHeight(tableDiv.offsetHeight - 75 - theadHeight)
+    }, 300)
+
+    const resizeObserver = new ResizeObserver(entries => {
+      emitResize()
     });
     document.getElementById(props.widget.id) && resizeObserver.observe(document.getElementById(props.widget.id))
     return () => { document.getElementById(props.widget.id) && resizeObserver.unobserve(document.getElementById(props.widget.id)) }
