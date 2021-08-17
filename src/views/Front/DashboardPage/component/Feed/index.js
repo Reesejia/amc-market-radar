@@ -1,7 +1,7 @@
 import Markdown from '../MarkdownView/Markdown'
 import React, { useState, useEffect, useMemo } from 'react'
 import './index.less'
-import { throttle, debounce } from '@/utils/com-methods'
+import { throttle } from '@/utils/com-methods'
 const Feed = (props) => {
   const [wrapHeight, setWrapHeight] = useState()
   let data = ""
@@ -16,7 +16,7 @@ const Feed = (props) => {
       let curChart = props.widget && props.widget.id && document.getElementById(props.widget.id)
       if (!curChart) return
       // 75标题高度
-      let titleHeight = title ? 75 : 0
+      let titleHeight = title ? 70 : 30
       setWrapHeight(curChart.offsetHeight - titleHeight)
     }, 300)
     const resizeObserver = new ResizeObserver(() => {

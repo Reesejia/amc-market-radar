@@ -10,8 +10,8 @@ const MarkdownView = (props) => {
   useEffect(() => {
     const emitResize = throttle(() => {
       let curChart = props.widget && props.widget.id && document.getElementById(props.widget.id)
-      if(!curChart) return
-      setWrapHeight(curChart.offsetHeight-30)
+      if (!curChart) return
+      setWrapHeight(curChart.offsetHeight - 30)
     },200)
     const resizeObserver = new ResizeObserver(() => {
       emitResize()
@@ -23,7 +23,7 @@ const MarkdownView = (props) => {
   }, [props.widget])
 
   return (
-    <div dangerouslySetInnerHTML={{ __html: data }}  className="markdown-wrap" style={{height: wrapHeight}}/>
+    <div dangerouslySetInnerHTML={{ __html: data }} className="markdown-wrap" style={{ height: wrapHeight }} />
   )
 }
 
