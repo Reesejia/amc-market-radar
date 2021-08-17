@@ -299,8 +299,44 @@ module.exports = function (webpackEnv) {
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
-        chunks: 'all',
-        name: isEnvDevelopment,
+        chunks: "initial",         // 代码块类型 必须三选一： "initial"（初始化） | "all"(默认就是all) | "async"（动态加载）
+        minSize: 0,                // 最小尺寸，默认0
+        minChunks: 1,              // 最小 chunk ，默认1
+        maxAsyncRequests: 1,       // 最大异步请求数， 默认1
+        maxInitialRequests: 1,
+        name: () => {},
+        cacheGroups: {
+          reactBase: {
+            name: 'reactBase',
+            test: (module) => {
+                return /react|redux/.test(module.context);
+            },
+            chunks: 'initial',
+            priority: 10,
+          },
+          utilBase: {
+            name: 'utilBase',
+            test: (module) => {
+                return /rxjs|lodash/.test(module.context);
+            },
+            chunks: 'initial',
+            priority: 9,
+          },
+          uiBase: {
+            name: 'chartBase',
+            test: (module) => {
+                return /echarts/.test(module.context);
+            },
+            chunks: 'initial',
+            priority: 8,
+          },
+          commons: {
+            name: 'common',
+            chunks: 'initial',
+            priority: 2,
+            minChunks: 2,
+          },
+        }
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
