@@ -18,7 +18,7 @@ class GridView extends PureComponent {
   static defaultProps = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 12, md: 12, sm: 12, xs: 4, xxs: 2 },
-    margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
+    // margin: { lg: [15, 15], md: [20, 20], sm: [10, 10], xs: [5, 5] }
   };
 
   constructor(props) {
@@ -156,7 +156,7 @@ class GridView extends PureComponent {
         return (
           <div key={widget.i} data-grid={widget} id={widget.id} data-w={widget.w} data-h={widget.h} data-type={widget.type} data-static={widget.static}>
             <div className="grid-wrapper">
-              {widget.type !== 'MARKDOWN' && <div className="grid-header" >{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>}
+              {widget.type !== 'MARKDOWN' && (widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title) && <div className="grid-header" >{widget.chartStyle && widget.chartStyle.chart && widget.chartStyle.chart.title}</div>}
               {
                 widget.type === 'CHART' && <div className='remove'>
                   <div className="img-wrapper">
