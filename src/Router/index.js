@@ -2,12 +2,12 @@ import { Spin } from 'antd';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 // import DashManage from '@/views/Admin/DashManage'
-// import DashboardPage from '@/views/Front/DashboardPage'
+import DashboardPage from '@/views/Front/DashboardPage'
 // import GridDemo from '@/views/Front/GridDemo/DragLayout'
 import { KeepAliveProvider } from '@/component/keepalive-react-component'
 
 const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
-const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'@/views/Front/DashboardPage'))
+// const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'@/views/Front/DashboardPage'))
 // const DragLayout = lazy(() => import(/* webpackChunkName: "DragLayout" */'../views/Front/GridDemo/DragLayout'))
 // const FormatData= lazy(() => import(/* webpackChunkName: "FormatData" */'../views/Front/FormatData/index'))
 // import DragLayout from '../views/Front/DragLayout'
