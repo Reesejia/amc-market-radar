@@ -23,7 +23,7 @@ class TabsView extends PureComponent {
         {this.state.widget.children && this.state.widget.children.map((item, i) => (
           <TabPane tab={item.text} key={item.tabsKey}>
             {
-              item && item.subTabs ? <GridView widgets={item.subTabs} dashboardId={this.props.dashboardId}/> : null
+              item && item.subTabs ? <GridView widgets={item.subTabs} dashboardId={this.props.dashboardId} isTabs={true}/> : null
             }
 
             {

@@ -108,9 +108,9 @@ class GridView extends PureComponent {
           }
 
           if (vizType === 'table') {
-              component = (
-                <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
-              )
+            component = (
+              <TableView widget={widget} style={{ width: '100%', height: '100%' }} />
+            )
 
           } else {
             component = (
@@ -203,7 +203,7 @@ class GridView extends PureComponent {
   render() {
     console.log("this.context", this.props)
     return (
-      <div className="grid-con-wrap">
+      <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
         <div className="grid-con">
           <ResponsiveReactGridLayout
             className="layout"
@@ -212,7 +212,7 @@ class GridView extends PureComponent {
             rowHeight={10}
             autoSize={true}
             // isBounded={true}
-            containerPadding={[20, 20]}
+            containerPadding={[0, 0]}
             onLayoutChange={(layout, layouts) => {
               this.onLayoutChange(layout, layouts)
             }
