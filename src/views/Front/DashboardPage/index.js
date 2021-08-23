@@ -84,7 +84,32 @@ const HeaderTab = (props) => {
     }
   }, [dashboardId])
 
+  useEffect(() => {
+    const resizeCallBack = () => {
+      const clientW = document.body.clientWidth
+      const $sidebar = document.getElementsByClassName('sidebar-container')
+      let sideBarWidth = 0
+      if ($sidebar && $sidebar.length) {
+        sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
+      }
+      // 6px 滚动条的宽度
+      const width = sideBarWidth ? `calc(100vw - ${sideBarWidth} - 6px)` : 'calc(100vw)'
 
+      if (clientW < 1100) {
+        const root = document.querySelector("#root")
+        root.style.overflow = 'auto'
+        root.style.width = '1100px'
+      } else {
+        const root = document.querySelector("#root")
+        root.style.width = width
+        root.style.overflow = "hidden"
+      }
+    }
+    resizeCallBack()
+    window.addEventListener("resize", () => {
+      resizeCallBack()
+    })
+  }, [])
 
   useEffect(() => {
     if (props.navList.length > 0 && !props.cacheIds.includes(dashboardId)) {
