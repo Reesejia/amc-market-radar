@@ -42,7 +42,6 @@ class GridView extends PureComponent {
 
   showFullScreen(id) {
     var ele = document.getElementById(id);
-    ele.childNodes[0].childNodes[1].childNodes[0].style.display = "none"
     const { width, height, transform } = window.getComputedStyle(ele)
     let translate = transform.split('(')[1].split(')')[0].split(',')
     var eleParent = ele.parentNode
@@ -84,7 +83,6 @@ class GridView extends PureComponent {
 
     minWrapper.childNodes[1].onclick = function () {
       document.body.style.overflow = "auto"
-      ele.childNodes[0].childNodes[1].childNodes[0].style.display = "block"
       document.getElementById("gridWrapper").remove()
       ele.style.width = width
       ele.style.height = height
