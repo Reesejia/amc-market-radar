@@ -34,7 +34,6 @@ export async function bootstrap() {
 }
 
 export async function mount(props) {
-  console.log('props from main framework', props);
   if (!props.routerBase) {
     props.routerBase = defaultRouterBase
   }

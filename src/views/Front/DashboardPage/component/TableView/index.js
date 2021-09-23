@@ -11,7 +11,6 @@ const TableView = (props) => {
 
   let columns = useMemo(() => {
     let { vizDataBase } = props.widget.chartStyle.chart
-    console.log("table vizDataBase", vizDataBase)
     let deal = (val) => {
       //以下涨幅需要带%和改变颜色
       const needChangeColor = ["t4yrange", "t41profit", "t1r", "t2r", "t3r", "range"]

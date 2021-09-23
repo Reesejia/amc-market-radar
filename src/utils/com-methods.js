@@ -56,3 +56,28 @@ export function throttle(fn, gapTime) {
     }
   }
 }
+
+// 数字四舍五入 保留两位 加百分号
+export const formatNum = (num, flag = '%') =>{
+  num = String(Math.round(num * 10000))
+  num = num.split(".")[0]
+  return Number(num) / 100  + flag
+}
+
+// 数字四舍五入 保留两位
+export const fixNum = (num) =>{
+  num = (num * 100).toFixed(2)
+  num = String(num).split('.')[0]
+  return  num / 100
+}
+
+// 返回当前日期 "2021-09-04"
+export const getCurDate = (split = '-') =>{
+  const date = new Date();
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  month =   month < 10 ? `0${month}` : month
+  let day = date.getDay();
+  day = day < 10 ? `0${day}` : day
+  return [year, month, day].join(split)
+}

@@ -44,7 +44,6 @@ class LimitRequest {
       this.running++
       try {
         const ret = await task
-        console.log('next ret', ret)
         if (Object.hasOwnProperty.call(ret, 'code') && ret.code === '0' || Object.hasOwnProperty.call(ret, 'statusCode') && (ret.statusCode === 0)) {
           let data =  ret.resp || ret.data
           this.dispatch({ type: this.types.GET_BUSINESS_DATA, payload: data })

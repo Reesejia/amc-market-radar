@@ -3,11 +3,9 @@ import { PureComponent } from 'react'
 let tasks = []
 function myNonEssentialWork(deadline) {
   while (deadline.timeRemaining() > 0 && tasks.length > 0) {
-    // console.log('ssss item', tasks)
     const task = tasks.shift()
     if (!task.classComponent) return
     if (!task.classComponent.state.show) {
-      // console.log('timeRemaining222 item show')
       task.classComponent.setState({
         show: true
       })
@@ -38,7 +36,6 @@ class WithLazyload extends PureComponent {
           if (isIntersecting) {
             ob.unobserve(ele)
             if (!this.state.show) {
-              // console.log('ssss show')
               this.setState({
                 show: true
               })

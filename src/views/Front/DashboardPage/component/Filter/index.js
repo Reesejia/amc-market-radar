@@ -40,7 +40,6 @@ const Filter = (props) => {
       }
       return prev
     }, {})
-    console.log('subAreaObj', subAreaObj)
     return { subAreaObj, subAreaList }
   }
 
@@ -105,7 +104,6 @@ const Filter = (props) => {
 
   const onCityChange = async (value) => {
     try {
-      console.log('onCityChange value', value)
       if (value) {
         setLoading(true)
         await props.onFilterGetDashboardData_action(value);
@@ -118,11 +116,11 @@ const Filter = (props) => {
   };
 
   const onFinish = (values) => {
-    console.log(values);
+    //
   };
 
   function onSearch(val) {
-    console.log('search:', val);
+    //
   }
 
   return (

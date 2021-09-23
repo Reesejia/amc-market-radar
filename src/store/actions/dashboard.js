@@ -15,7 +15,6 @@ const onGetDashboardData_action = (dashboardId, refresh = false) => {
     const isAmc = store.getState().dashboardStore.isAmc
     const res = await getDashboardData(dashboardId, refresh, isAmc)
     if (res.code === "0" || res.statusCode === 0) {
-      console.log(`step1 getDashboardData 看板 - ${dashboardId}`, res.resp)
       let data = res.resp || res.data
       const { charsData, dashboard } = data
       if (charsData) {

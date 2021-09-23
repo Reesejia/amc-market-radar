@@ -4,6 +4,7 @@ import Feed from '@/views/Front/DashboardPage/component/Feed';
 import TabsView from '@/views/Front/DashboardPage/component/TabsView';
 import Chart from '@/views/Front/DashboardPage/component/Chart'
 import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
+import RealView from '@/views/Front/DashboardPage/component/RealView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import Filter from '@/views/Front/DashboardPage/component/Filter'
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -57,7 +58,6 @@ class GridView extends PureComponent {
     let sideBarWidth = 0
     if ($sidebar && $sidebar.length) {
       sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
-      console.log('sideBarWidth', sideBarWidth)
     }
     gridWrapper.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
     gridWrapper.style.left = sideBarWidth
@@ -122,7 +122,12 @@ class GridView extends PureComponent {
           component = (
             <MarkdownView widget={widget} />
           )
-        } else if (widget.type === 'FEED') {
+        } else if (widget.type === 'REALVIEW') {
+          component = (
+            <RealView widget={widget} />
+          )
+        }
+         else if (widget.type === 'FEED') {
           component = (
             <Feed widget={widget} />
           )
@@ -201,7 +206,6 @@ class GridView extends PureComponent {
     document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
   }
   render() {
-    console.log("this.context", this.props)
     return (
       <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
         <div className="grid-con">

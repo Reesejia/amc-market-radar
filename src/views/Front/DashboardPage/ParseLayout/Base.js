@@ -11,7 +11,6 @@ class Base {
   }
 
   ColumnHasRowAndCol(children) {
-    console.log('children11', children)
     return children.some(child => this.COLUMN_CHILD.includes(this.getNodesType(child)));
   }
 
@@ -20,7 +19,6 @@ class Base {
   }
 
   formatColumnNode(node) {
-    console.log('ColumnHasRowAndCol(node)', this.ColumnHasRowAndCol(node.children))
     if (this.ColumnHasRowAndCol(node.children)) {
 
     } else {

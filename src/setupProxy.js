@@ -22,4 +22,13 @@ module.exports = function (app) {
             changeOrigin: true
         })
     )
+    app.use(
+      createProxyMiddleware("/data-api/v1", {
+          target: "https://service-wbsnbcc.newbanker.cn/data-api/v1",
+          changeOrigin: true,
+          pathRewrite: {
+            '^/data-api/v1': ''
+        }
+      })
+  )
 };

@@ -7,7 +7,6 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
   return function (props) {
     let divRef = useRef(null)
     let { cacheStates, dispatch, mount, handleScroll } = useContext(CacheContext)
-    console.log('mount', mount)
     useEffect(() => {
       if (scroll) {
         // 监听捕获阶段， true 捕获，false 冒泡；
