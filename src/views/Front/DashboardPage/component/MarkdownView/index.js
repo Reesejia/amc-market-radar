@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { throttle } from '@/utils/com-methods'
+import ResizeObserver from 'resize-observer-polyfill';
 const MarkdownView = (props) => {
   const [wrapHeight, setWrapHeight] = useState()
   let data = ""

@@ -10,6 +10,7 @@ import store from '@/store'
 import { debounce } from '@/utils/com-methods'
 import { Switch, Route } from 'react-router-dom';
 import * as types from '@/store/action-types';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const { TabPane } = Tabs;
 
