@@ -28,42 +28,47 @@ class WithLazyload extends PureComponent {
     }
   }
   componentDidMount() {
-    if (this.props.id) {
-      let ele = document.getElementById(this.props.id)
-      const ob = new IntersectionObserver((changes) => {
-        changes.forEach(change => {
-          const { isIntersecting, target } = change
-          if (isIntersecting) {
-            ob.unobserve(ele)
-            if (!this.state.show) {
-              this.setState({
-                show: true
-              })
-              target.$task.remove()
+    if( window.requestIdleCallback){
+      if (this.props.id ) {
+        let ele = document.getElementById(this.props.id)
+        const ob = new IntersectionObserver((changes) => {
+          changes.forEach(change => {
+            const { isIntersecting, target } = change
+            if (isIntersecting) {
+              ob.unobserve(ele)
+              if (!this.state.show) {
+                this.setState({
+                  show: true
+                })
+                target.$task.remove()
+              }
             }
-          }
+          })
+        }, {
+          threshold: [0]
         })
-      }, {
-        threshold: [0]
-      })
-      if (ele) {
-        ob.observe(ele)
-      }
-      if (!this.state.show) {
-        const task = {
-          classComponent: this,
-          show: false,
-        }
-        task.remove = () => {
-          tasks = tasks.filter(t => t !== task.classComponent)
-        }
         if (ele) {
-          ele.$task = task
+          ob.observe(ele)
         }
-        tasks.push(task)
+        if (!this.state.show) {
+          const task = {
+            classComponent: this,
+            show: false,
+          }
+          task.remove = () => {
+            tasks = tasks.filter(t => t !== task.classComponent)
+          }
+          if (ele) {
+            ele.$task = task
+          }
+          tasks.push(task)
+        }
       }
+      window.requestIdleCallback(myNonEssentialWork);
+    }else {
+      this.setState({show: true})
     }
-    window.requestIdleCallback(myNonEssentialWork);
+
   }
 
   render() {
