@@ -3,6 +3,7 @@ import { Table } from 'antd';
 import { connect } from 'react-redux'
 import { throttle } from '@/utils/com-methods'
 import "./index.less"
+import ResizeObserver from 'resize-observer-polyfill';
 
 const TableView = (props) => {
   const [loading, setLoading] = useState(true)

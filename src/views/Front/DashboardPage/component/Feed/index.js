@@ -2,6 +2,7 @@ import Markdown from '../MarkdownView/Markdown'
 import React, { useState, useEffect, useMemo } from 'react'
 import './index.less'
 import { throttle } from '@/utils/com-methods'
+import ResizeObserver from 'resize-observer-polyfill';
 const Feed = (props) => {
   const [wrapHeight, setWrapHeight] = useState()
   let data = ""
