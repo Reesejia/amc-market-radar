@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import { getDashboardData } from '@/api/radar'
 import { useDispatch } from 'react-redux'
-import { WidthProvider } from 'react-grid-layout';
 import './index.less'
 const { Option } = Select;
 const Filter = (props) => {

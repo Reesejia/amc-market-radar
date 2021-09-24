@@ -1,5 +1,7 @@
 import { formatNum, fixNum, getCurDate } from '@/utils/com-methods'
 import { useEffect, useState } from 'react';
+import { connect } from 'react-redux'
+import actions from '@/store/actions/dashboard'
 import "./index.less"
 import axios from 'axios';
 
@@ -72,19 +74,24 @@ const RealView = (props) => {
     }
   }, [])
 
+  const formatUrl = (urlStr) =>{
+    if(urlStr && urlStr.startsWith('https://')){
+      let url =  urlStr.split('?date=')[0]
+      setRealUrl(url)
+    }
+  }
+
   useEffect(() =>{
     if(props.widget){
       const {chartStyle} = props.widget
       if(chartStyle && chartStyle.chart && chartStyle.chart.datasourceDefine){
         const datasourceDefine = chartStyle.chart.datasourceDefine
-        if(datasourceDefine && datasourceDefine.startsWith('https://')){
-          let url =  datasourceDefine.split('?date=')[0]
-          console.log('datasourceDefine', datasourceDefine)
-          setRealUrl(url)
-        }
+        formatUrl(datasourceDefine)
       }
+    } else if(props.businessData){
+      formatUrl(props.businessData)
     }
-  }, [props?.widget?.chartStyle?.chart?.datasourceDefine])
+  }, [props.businessData, props?.widget?.chartStyle?.chart?.datasourceDefine])
 
   return (
     <div className="real-view-wraper">
@@ -110,4 +117,14 @@ const RealView = (props) => {
   )
 }
 
-export default RealView
+const mapStateToProps = (state, ownProps) => {
+  let businessData = ""
+  if (ownProps.widget && ownProps.widget.id) {
+    businessData = state.dashboardStore.chartsData[ownProps.widget.id] && state.dashboardStore.chartsData[ownProps.widget.id].data
+  }
+  return {
+    businessData
+  }
+}
+
+export default connect(mapStateToProps, actions)(RealView)
