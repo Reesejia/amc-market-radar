@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
   const reduxTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   store = applyMiddleware(promise, thunk, logger, routerMiddleware(history))(createStore)(reducers, reduxTools)
 } else {
-  store = applyMiddleware(promise, thunk, logger, routerMiddleware(history))(createStore)(reducers)
+  store = applyMiddleware(promise, thunk, routerMiddleware(history))(createStore)(reducers)
 }
 
 export default store;
