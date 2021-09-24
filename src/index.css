@@ -90,7 +90,3 @@ code {
   right: 20px;
   z-index: 999;
 }
-
-* {
-  touch-action: none;
-}
