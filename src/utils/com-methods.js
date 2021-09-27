@@ -58,7 +58,7 @@ export function throttle(fn, gapTime) {
 }
 
 // 数字四舍五入 保留两位 加百分号
-export const formatNum = (num, flag = '%') =>{
+export const formatNum = (num, flag = '') =>{
   num = String(Math.round(num * 10000))
   num = num.split(".")[0]
   return Number(num) / 100  + flag
