@@ -6,8 +6,8 @@ import "./index.less"
 import axios from 'axios';
 
 const RealView = (props) => {
-  const [realDatas,setRealDatas] = useState([])
-  const [realUrl,setRealUrl] = useState('')
+  const [realDatas, setRealDatas] = useState([])
+  const [realUrl, setRealUrl] = useState('')
   const [curTime, setTime] = useState(getCurDate())
   const baseReal = {
     '000001.SH': {
@@ -23,20 +23,20 @@ const RealView = (props) => {
       sort: 2
     },
   }
-  const calcColor = (num) =>{
-    if(num === 0) return '#000'
-    if(num > 0) return 'red'
-    if(num < 0) return 'green'
+  const calcColor = (num) => {
+    if (num === 0) return '#000'
+    if (num > 0) return 'red'
+    if (num < 0) return 'green'
   }
 
-  const fetchRealData = async () =>{
+  const fetchRealData = async () => {
     setTime(getCurDate())
-    if(realUrl){
+    if (realUrl) {
       let url = realUrl
       url = url.replace('https://service-wbsrecu.newbanker.cn/data-api//v1', '');
       url = url.replace('https://service-wbsrecu.newbanker.cn/data-api/v1', '');
-     const res = await axios.get(url, {
-        baseURL:'/data-api/v1',
+      const res = await axios.get(url, {
+        baseURL: '/data-api/v1',
         headers: {
           responseType: 'json'
         },
@@ -44,75 +44,74 @@ const RealView = (props) => {
           date: curTime
         }
       })
-        if(res.code === 0){
-          formatData(res.param)
-        }
+      if (res.code === 0) {
+        formatData(res.param)
+      }
     }
   }
 
-  const formatData = (data) =>{
+  const formatData = (data) => {
     let realDataWrape = []
-    data.forEach((pre) =>{
-      if(Object.hasOwnProperty.call(baseReal,pre.index_name)){
+    data.forEach((pre) => {
+      if (Object.hasOwnProperty.call(baseReal, pre.index_name)) {
         realDataWrape.push(Object.assign({}, baseReal[pre.index_name], pre))
       }
     })
-    realDataWrape.sort((pre, cur) =>  pre.sort - cur.sort)
+    realDataWrape.sort((pre, cur) => pre.sort - cur.sort)
     setRealDatas(realDataWrape)
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     fetchRealData()
   }, [realUrl])
 
-  useEffect(() =>{
+  useEffect(() => {
     let timer = setInterval(() => {
       fetchRealData()
-  }, 1000 * 60 * 10);
-    return () =>{
+    }, 1000 * 60 * 10);
+    return () => {
       clearInterval(timer)
     }
   }, [])
 
-  const formatUrl = (urlStr) =>{
-    if(urlStr && urlStr.startsWith('https://')){
-      let url =  urlStr.split('?date=')[0]
+  const formatUrl = (urlStr) => {
+    if (urlStr && urlStr.startsWith('https://')) {
+      let url = urlStr.split('?date=')[0]
       setRealUrl(url)
     }
   }
 
-  useEffect(() =>{
-    if(props.widget){
-      const {chartStyle} = props.widget
-      if(chartStyle && chartStyle.chart && chartStyle.chart.datasourceDefine){
+  useEffect(() => {
+    if (props.widget) {
+      const { chartStyle } = props.widget
+      if (chartStyle && chartStyle.chart && chartStyle.chart.datasourceDefine) {
         const datasourceDefine = chartStyle.chart.datasourceDefine
         formatUrl(datasourceDefine)
       }
-    } else if(props.businessData){
+    } else if (props.businessData) {
       formatUrl(props.businessData)
     }
   }, [props.businessData, props?.widget?.chartStyle?.chart?.datasourceDefine])
 
   return (
     <div className="real-view-wraper">
-     {
-       realDatas.map(realData =>{
-        return (
-          <div className="real-view-item" >
-          <div className="data-name" >{realData.name}</div>
-          <div className="data-now" style={{color: calcColor(realData.change)}}>{fixNum(realData.now)}</div>
-          <div className="data-rang">
-            <span className="data-change"  style={{color: calcColor(realData.change)}}>{formatNum(realData.change)}</span>
-            <span className="data-pct_change"  style={{color: calcColor(realData.pct_change)}}>{formatNum(realData.pct_change)}</span>
-          </div>
-          {
-           realData.index_name === '000001.SH' ?  <div className="data-time">截至 {curTime}</div> : <div className="data-time data-time-empty">{curTime}</div>
-          }
-
-        </div>
-        )
-       })
-     }
+      {
+        realDatas.map(realData => {
+          return (
+            <div className="real-view-item">
+              <div className="data-name" >{realData.name}</div>
+              <div className="data-now" style={{ color: calcColor(realData.change) }}>{fixNum(realData.now)}</div>
+              <div className="data-rang">
+                <span className="data-change" style={{ color: calcColor(realData.change) }}>{fixNum(realData.change)}</span>
+                <span className="data-pct_change" style={{ color: calcColor(realData.pct_change) }}>{formatNum(realData.pct_change)}</span>
+              </div>
+              {
+                realData.index_name === '000001.SH' ? <div className="data-time">截至 {curTime}</div> : <div className="data-time data-time-empty">{curTime}</div>
+              }
+            </div>
+          )
+        })
+      }
     </div>
   )
 }

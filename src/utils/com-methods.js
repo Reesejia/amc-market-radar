@@ -1,4 +1,4 @@
-export function timeFormatNow () { // 2019-04-03 10:10:10
+export function timeFormatNow() { // 2019-04-03 10:10:10
   var date = new Date()
   var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
   var currentDate = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
@@ -16,27 +16,27 @@ export function timeFormatNow () { // 2019-04-03 10:10:10
  * @param {*} immediate 开始边界还是结束边界，默认false 结束边界执行，true 开始边界执行
  */
 let timer = null
-export function debounce(func, wait, immediate){
-  return function operator(...args){
-    if(typeof func !== 'function') throw new TypeError(`${func} must be a function`);
-    if(typeof wait === 'boolean') immediate = wait;
-    if(typeof wait !== 'number') wait = 500
+export function debounce(func, wait, immediate) {
+  return function operator(...args) {
+    if (typeof func !== 'function') throw new TypeError(`${func} must be a function`);
+    if (typeof wait === 'boolean') immediate = wait;
+    if (typeof wait !== 'number') wait = 500
 
     let now = !timer && immediate
-    if(timer){
+    if (timer) {
       clearTimeout(timer)
       timer = null
     }
 
     timer = setTimeout(() => {
       // 结束边界执行
-      if(!immediate)func.call(this, ...args)
+      if (!immediate) func.call(this, ...args)
       clearTimeout(timer)
       timer = null
     }, wait);
 
     // 开始边界执行
-    if(now) func.call(this, ...args)
+    if (now) func.call(this, ...args)
   }
 }
 
@@ -58,25 +58,25 @@ export function throttle(fn, gapTime) {
 }
 
 // 数字四舍五入 保留两位 加百分号
-export const formatNum = (num, flag = '') =>{
+export const formatNum = (num, flag = '%') => {
   num = String(Math.round(num * 10000))
   num = num.split(".")[0]
-  return Number(num) / 100  + flag
+  return Number(num) / 100 + flag
 }
 
 // 数字四舍五入 保留两位
-export const fixNum = (num) =>{
+export const fixNum = (num) => {
   num = (num * 100).toFixed(2)
   num = String(num).split('.')[0]
-  return  num / 100
+  return num / 100
 }
 
 // 返回当前日期 "2021-09-04"
-export const getCurDate = (split = '-') =>{
+export const getCurDate = (split = '-') => {
   const date = new Date();
   const year = date.getFullYear();
   let month = date.getMonth() + 1;
-  month =   month < 10 ? `0${month}` : month
+  month = month < 10 ? `0${month}` : month
   let day = date.getDate();
   day = day < 10 ? `0${day}` : day
   return [year, month, day].join(split);
