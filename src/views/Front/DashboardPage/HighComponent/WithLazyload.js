@@ -73,7 +73,7 @@ class WithLazyload extends PureComponent {
 
   render() {
     return (
-      <div style={{ flex: 'auto',  height: '90%'}}>{this.state.show && this.props.children}</div>
+      <div style={{ flex: 'auto',  height: '90%',overflow: 'hidden'}}>{this.state.show && this.props.children}</div>
     )
   }
 }
