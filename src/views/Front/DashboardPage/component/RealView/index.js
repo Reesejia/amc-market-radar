@@ -100,7 +100,7 @@ const RealView = (props) => {
         return (
           <div className="real-view-item" >
           <div className="data-name" >{realData.name}</div>
-          <div className="data-now" style={{color: calcColor(realData.now)}}>{fixNum(realData.now)}</div>
+          <div className="data-now" style={{color: calcColor(realData.change)}}>{fixNum(realData.now)}</div>
           <div className="data-rang">
             <span className="data-change"  style={{color: calcColor(realData.change)}}>{formatNum(realData.change)}</span>
             <span className="data-pct_change"  style={{color: calcColor(realData.pct_change)}}>{formatNum(realData.pct_change)}</span>

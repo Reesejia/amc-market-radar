@@ -115,6 +115,7 @@ class ChartComponent extends PureComponent {
         option={this.state.option}
         notMerge={true}
         lazyUpdate={true}
+        style={{ width: '100%', height: '100%' }}
       />
     );
   }
