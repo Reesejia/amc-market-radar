@@ -9,7 +9,7 @@ axios.defaults.timeout = 150000;
 // Request interceptors
 axios.interceptors.request.use(
 	(config) => {
-		const token = window.sessionStorage.getItem('token') || '4c98ee7b-c69f-4fc8-9fb9-53d9b071f7ef';
+		const token = window.sessionStorage.getItem('token') || 'd1b3705f-c169-4359-84e9-922bc29161e0';
 		const tenantId = window.sessionStorage.getItem('tenantId') || 1001;
 		config.headers.tenantId = tenantId;
 		config.headers.Authorization = 'bearer ' + token;
