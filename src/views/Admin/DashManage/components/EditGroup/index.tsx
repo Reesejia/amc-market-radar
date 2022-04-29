@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect, useContext } from 'react';
 import { Form, Input, Button, Transfer, message } from 'antd';
 import { CreateGroup, DashItem, BoardDetail } from '@/typing/Admin/groups';
 import { DashContext } from '@/views/Admin/DashManage/utils'
-import './index.scss';
+import './index.less';
 interface chidProps {
   boardDetail: BoardDetail
   onBoardDetail: Function
@@ -45,7 +45,6 @@ const EditGroup: FC<chidProps> = (props) => {
       return key = { dashboardId: key };
     });
     const res = await saveGroup(values);
-    console.log('saveGroup res', res);
     if (res.statusCode === 0 && res.data) {
       message.success('操作成功');
       dispatch({ type: 'SET_EDIT_GROUP', payload: false })
@@ -60,7 +59,6 @@ const EditGroup: FC<chidProps> = (props) => {
   };
 
   const onFinishFailed = (errorInfo: object) => {
-    console.log('Failed:', errorInfo);
   };
 
   const onChange = (nextTargetKeys: string[]) => {

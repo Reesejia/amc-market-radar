@@ -7,7 +7,7 @@ import ShowItem from './components/DashDetail'
 import GroupShow from './components/GroupShow'
 import { GroupItem, SorterResult } from '@/typing/Admin/groups';
 import { useDashApi, DashContext } from '@/views/Admin/DashManage/utils';
-import './index.scss'
+import './index.less'
 import { SearchOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 export interface Props {

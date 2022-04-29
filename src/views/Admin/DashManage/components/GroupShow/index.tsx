@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { Modal, Button } from 'antd';
 import { DashContext } from '@/views/Admin/DashManage/utils';
 import GroupItem from '@/views/Admin/DashManage/components/GroupShow/GroupItem'
-import './index.scss'
+import './index.less'
 
 const GroupShow: FC = () => {
   const { showGroup, navList, getNavigationList, dispatch } = useContext(DashContext)

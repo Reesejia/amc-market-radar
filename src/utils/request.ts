@@ -1,16 +1,16 @@
 import { message } from 'antd';
 import axios from 'axios';
 
-const service = axios.create({
-	baseURL: '/aap/api/v1',
-	timeout: 150000
-});
+axios.defaults.headers['Content-type'] = 'application/json';
+
+axios.defaults.baseURL = '/aap/api/v1';
+axios.defaults.timeout = 150000;
 
 // Request interceptors
-service.interceptors.request.use(
+axios.interceptors.request.use(
 	(config) => {
-		const token = window.sessionStorage.getItem('token') || 'b4c5c7d6-5817-45c9-953b-684435ade6ab'
-		const tenantId = window.sessionStorage.getItem('tenantId') || 1001
+		const token = window.sessionStorage.getItem('token') || 'f5b41352-a416-4dfa-a80e-dc85e91dc85c';
+		const tenantId = window.sessionStorage.getItem('tenantId') || 1001;
 		config.headers.tenantId = tenantId;
 		config.headers.Authorization = 'bearer ' + token;
 		return config;
@@ -21,21 +21,32 @@ service.interceptors.request.use(
 );
 
 // Response interceptors
-service.interceptors.response.use(
+axios.interceptors.response.use(
 	(response) => {
+		const { baseURL } = response.config;
 		const resData = response.data;
-		const { statusCode } = resData;
-		if (statusCode !== 0) {
-      message.error(resData.errorMsg || 'Error')
-      Promise.reject(resData.errorMsg || 'Error');
-    }
 
+		if (baseURL === '/aap/api/v1') {
+			const { statusCode } = resData;
+			if (statusCode !== 0) {
+				message.error(resData.errorMsg || 'Error');
+				return Promise.reject(resData.errorMsg || 'Error');
+			}
+		}
+
+		if (baseURL === '/radar') {
+			const { code } = resData;
+			if (code !== '0') {
+				message.error(resData.errorMsg || 'Error');
+				return Promise.reject(resData.errorMsg || 'Error');
+			}
+		}
 		return resData;
 	},
 	(error) => {
-    message.error(error.message || 'Error')
+		message.error(error.message || 'Error');
 		return Promise.reject(error);
 	}
 );
 
-export default service;
+export default axios;
