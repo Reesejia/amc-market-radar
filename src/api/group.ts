@@ -1,4 +1,4 @@
-import {CreateGroup, NavListInfo} from '@/typing/Admin/groups'
+import {CreateGroup, NavListInfo,ViewPoint} from '@/typing/Admin/groups'
 import request from "@/utils/request"
 
 // 获取组合列表
@@ -47,3 +47,15 @@ export const updateNavigation = (data: NavListInfo) => request({
   data
 })
 
+//查看观点列表
+export const getViewpointList = (params: unknown) => request({
+  url: `/blackcat/dashboard/viewpoint/list`,
+  method: 'get'
+})
+
+//修改机构观点
+export const updateViewPoint = (data: ViewPoint) => request({
+  url: `/blackcat/dashboard/viewpoint/update`,
+  method: 'post',
+  data
+})
