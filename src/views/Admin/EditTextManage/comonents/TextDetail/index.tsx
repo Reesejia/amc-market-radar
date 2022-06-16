@@ -1,17 +1,33 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useState, useEffect } from 'react';
 import { Drawer, Descriptions, Button, Divider, Form, Input, Row, Col, message } from "antd"
 import { TextContext, labelStyle, contentStyle } from '@/views/Admin/EditTextManage/utils';
 import { updateViewPoint } from "@/api/group"
 import "./index.less"
+
+interface fromDataType {
+	content: string;
+}
+
 const TextDetail: FC = () => {
-	const { status,viewPointInfo, dispatch, fetchData } = useContext(TextContext)
+	const { status, viewPointInfo, dispatch, fetchData } = useContext(TextContext)
 	const [editShow, setEditShow] = useState(false)
 	const [form] = Form.useForm();
 
 	let initialForm = {
 		content: viewPointInfo.content
 	}
-	const onSaveGroup = async (value: any) => {
+
+	useEffect(() => {
+		setFields()
+	}, [viewPointInfo])
+
+	const setFields = () => {
+		form.setFieldsValue({
+			content: viewPointInfo.content
+		})
+	}
+
+	const onSaveGroup = async (value: fromDataType) => {
 		let params = {
 			id: viewPointInfo.id,
 			content: value.content
@@ -25,7 +41,7 @@ const TextDetail: FC = () => {
 	}
 
 	const checkBoardName = (rules: object, value: string) => {
-		if (value.length > 100) {
+		if (value.length > 500) {
 			return Promise.reject();
 		}
 		return Promise.resolve(true);
@@ -33,6 +49,7 @@ const TextDetail: FC = () => {
 
 	const closeDrawer = () => {
 		dispatch({ type: 'CHANGE_STATUS', payload: false })
+		setEditShow(false)
 	}
 	return (
 		<div className="dash-detail">
@@ -41,9 +58,7 @@ const TextDetail: FC = () => {
 				width="50%"
 				placement="right"
 				closable={false}
-				onClose={() => {
-					dispatch({ type: 'CHANGE_STATUS', payload: false })
-				}}
+				onClose={closeDrawer}
 				visible={status}
 			>
 				<Descriptions
@@ -86,7 +101,7 @@ const TextDetail: FC = () => {
 									{ message: '组合名称最多输入100位', validator: checkBoardName }
 								]}
 							>
-								<Input.TextArea placeholder="输入机构观点" maxLength={11} allowClear rows={10} />
+								<Input.TextArea placeholder="输入机构观点" maxLength={500} allowClear rows={10} />
 							</Form.Item>
 							<Form.Item>
 								<Row>

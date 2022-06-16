@@ -12,7 +12,7 @@ interface DataType {
 
 const TextPageManage: FC = () => {
 	const reduderObj = useDashApi(getViewpointList)
-	const { dispatch, viewPointList, status,loading } = reduderObj
+	const { dispatch, viewPointList, status, loading } = reduderObj
 	const columns: any = [
 		{
 			title: '内容标题',
@@ -55,13 +55,13 @@ const TextPageManage: FC = () => {
 					loading={loading}
 				/>
 			</div>
-			{status ? (
-				<div>
-					<TextContext.Provider value={reduderObj}>
-						<TextDetail />
-					</TextContext.Provider>
-				</div>
-			) : null}
+
+			<div>
+				<TextContext.Provider value={reduderObj}>
+					<TextDetail />
+				</TextContext.Provider>
+			</div>
+
 		</div>
 	)
 }
