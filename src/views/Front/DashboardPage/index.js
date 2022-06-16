@@ -46,7 +46,6 @@ const HeaderTab = (props) => {
             com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
           }
         })
-        console.log("@@@routeList", l)
         setRouterList(l)
         const idList = listArr.map(item => item.dashboardId)
         const p = history.location.pathname && history.location.pathname

@@ -12,7 +12,7 @@ interface DataType {
 
 const TextPageManage: FC = () => {
 	const reduderObj = useDashApi(getViewpointList)
-	const { dispatch, viewPointList, status, loading } = reduderObj
+	const { dispatch, viewPointList, loading } = reduderObj
 	const columns: any = [
 		{
 			title: '内容标题',

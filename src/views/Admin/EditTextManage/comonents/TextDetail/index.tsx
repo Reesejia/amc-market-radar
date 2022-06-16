@@ -14,23 +14,26 @@ const TextDetail: FC = () => {
 	const [form] = Form.useForm();
 
 	let initialForm = {
-		content: viewPointInfo.content
+		content: '',
 	}
 
 	useEffect(() => {
-		setFields()
-	}, [viewPointInfo])
+		if(editShow) {
+			setFields()
+		}
+	}, [viewPointInfo,editShow])
 
 	const setFields = () => {
+		let { content } = viewPointInfo
 		form.setFieldsValue({
-			content: viewPointInfo.content
+			content
 		})
 	}
 
 	const onSaveGroup = async (value: fromDataType) => {
 		let params = {
+			...value,
 			id: viewPointInfo.id,
-			content: value.content
 		}
 		let res = await updateViewPoint(params)
 		if (res.statusCode === 0 && res.success) {
@@ -90,7 +93,7 @@ const TextDetail: FC = () => {
 						<Form
 							form={form}
 							name="basic"
-							layout="vertical"
+							layout="horizontal"
 							initialValues={initialForm}
 							onFinish={onSaveGroup}
 						>
