@@ -14,7 +14,9 @@ const initialState = {
 	viewPointInfo: {
 		id: "",
 		title: "",
+		chartId: "",
 		content: "",
+		dashboardId: "",
 		createByName: "",
 		lastModifiedTime: "",
 	},

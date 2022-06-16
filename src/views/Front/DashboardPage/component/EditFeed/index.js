@@ -18,7 +18,7 @@ const EditFeed = (props) => {
         params
       })
       let { statusCode,data } = res
-      if (statusCode === 0) {
+      if (statusCode === 0 && data) {
         setContent(data.content)
       }
     }
