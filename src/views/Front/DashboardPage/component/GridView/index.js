@@ -7,10 +7,11 @@ import MarkdownView from '@/views/Front/DashboardPage/component/MarkdownView'
 import RealView from '@/views/Front/DashboardPage/component/RealView'
 import TableView from '@/views/Front/DashboardPage/component/TableView'
 import Filter from '@/views/Front/DashboardPage/component/Filter'
+import EditFeed from '@/views/Front/DashboardPage/component/EditFeed'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider } from 'antd';
+import { PageHeader, Divider,Spin } from 'antd';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.css"
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -113,7 +114,6 @@ class GridView extends PureComponent {
           } else {
             component = (
               <Chart widget={widget} style={{ width: '100%', height: '100%' }} />
-              // <div key={widget.i}>{widget.i}</div>
             )
           }
         } else if (widget.type === 'MARKDOWN') {
@@ -128,6 +128,11 @@ class GridView extends PureComponent {
         else if (widget.type === 'FEED') {
           component = (
             <Feed widget={widget} />
+          )
+        }
+        else if (widget.type === 'EDITFEED') {
+          component = (
+            <EditFeed widget={widget} dashboardId={this.props.id} />
           )
         }
         else if (widget.type === 'TABS') {
@@ -205,6 +210,7 @@ class GridView extends PureComponent {
   render() {
     return (
       <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
+        {this.state.widgets && this.state.widgets.length ?
         <div className="grid-con">
           <ResponsiveReactGridLayout
             className="layout"
@@ -221,7 +227,7 @@ class GridView extends PureComponent {
           >
             {this.getChartDom()}
           </ResponsiveReactGridLayout>
-        </div>
+        </div> : <div class="spin-example"><Spin size="large" /></div>}
       </div>
     );
   }

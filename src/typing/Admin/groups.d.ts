@@ -68,7 +68,7 @@ export interface NavListInfo {
   navigationName: string;
   dashboardGroupName: string;
   dashboardGroupId:string;
-	navigationGroups: Array<NavGroupItem>;
+  navigationGroups: Array<NavGroupItem>;
 }
 
 export type NavListData = Array<NavListInfo>
@@ -78,4 +78,9 @@ export interface SorterResult<RecordType> {
   order?: SortOrder;
   field?: Key | readonly Key[];
   columnKey?: Key;
+}
+
+export interface ViewPoint {
+	id: string;
+	content: string;
 }

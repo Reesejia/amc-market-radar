@@ -7,6 +7,7 @@ import DashboardPage from '@/views/Front/DashboardPage'
 import { KeepAliveProvider } from '@/component/keepalive-react-component'
 
 const DashManage = lazy(() => import(/* webpackChunkName: "BoardAdmin" */'@/views/Admin/DashManage'))
+const TextManage = lazy(() => import ('@/views/Admin/EditTextManage'))
 // const DashboardPage = lazy(() => import(/* webpackChunkName: "DashboardPage" */'@/views/Front/DashboardPage'))
 // const DragLayout = lazy(() => import(/* webpackChunkName: "DragLayout" */'../views/Front/GridDemo/DragLayout'))
 // const FormatData= lazy(() => import(/* webpackChunkName: "FormatData" */'../views/Front/FormatData/index'))
@@ -29,6 +30,7 @@ const routes = (props) => (
           <Switch>
 
             {/* <Route path="/gridDemo" component={GridDemo} /> */}
+            <Route path="/textManage" component={TextManage} />
             <Route path="/dashManage" component={DashManage} />
             <Route path="/dashboardPage" component={DashboardPage} />
             <Route path="/" component={DashboardPage} />
