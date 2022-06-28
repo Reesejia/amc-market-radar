@@ -1,34 +1,24 @@
-.real-view-wraper{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-    .real-view-item{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        .data-name{
-            font-size: 21px;
-        }
-        .data-now{
-            font-size: 24px;
-            font-weight: 500;
-        }
-        .data-rang{
-            font-size: 19px;
-            .data-change{
-                margin-right: 15px;
-            }
-        }
-        .data-time{
-            font-size: 16px;
-            margin-top: 5px;
-        }
-        .data-time-empty{
-            color: transparent;
-        }
+.feed-wrap {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  table {
+    width: 100%;
+    border: 1px #efefef solid;
+    margin: 15px 0;
+
+    tr {
+      td,
+      th {
+        border: 1px #efefef solid;
+        min-height: 30px;
+        line-height: 30px;
+        padding: 4px 8px;
+      }
+      th {
+        background: #f9f9f9;
+      }
     }
+  }
 }
