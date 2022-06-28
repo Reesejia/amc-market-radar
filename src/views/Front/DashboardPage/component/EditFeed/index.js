@@ -3,11 +3,14 @@ import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import "./index.less"
 import axios from 'axios';
+import { throttle } from '@/utils/com-methods'
+import Markdown from '../MarkdownView/Markdown'
 
 const EditFeed = (props) => {
   const [realUrl, setRealUrl] = useState("")
   const [params,setParamsData] = useState({})
   const [content, setContent] = useState("")
+  const [wrapHeight, setWrapHeight] = useState()
 
   const fetchRealData = async ()=> {
     if(realUrl) {
@@ -48,10 +51,28 @@ const EditFeed = (props) => {
       dashboardId: props.dashboardId
     }
     setParamsData(params)
-  }, [props.businessData, props.dashboardId, props?.widget?.chartStyle?.chart?.datasourceDefine])
 
+    const emitResize = throttle(() => {
+      let curChart = props.widget && props.widget.id && document.getElementById(props.widget.id)
+      if (!curChart) return
+      // 75标题高度
+      let titleHeight = 70
+      setWrapHeight(curChart.offsetHeight - titleHeight)
+    }, 300)
+    const resizeObserver = new ResizeObserver(() => {
+      emitResize()
+    });
+    document.getElementById(props.widget.id) && resizeObserver.observe(document.getElementById(props.widget.id))
+    return () => {
+      document.getElementById(props.widget.id) && resizeObserver.unobserve(document.getElementById(props.widget.id))
+    }
+  }, [props.businessData, props.dashboardId, props.widget])
 
-  return <div dangerouslySetInnerHTML={{ __html: content}}></div>
+  return (
+    <div className="feed-wrap" style={{ height: wrapHeight }}>
+      <Markdown data={content} />
+    </div>
+  )
 }
 
 const mapStateToProps = (state, ownProps) => {
