@@ -11,6 +11,7 @@ interface fromDataType {
 const TextDetail: FC = () => {
 	const { status, viewPointInfo, dispatch, fetchData } = useContext(TextContext)
 	const [editShow, setEditShow] = useState(false)
+	const [content,setContent] = useState(viewPointInfo.content)
 	const [form] = Form.useForm();
 
 	let initialForm = {
@@ -21,6 +22,9 @@ const TextDetail: FC = () => {
 		if(editShow) {
 			setFields()
 		}
+		let { content } = viewPointInfo
+		content = content ? content.replace(/\n/g,"<br/>") : content
+		setContent(content)
 	}, [viewPointInfo,editShow])
 
 	const setFields = () => {
@@ -83,7 +87,7 @@ const TextDetail: FC = () => {
 							</Button>
 						}
 					>
-						<Descriptions.Item>{viewPointInfo.content}</Descriptions.Item>
+						<Descriptions.Item> <div dangerouslySetInnerHTML={{ __html: content}}></div></Descriptions.Item>
 					</Descriptions>
 				) : null}
 

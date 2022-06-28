@@ -19,6 +19,7 @@ const EditFeed = (props) => {
       })
       let { statusCode,data } = res
       if (statusCode === 0 && data) {
+        data.content = data.content ? data.content.replace(/\n/g,"<br/>") : data.content
         setContent(data.content)
       }
     }
@@ -50,7 +51,7 @@ const EditFeed = (props) => {
   }, [props.businessData, props.dashboardId, props?.widget?.chartStyle?.chart?.datasourceDefine])
 
 
-  return <div>{content}</div>
+  return <div dangerouslySetInnerHTML={{ __html: content}}></div>
 }
 
 const mapStateToProps = (state, ownProps) => {
