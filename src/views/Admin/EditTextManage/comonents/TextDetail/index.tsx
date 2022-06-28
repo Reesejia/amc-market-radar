@@ -44,7 +44,7 @@ const TextDetail: FC = () => {
 	}
 
 	const checkBoardName = (rules: object, value: string) => {
-		if (value.length > 500) {
+		if (value && value.length > 500) {
 			return Promise.reject();
 		}
 		return Promise.resolve(true);
@@ -101,7 +101,7 @@ const TextDetail: FC = () => {
 								name="content"
 								rules={[
 									{ required: true, message: '输入机构观点' },
-									{ message: '组合名称最多输入100位', validator: checkBoardName }
+									{ message: '输入内容字符上限为500字', validator: checkBoardName }
 								]}
 							>
 								<Input.TextArea placeholder="输入机构观点" maxLength={500} allowClear rows={10} />
