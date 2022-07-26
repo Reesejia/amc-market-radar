@@ -19,7 +19,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }
 
     useEffect(() => {
       let cacheState = cacheStates[cacheId]
-      console.log('cacheStates33', cacheStates,anchorList)
+      console.log('cacheStates33', cacheStates)
       if (cacheState && cacheState.doms && cacheState.status !== CacheTypes.DESTROY) {
         let doms = cacheState.doms
         doms.forEach(dom => {
@@ -42,7 +42,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }
 
 
     return (
-      <div id={`withKeepAlive-${cacheId}`} ref={divRef} style={{marginTop: '55px'}}>
+      <div id={`withKeepAlive-${cacheId}`} ref={divRef} style={{marginTop: anchorList && anchorList.length ? '85px' : '55px'}}>
 
       </div>
     )

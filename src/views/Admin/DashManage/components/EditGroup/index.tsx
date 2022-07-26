@@ -25,7 +25,6 @@ const EditGroup: FC<chidProps> = (props) => {
   const [anchorList, setanchorList] = useState<number[]>([])
   useEffect(() => {
     setFields()
-    console.log("@@@boardDetail", boardDetail)
   }, [boardDetail])
 
   const setFields = () => {

@@ -10,11 +10,11 @@ import Filter from '@/views/Front/DashboardPage/component/Filter'
 import EditFeed from '@/views/Front/DashboardPage/component/EditFeed'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
+import { throttle } from 'lodash';
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider, Spin, Tabs, Radio } from 'antd';
+import { PageHeader, Divider, Spin, Radio } from 'antd';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.css"
-const { TabPane } = Tabs
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
@@ -214,11 +214,33 @@ class GridView extends PureComponent {
     document.querySelector(id_name).scrollIntoView()
   };
 
+  handleScroll() {
+    const { anchorList } = this.props
+    if(anchorList && anchorList.length) {
+      anchorList.forEach(item => {
+          const id_name = `#${item.anchorId}`;
+          const elem = document.querySelector(id_name);
+          if (elem) {
+            const rect = elem.getBoundingClientRect();
+            const yInView = rect.top < 300 && rect.bottom > 0;
+            if (yInView) {
+              this.setState({
+                defaultTabKey: item.anchorId
+              })
+            }
+          }
+        }
+      );
+    }
+  }
+
   componentWillUnmount() {
     // 点击了最大化后没有最小化直接切换菜单栏
     document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
   }
-
+  componentDidMount() {
+    window.addEventListener("scroll", throttle(this.handleScroll.bind(this), 200), true);
+  }
   render() {
     return (
       <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
@@ -230,8 +252,6 @@ class GridView extends PureComponent {
                   {this.props.anchorList.map(item =>
                     <Radio.Button value={item.anchorId}>{item.anchorName}</Radio.Button>
                   )}
-
-
                 </Radio.Group>
               </div>
             ) : null}
