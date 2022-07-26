@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect, useContext } from 'react';
-import { Drawer, Descriptions, Button, Divider, Modal, Tag } from 'antd';
+import { Drawer, Descriptions, Button, Divider, Modal, Tag, Row, Col } from 'antd';
 import EditGroup from '@/views/Admin/DashManage/components/EditGroup';
 import { DashContext, labelStyle, contentStyle, infoLabelStyle, infoContentStyle } from '@/views/Admin/DashManage/utils';
-import { BoardDetail, DashItem } from '@/typing/Admin/groups';
+import { BoardDetail, DashItem, AnchorInfo } from '@/typing/Admin/groups';
 import { getBoardDetail } from '@/api/group';
 import './index.less';
 
@@ -83,7 +83,7 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
             </Button> :
               <Button type="primary" onClick={() => handleEditGroup(boardDetail.used)}>
                 编辑
-              </Button>: ""
+              </Button> : ""
           }
         >
           <Descriptions.Item label="修改人">{isCreate ? '-' : boardDetail.updateByName || '-'}</Descriptions.Item>
@@ -115,7 +115,6 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
               </Descriptions.Item>
 
               <Descriptions.Item label="备注">{boardDetail.comment}</Descriptions.Item>
-
               <Descriptions.Item label="组合状态">
                 {
                   boardDetail.used ?
@@ -124,6 +123,29 @@ const DashDetail: FC<ChidProps> = (props: ChidProps) => {
                 }
               </Descriptions.Item>
             </Descriptions>
+            <Divider />
+            <Descriptions
+              title="锚点信息:"
+              labelStyle={infoLabelStyle}
+              contentStyle={infoContentStyle}
+              size={'middle'}
+              style={{ marginTop: '20px' }}
+            >
+            </Descriptions>
+            {boardDetail.dashboardGroupMappings.map((item: DashItem) => (
+              <>
+                <Row key={item.id}>
+                  <Col span={24}>
+                    <Tag color="blue">{item.dashboardName}</Tag>
+                  </Col>
+                </Row>
+                <Descriptions className='m-t-10'>
+                  {item.dashboardGroupChartIdMappingList?.map((anchorItem: AnchorInfo) => (
+                    <Descriptions.Item key={anchorItem.id} label={anchorItem.anchorName}>{anchorItem.anchorId}</Descriptions.Item>
+                  ))}
+                </Descriptions>
+              </>
+            ))}
           </div>
         )}
       </Drawer>

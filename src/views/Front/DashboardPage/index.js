@@ -43,7 +43,7 @@ const HeaderTab = (props) => {
           return {
             path: item.dashboardId,
             key: `${props.routerBase}-item.dashboardId`,
-            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
+            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true, anchorList: item.dashboardGroupChartIdMappingList }),
           }
         })
         setRouterList(l)
@@ -152,7 +152,6 @@ const HeaderTab = (props) => {
     }
   }
 
-
   return <div style={{ position: 'relative', overflow: 'auto' }}>
     <div className="page-header-wrapper" id="page-header-wrapper">
       {/* <div className="page-header"> */}
@@ -187,16 +186,15 @@ const HeaderTab = (props) => {
       }
       {/* </div> */}
     </div>
-
     <Switch>
       {
         routerList.length > 0 && routerList.map((item) => (
           <Route key={item.key} path={`/dashboardPage/${item.path}`}
-            component={item.com}
-          >
+            component={item.com}>
           </Route>
         ))
       }
+
     </Switch>
   </div>
 
