@@ -75,5 +75,10 @@
 }
 
 .anchor-cont {
-    margin-bottom: 20px;
+    position: fixed;
+    left: 0px;
+    top: 64px;
+    width: 100%;
+    padding: 0px 20px;
+    z-index: 9999;
 }
