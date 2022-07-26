@@ -43,7 +43,7 @@ const HeaderTab = (props) => {
           return {
             path: item.dashboardId,
             key: `${props.routerBase}-item.dashboardId`,
-            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true }),
+            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true, anchorList: item.dashboardGroupChartIdMappingList }),
           }
         })
         setRouterList(l)
@@ -186,7 +186,6 @@ const HeaderTab = (props) => {
       }
       {/* </div> */}
     </div>
-
     <Switch>
       {
         routerList.length > 0 && routerList.map((item) => (

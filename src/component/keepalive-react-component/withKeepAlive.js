@@ -3,7 +3,7 @@ import CacheContext from './CacheContext'
 import * as  CacheTypes from './cache-types'
 import * as uuid from 'uuid'
 
-function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
+function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }) {
   return function (props) {
     let divRef = useRef(null)
     let { cacheStates, dispatch, mount, handleScroll } = useContext(CacheContext)
@@ -19,7 +19,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
 
     useEffect(() => {
       let cacheState = cacheStates[cacheId]
-      console.log('cacheStates33', cacheStates)
+      console.log('cacheStates33', cacheStates,anchorList)
       if (cacheState && cacheState.doms && cacheState.status !== CacheTypes.DESTROY) {
         let doms = cacheState.doms
         doms.forEach(dom => {
@@ -35,7 +35,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll }) {
 
 
       } else {
-        const reactElement = <OldComponent {...props} dispatch={dispatch} />
+        const reactElement = <OldComponent {...props} dispatch={dispatch} anchorList={ anchorList }/>
         mount({ cacheId, reactElement })
       }
     }, [cacheStates])
