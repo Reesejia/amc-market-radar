@@ -22,7 +22,6 @@ const EditGroup: FC<chidProps> = (props) => {
   const [targetKeys, setTargetKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [form] = Form.useForm();
-  const [anchorList, setanchorList] = useState<number[]>([])
   useEffect(() => {
     setFields()
   }, [boardDetail])
@@ -41,18 +40,21 @@ const EditGroup: FC<chidProps> = (props) => {
 
   const getAnchorsData = (key: string, list: AnchorInfo[]): AnchorInfo[] => {
     let keys = key.split('～')
-    console.log(key, keys)
+    console.log(key, keys, list)
     let id = keys[1], dashboardId = keys[2]
     let anchorList = [] as AnchorInfo[]
-    list.map((item: AnchorInfo) => {
-      let params = {
-        ...item,
-        dashboardId,
-        dashboardGroupId: id,
-      }
-      anchorList.push(params)
-    })
-    return anchorList
+    if (list && list.length) {
+      list.map((item: AnchorInfo) => {
+        let params = {
+          ...item,
+          dashboardId,
+          dashboardGroupId: id,
+        }
+        anchorList.push(params)
+      })
+      return anchorList
+    }
+    return []
   }
 
   const onSaveGroup = async (values: CreateGroup) => {
@@ -116,16 +118,6 @@ const EditGroup: FC<chidProps> = (props) => {
     return Promise.resolve(true);
   };
 
-  const addanchorList = () => {
-    anchorList.push(1)
-    setanchorList(anchorList)
-    console.log("@@@anchorList", anchorList)
-  }
-
-  const removeAhchorList = (index: number) => {
-    anchorList.splice(index, 1)
-    setanchorList(anchorList)
-  }
   return (
     <div className="edit-group-wraper">
       <Form
@@ -173,8 +165,8 @@ const EditGroup: FC<chidProps> = (props) => {
           <TextArea placeholder="输入备注信息" allowClear showCount maxLength={20} />
         </Form.Item>
         <Row>
-          {boardDetail.dashboardGroupMappings.map((item,index) =>
-            <Col span={11} key={item.id} offset={ index % 2 === 1 ? 1 : 0}>
+          {boardDetail.dashboardGroupMappings.map((item, index) =>
+            <Col span={11} key={item.id} offset={index % 2 === 1 ? 1 : 0}>
               <Form.List name={`anchors～${item.id}～${item.dashboardId}`} initialValue={item.dashboardGroupChartIdMappingList}>
                 {(fields, { add, remove }) => (
                   <>
