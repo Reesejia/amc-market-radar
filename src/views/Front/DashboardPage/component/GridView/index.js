@@ -218,9 +218,7 @@ class GridView extends PureComponent {
     // 点击了最大化后没有最小化直接切换菜单栏
     document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
   }
-  componentDidMount() {
-    window.addEventListener("scroll", throttle(this.handleScroll.bind(this), 200), true);
-  }
+
   render() {
     return (
       <div>
@@ -254,7 +252,7 @@ class GridView extends PureComponent {
                 <RightOutlined />
               </div>
             </div>
-            <Anchor bounds={3}>
+            <Anchor>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
