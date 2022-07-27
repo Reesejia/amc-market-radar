@@ -12,9 +12,11 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import { throttle } from 'lodash';
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider, Spin, Radio, Calendar } from 'antd';
+import { PageHeader, Divider, Spin, Anchor } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
-import "./index.css"
+import "./index.less"
+const { Link } = Anchor;
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class GridView extends PureComponent {
@@ -30,16 +32,16 @@ class GridView extends PureComponent {
       widgets: [],
       chartsData: {},
       defaultTabKey: '',
-      anchorList: []
+      anchorList: [],
+      anchorShow: false,
     }
   }
 
   static getDerivedStateFromProps(nextProps) {
-    console.log(nextProps)
-    const { widgets, chartsData,anchorList } = nextProps
+    const { widgets, chartsData, anchorList } = nextProps
     if (widgets && widgets.length > 0) {
       return {
-        widgets, chartsData,anchorList
+        widgets, chartsData, anchorList
       }
     }
     return {}
@@ -207,35 +209,11 @@ class GridView extends PureComponent {
     })
   }
 
-  onChange(option) {
-    let value = option.target.value
+  changeAnchorShow() {
     this.setState({
-      defaultTabKey: value
+      anchorShow: !this.state.anchorShow
     })
-    let id_name = `#${value}`
-    document.querySelector(id_name).scrollIntoView()
-  };
-
-  handleScroll() {
-    const { anchorList } = this.props
-    if (anchorList && anchorList.length) {
-      anchorList.forEach(item => {
-        const id_name = `#${item.anchorId}`;
-        const elem = document.querySelector(id_name);
-        if (elem) {
-          const rect = elem.getBoundingClientRect();
-          const yInView = rect.top < 300 && rect.bottom > 0;
-          if (yInView) {
-            this.setState({
-              defaultTabKey: item.anchorId
-            })
-          }
-        }
-      }
-      );
-    }
   }
-
   componentWillUnmount() {
     // 点击了最大化后没有最小化直接切换菜单栏
     document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
@@ -246,16 +224,7 @@ class GridView extends PureComponent {
   render() {
     return (
       <div>
-        {this.props.anchorList ? (
-          <div className="anchor-cont">
-            <Radio.Group value={this.state.defaultTabKey} onChange={this.onChange.bind(this)}>
-              {this.props.anchorList.map(item =>
-                <Radio.Button value={item.anchorId}>{item.anchorName}</Radio.Button>
-              )}
-            </Radio.Group>
-          </div>
-        ) : null}
-        <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20, paddingTop: this.props.anchorList ? 0 : 20}}>
+        <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
           {this.state.widgets && this.state.widgets.length ?
             <div>
               <div className="grid-con">
@@ -278,6 +247,20 @@ class GridView extends PureComponent {
             </div>
             : <div className="spin-example"><Spin size="large" /></div>}
         </div>
+        {this.props.anchorList ? (
+          <div className={this.state.anchorShow ? 'anchor-cont show-status' : 'anchor-cont hide-status'}>
+            <div className="position-icon" >
+              <div className="icon-box" onClick={this.changeAnchorShow.bind(this)}>
+                <RightOutlined />
+              </div>
+            </div>
+            <Anchor bounds={3}>
+              {this.props.anchorList.map(item =>
+                <Link href={`#${item.anchorId}`} title={item.anchorName} />
+              )}
+            </Anchor>
+          </div>
+        ) : null}
       </div>
     );
   }
