@@ -4,6 +4,7 @@
 
 .grid-con-wrap {
     overflow: auto;
+    height: calc(100vh - 82px);
 }
 
 .grid-wrapper {
@@ -75,10 +76,9 @@
 }
 
 .anchor-cont {
+    width: calc(100vw - 180px);
     position: fixed;
-    left: 0px;
-    top: 64px;
-    width: 100%;
-    padding: 0px 20px;
-    z-index: 9999;
+    z-index: 9;
+    padding-left: 20px;
+    top: 66px;
 }

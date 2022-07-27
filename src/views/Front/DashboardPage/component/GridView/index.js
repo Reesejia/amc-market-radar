@@ -12,7 +12,7 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import { throttle } from 'lodash';
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider, Spin, Radio } from 'antd';
+import { PageHeader, Divider, Spin, Radio, Calendar } from 'antd';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.css"
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -30,14 +30,16 @@ class GridView extends PureComponent {
       widgets: [],
       chartsData: {},
       defaultTabKey: '',
+      anchorList: []
     }
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { widgets, chartsData } = nextProps
+    console.log(nextProps)
+    const { widgets, chartsData,anchorList } = nextProps
     if (widgets && widgets.length > 0) {
       return {
-        widgets, chartsData,
+        widgets, chartsData,anchorList
       }
     }
     return {}
@@ -216,20 +218,20 @@ class GridView extends PureComponent {
 
   handleScroll() {
     const { anchorList } = this.props
-    if(anchorList && anchorList.length) {
+    if (anchorList && anchorList.length) {
       anchorList.forEach(item => {
-          const id_name = `#${item.anchorId}`;
-          const elem = document.querySelector(id_name);
-          if (elem) {
-            const rect = elem.getBoundingClientRect();
-            const yInView = rect.top < 300 && rect.bottom > 0;
-            if (yInView) {
-              this.setState({
-                defaultTabKey: item.anchorId
-              })
-            }
+        const id_name = `#${item.anchorId}`;
+        const elem = document.querySelector(id_name);
+        if (elem) {
+          const rect = elem.getBoundingClientRect();
+          const yInView = rect.top < 300 && rect.bottom > 0;
+          if (yInView) {
+            this.setState({
+              defaultTabKey: item.anchorId
+            })
           }
         }
+      }
       );
     }
   }
@@ -243,37 +245,39 @@ class GridView extends PureComponent {
   }
   render() {
     return (
-      <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}>
-        {this.state.widgets && this.state.widgets.length ?
-          <div>
-            {this.props.anchorList ? (
-              <div className="anchor-cont">
-                <Radio.Group value={this.state.defaultTabKey} onChange={this.onChange.bind(this)}>
-                  {this.props.anchorList.map(item =>
-                    <Radio.Button value={item.anchorId}>{item.anchorName}</Radio.Button>
-                  )}
-                </Radio.Group>
-              </div>
-            ) : null}
-            <div className="grid-con">
-              <ResponsiveReactGridLayout
-                className="layout"
-                {...this.props}
-                layouts={this.state.widgets}
-                rowHeight={10}
-                autoSize={true}
-                // isBounded={true}
-                containerPadding={[0, 0]}
-                onLayoutChange={(layout, layouts) => {
-                  this.onLayoutChange(layout, layouts)
-                }
-                }
-              >
-                {this.getChartDom()}
-              </ResponsiveReactGridLayout>
-            </div>
+      <div>
+        {this.props.anchorList ? (
+          <div className="anchor-cont">
+            <Radio.Group value={this.state.defaultTabKey} onChange={this.onChange.bind(this)}>
+              {this.props.anchorList.map(item =>
+                <Radio.Button value={item.anchorId}>{item.anchorName}</Radio.Button>
+              )}
+            </Radio.Group>
           </div>
-          : <div className="spin-example"><Spin size="large" /></div>}
+        ) : null}
+        <div className="grid-con-wrap" style={this.props.isTabs ? { padding: 0 } : { padding: 20, paddingTop: this.props.anchorList ? 0 : 20}}>
+          {this.state.widgets && this.state.widgets.length ?
+            <div>
+              <div className="grid-con">
+                <ResponsiveReactGridLayout
+                  className="layout"
+                  {...this.props}
+                  layouts={this.state.widgets}
+                  rowHeight={10}
+                  autoSize={true}
+                  // isBounded={true}
+                  containerPadding={[0, 0]}
+                  onLayoutChange={(layout, layouts) => {
+                    this.onLayoutChange(layout, layouts)
+                  }
+                  }
+                >
+                  {this.getChartDom()}
+                </ResponsiveReactGridLayout>
+              </div>
+            </div>
+            : <div className="spin-example"><Spin size="large" /></div>}
+        </div>
       </div>
     );
   }
