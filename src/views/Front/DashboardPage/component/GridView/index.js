@@ -10,7 +10,6 @@ import Filter from '@/views/Front/DashboardPage/component/Filter'
 import EditFeed from '@/views/Front/DashboardPage/component/EditFeed'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
-import { throttle } from 'lodash';
 import actions from '@/store/actions/dashboard'
 import { PageHeader, Divider, Spin, Anchor } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
@@ -252,7 +251,7 @@ class GridView extends PureComponent {
                 <RightOutlined />
               </div>
             </div>
-            <Anchor>
+            <Anchor affix={false}  offsetTop={400}>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
