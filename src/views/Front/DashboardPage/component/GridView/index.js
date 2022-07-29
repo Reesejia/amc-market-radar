@@ -251,7 +251,7 @@ class GridView extends PureComponent {
                 <RightOutlined />
               </div>
             </div>
-            <Anchor affix={false}  offsetTop={400}>
+            <Anchor affix={false}  offsetTop={200}>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
