@@ -42,7 +42,7 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }
 
 
     return (
-      <div id={`withKeepAlive-${cacheId}`} ref={divRef} style={{marginTop: '55px'}}>
+      <div id={`withKeepAlive-${cacheId}`} ref={divRef} style={{marginTop: '55px'}} className="withKeepAlive-wrapper">
 
       </div>
     )

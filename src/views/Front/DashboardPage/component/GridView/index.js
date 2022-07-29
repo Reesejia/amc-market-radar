@@ -212,8 +212,12 @@ class GridView extends PureComponent {
     this.setState({
       anchorShow: !this.state.anchorShow
     })
-    console.log(888)
   }
+
+  handleAnchorClick(e) {
+    e.preventDefault()
+  }
+
   componentWillUnmount() {
     // 点击了最大化后没有最小化直接切换菜单栏
     document.getElementById("gridWrapper") && document.getElementById("gridWrapper").remove()
@@ -252,7 +256,7 @@ class GridView extends PureComponent {
                 { this.state.anchorShow ? <RightOutlined /> : <LeftOutlined />  }
               </div>
             </div>
-            <Anchor affix={false}   targetOffset={300} getContainer={() => window}>
+            <Anchor affix={false}   targetOffset={100} onClick={this.handleAnchorClick}>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
