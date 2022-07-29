@@ -252,7 +252,7 @@ class GridView extends PureComponent {
                 { this.state.anchorShow ? <RightOutlined /> : <LeftOutlined />  }
               </div>
             </div>
-            <Anchor affix={false}   targetOffset={300}>
+            <Anchor affix={false}   targetOffset={300} getContainer={() => window}>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
