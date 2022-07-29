@@ -12,7 +12,7 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import { PageHeader, Divider, Spin, Anchor } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
+import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
 import "./index.less"
 const { Link } = Anchor;
@@ -212,6 +212,7 @@ class GridView extends PureComponent {
     this.setState({
       anchorShow: !this.state.anchorShow
     })
+    console.log(888)
   }
   componentWillUnmount() {
     // 点击了最大化后没有最小化直接切换菜单栏
@@ -248,10 +249,10 @@ class GridView extends PureComponent {
           <div className={this.state.anchorShow ? 'anchor-cont show-status' : 'anchor-cont hide-status'}>
             <div className="position-icon" >
               <div className="icon-box" onClick={this.changeAnchorShow.bind(this)}>
-                <RightOutlined />
+                { this.state.anchorShow ? <RightOutlined /> : <LeftOutlined />  }
               </div>
             </div>
-            <Anchor affix={false}  offsetTop={200}>
+            <Anchor affix={false}   targetOffset={300}>
               {this.props.anchorList.map(item =>
                 <Link href={`#${item.anchorId}`} title={item.anchorName} />
               )}
