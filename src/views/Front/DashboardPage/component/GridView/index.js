@@ -11,9 +11,10 @@ import EditFeed from '@/views/Front/DashboardPage/component/EditFeed'
 import { WidthProvider, Responsive } from 'react-grid-layout'
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
-import { PageHeader, Divider, Spin, Anchor } from 'antd'
+import { PageHeader, Divider, Spin } from 'antd'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import WithLazyload from '@/views/Front/DashboardPage/HighComponent/WithLazyload'
+import Anchor from '../Anchor'
 import './index.less'
 const { Link } = Anchor
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
@@ -230,6 +231,7 @@ class GridView extends PureComponent {
 
   handleAnchorClick(e) {
     e.preventDefault()
+    console.log('exxx', e.target)
   }
 
   componentWillUnmount() {
@@ -241,6 +243,7 @@ class GridView extends PureComponent {
   render() {
     return (
       <div>
+        <Anchor links={this.props.anchorList} />
         <div
           className="grid-con-wrap"
           style={this.props.isTabs ? { padding: 0 } : { padding: 20 }}
@@ -286,20 +289,37 @@ class GridView extends PureComponent {
                 {this.state.anchorShow ? <RightOutlined /> : <LeftOutlined />}
               </div>
             </div>
-            <Anchor
+            {/* <Anchor
               affix={false}
-              getContainer={() => document.querySelector('#root')}
-              targetOffset={100}
-              onClick={this.handleAnchorClick}
+              bounds={300}
+              offsetTop={-200}
+              getContainer={() => {
+                return document.getElementsByClassName('app-vue')[0]
+              }}
             >
               {this.props.anchorList.map((item) => (
-                <Link href={`#${item.anchorId}`} title={item.anchorName} />
+                <Link
+                  onClick={() => this.handleClickFun(item)}
+                  href={`#${item.anchorId}`}
+                  title={item.anchorName}
+                />
               ))}
-            </Anchor>
+            </Anchor> */}
           </div>
         ) : null}
       </div>
     )
+  }
+
+  handleClickFun = (e, link) => {
+    console.log('e, link', e, link)
+    e.preventDefault()
+    if (link.href) {
+      // 找到锚点对应得的节点
+      let element = document.getElementById(link.href)
+      // 如果对应id的锚点存在，就跳滚动到锚点顶部
+      element && element.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }
   }
 }
 
