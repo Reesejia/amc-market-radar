@@ -51,25 +51,29 @@ const Anchor = (props) => {
   }, [props.links])
 
   return (
-    <div className={`anchor-wraper ${state ? 'show' : 'hide'}`}>
-      <div className="arrow-wraper">
-        {state ? (
-          <RightOutlined onClick={() => setState(false)} />
-        ) : (
-          <LeftOutlined onClick={() => setState(true)} />
-        )}
-      </div>
-      {links &&
-        links.map((link) => (
-          <p
-            className="link-item"
-            key={link.id}
-            id={`text-${link.anchorId}`}
-            onClick={() => handleClick(link)}
-          >
-            {link.anchorName}
-          </p>
-        ))}
+    <div>
+      {links && links.length > 0 ? (
+        <div className={`anchor-wraper ${state ? 'show' : 'hide'}`}>
+          <div className="arrow-wraper">
+            {state ? (
+              <RightOutlined onClick={() => setState(false)} />
+            ) : (
+              <LeftOutlined onClick={() => setState(true)} />
+            )}
+          </div>
+          {links &&
+            links.map((link) => (
+              <p
+                className="link-item"
+                key={link.id}
+                id={`text-${link.anchorId}`}
+                onClick={() => handleClick(link)}
+              >
+                {link.anchorName}
+              </p>
+            ))}
+        </div>
+      ) : null}
     </div>
   )
 }
