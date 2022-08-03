@@ -1,5 +1,9 @@
+.link-active{
+  color: #1890ff;
+  font-size: 20px;
+  font-weight: 500;
+}
 .anchor-wraper{
-    padding: 15px 10px;
     position: fixed;
     z-index: 10;
     right: 10px;
@@ -7,7 +11,7 @@
     background-color: #fff;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    padding: 14px 24px 24px 14px;
+    padding: 24px 14px;
     box-sizing: border-box;
 };
 .init{
@@ -15,9 +19,9 @@
 }
 .show{
     display: block;
-    transform: translateX(0);
-    animation: right-to-left linear 0.3s;
+    animation: right-to-left linear 0.8s;
 }
+
 
 .hide{
     display: block;
@@ -27,24 +31,30 @@
 .arrow-wraper{
     position: absolute;
     top: 50%;
-    /* transform: translateY(-50%); */
-    transform: translateX(-100%);
+    transform: translate(-100%,-50%);
     left: 0%;
-    color: #1890ff;
     font-size: 25px;
+    width: 25px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    color: #1890ff;
+    cursor: pointer;
 }
 
+
 .link-item{
-    cursor: pointer;
-    color: #1890ff;
     font-size: 16px;
-    line-height: 30px;
+    line-height: 40px;
 };
 
 
 @keyframes right-to-left {
     0% {
-      transform: translateX(180px);
+      transform: translateX(100px);
     }
     100% {
       transform: translateX(0px);

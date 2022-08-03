@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { Tabs } from 'antd';
+import { Tabs } from 'antd'
 import { connect } from 'react-redux'
 import actions from '@/store/actions/dashboard'
 import GridView from '@/views/Front/DashboardPage/component/GridView'
 import { withKeepAlive } from '@/component/keepalive-react-component'
-import { Popconfirm, Button } from 'antd';
+import { Popconfirm, Button } from 'antd'
 import { useHistory } from 'react-router-dom'
 import store from '@/store'
 import { debounce } from '@/utils/com-methods'
-import { Switch, Route } from 'react-router-dom';
-import * as types from '@/store/action-types';
-import ResizeObserver from 'resize-observer-polyfill';
+import { Switch, Route } from 'react-router-dom'
+import * as types from '@/store/action-types'
+import ResizeObserver from 'resize-observer-polyfill'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 const HeaderTab = (props) => {
   const history = useHistory()
   const [list, setList] = useState([])
-  const [dashboardId, setDashboardId] = useState("")
+  const [dashboardId, setDashboardId] = useState('')
   const [routerList, setRouterList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
 
   const getGridsData = async (refresh) => {
     if (dashboardId) {
@@ -29,25 +28,28 @@ const HeaderTab = (props) => {
     }
   }
 
-
-
   useEffect(() => {
     console.log('groupId', props.groupId)
     let groupId = props.groupId || 'n1'
     if (groupId) {
       if (props.navList.length) {
-        const listArr = props.navList.find(o => o.id === groupId).navigationGroups
+        const listArr = props.navList.find((o) => o.id === groupId)
+          .navigationGroups
         setList(listArr)
         const dashId = listArr[0] && listArr[0].dashboardId
-        const l = listArr.map(item => {
+        const l = listArr.map((item) => {
           return {
             path: item.dashboardId,
             key: `${props.routerBase}-item.dashboardId`,
-            com: withKeepAlive(GridView, { cacheId: item.dashboardId, scroll: true, anchorList: item.dashboardGroupChartIdMappingList }),
+            com: withKeepAlive(GridView, {
+              cacheId: item.dashboardId,
+              scroll: true,
+              anchorList: item.dashboardGroupChartIdMappingList,
+            }),
           }
         })
         setRouterList(l)
-        const idList = listArr.map(item => item.dashboardId)
+        const idList = listArr.map((item) => item.dashboardId)
         const p = history.location.pathname && history.location.pathname
         const id = p && p.split('/')[2]
         if (id && idList.includes(id)) {
@@ -63,9 +65,9 @@ const HeaderTab = (props) => {
 
   useEffect(() => {
     props.getNavigationList_action()
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       const emitResize = function emitResize() {
-        var myEvent = new Event('resize');
+        var myEvent = new Event('resize')
         window.dispatchEvent(myEvent)
       }
       debounce(emitResize, 100, false)()
@@ -76,12 +78,15 @@ const HeaderTab = (props) => {
         sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
       }
       const pageId = document.getElementById('page-header-wrapper')
-      pageId.style.width = sideBarWidth ? `calc(100vw - ${sideBarWidth})` : 'calc(100vw)'
-
-    });
-    document.getElementById('sidebar-container') && resizeObserver.observe(document.getElementById('sidebar-container'));
+      pageId.style.width = sideBarWidth
+        ? `calc(100vw - ${sideBarWidth})`
+        : 'calc(100vw)'
+    })
+    document.getElementById('sidebar-container') &&
+      resizeObserver.observe(document.getElementById('sidebar-container'))
     return () => {
-      document.getElementById('sidebar-container') && resizeObserver.unobserve(document.getElementById('sidebar-container'))
+      document.getElementById('sidebar-container') &&
+        resizeObserver.unobserve(document.getElementById('sidebar-container'))
     }
   }, [dashboardId])
 
@@ -94,20 +99,22 @@ const HeaderTab = (props) => {
         sideBarWidth = window.getComputedStyle($sidebar[0]).width || 0
       }
       // 6px 滚动条的宽度
-      const width = sideBarWidth ? `calc(100vw - ${sideBarWidth} - 6px)` : 'calc(100vw)'
+      const width = sideBarWidth
+        ? `calc(100vw - ${sideBarWidth} - 6px)`
+        : 'calc(100vw)'
 
       if (clientW < 1100) {
-        const root = document.querySelector("#root")
+        const root = document.querySelector('#root')
         root.style.overflow = 'auto'
         root.style.width = '1100px'
       } else {
-        const root = document.querySelector("#root")
+        const root = document.querySelector('#root')
         root.style.width = width
-        root.style.overflow = "hidden"
+        root.style.overflow = 'hidden'
       }
     }
     resizeCallBack()
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       resizeCallBack()
     })
   }, [])
@@ -142,8 +149,8 @@ const HeaderTab = (props) => {
         type: types.UPDATE_GRIDDATA,
         payload: {
           dashId: dashboardId,
-          gridwidgets: widgets
-        }
+          gridwidgets: widgets,
+        },
       })
       if (dashboardId) {
         await props.updateGridData_action(dashboardId, true)
@@ -152,15 +159,25 @@ const HeaderTab = (props) => {
     }
   }
 
-  return <div style={{ position: 'relative', overflow: 'auto' }}>
-    <div className="page-header-wrapper" id="page-header-wrapper">
-      {/* <div className="page-header"> */}
-      {list.length > 0 && <Tabs activeKey={dashboardId} onChange={tabChange} className="header-tab-wrapper" animated={false}>
-        {
-          list.length > 0 && list.map((item) => (
-            <TabPane tab={item.displayName || item.dashboardName} key={item.dashboardId}>
-              <div>
-                {/* {
+  return (
+    <div>
+      <div className="page-header-wrapper" id="page-header-wrapper">
+        {/* <div className="page-header"> */}
+        {list.length > 0 && (
+          <Tabs
+            activeKey={dashboardId}
+            onChange={tabChange}
+            className="header-tab-wrapper"
+            animated={false}
+          >
+            {list.length > 0 &&
+              list.map((item) => (
+                <TabPane
+                  tab={item.displayName || item.dashboardName}
+                  key={item.dashboardId}
+                >
+                  <div>
+                    {/* {
                 props.boardGridOrigin[dashboardId] ?
                   <GridView
                     widgets={props.boardGridOrigin[dashboardId].widgets}
@@ -169,34 +186,52 @@ const HeaderTab = (props) => {
                   :
                   null
               } */}
-              </div>
-
-            </TabPane>
-          ))
-        }
-      </Tabs>
-      }
-      {
-        props.isEditDashBoard && <div className="header-btn">
-          <Button type="primary" style={{ 'marginRight': '7px' }} onClick={() => onSavePositionGrid()}>保存数据</Button>
-          <Popconfirm placement="topLeft" title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！" onConfirm={() => setInit()} okText={"初始化"} cancelText="算了">
-            <Button type="primary" style={{ 'marginRight': '7px' }} loading={isLoading}>初始化数据</Button>
-          </Popconfirm>
-        </div>
-      }
-      {/* </div> */}
+                  </div>
+                </TabPane>
+              ))}
+          </Tabs>
+        )}
+        {props.isEditDashBoard && (
+          <div className="header-btn">
+            <Button
+              type="primary"
+              style={{ marginRight: '7px' }}
+              onClick={() => onSavePositionGrid()}
+            >
+              保存数据
+            </Button>
+            <Popconfirm
+              placement="topLeft"
+              title="初始化数据 会将之前保存的当前board编辑数据 重新覆盖！"
+              onConfirm={() => setInit()}
+              okText={'初始化'}
+              cancelText="算了"
+            >
+              <Button
+                type="primary"
+                style={{ marginRight: '7px' }}
+                loading={isLoading}
+              >
+                初始化数据
+              </Button>
+            </Popconfirm>
+          </div>
+        )}
+        {/* </div> */}
+      </div>
+      <div className="page-header-wrapper-repeat"></div>
+      <Switch>
+        {routerList.length > 0 &&
+          routerList.map((item) => (
+            <Route
+              key={item.key}
+              path={`/dashboardPage/${item.path}`}
+              component={item.com}
+            ></Route>
+          ))}
+      </Switch>
     </div>
-    <Switch>
-      {
-        routerList.length > 0 && routerList.map((item) => (
-          <Route key={item.key} path={`/dashboardPage/${item.path}`}
-            component={item.com}>
-          </Route>
-        ))
-      }
-    </Switch>
-  </div>
-
+  )
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -207,7 +242,7 @@ const mapStateToProps = (state, ownProps) => {
     boardGridOrigin: state.dashboardStore.boardGridOrigin,
     isEditDashBoard: state.dashboardStore.isEditDashBoard,
     routerBase: state.dashboardStore.routerBase,
-    cacheIds: state.dashboardStore.cacheIds
+    cacheIds: state.dashboardStore.cacheIds,
   }
 }
 export default connect(mapStateToProps, actions)(HeaderTab)

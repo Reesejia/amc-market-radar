@@ -1,12 +1,17 @@
 import { useContext, useRef, useEffect } from 'react'
 import CacheContext from './CacheContext'
-import * as  CacheTypes from './cache-types'
+import * as CacheTypes from './cache-types'
 import * as uuid from 'uuid'
 
-function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }) {
+function withKeepAlive(
+  OldComponent,
+  { cacheId = uuid.v4(), scroll, anchorList },
+) {
   return function (props) {
     let divRef = useRef(null)
-    let { cacheStates, dispatch, mount, handleScroll } = useContext(CacheContext)
+    let { cacheStates, dispatch, mount, handleScroll } = useContext(
+      CacheContext,
+    )
     useEffect(() => {
       if (scroll) {
         // 监听捕获阶段， true 捕获，false 冒泡；
@@ -20,31 +25,46 @@ function withKeepAlive(OldComponent, { cacheId = uuid.v4(), scroll, anchorList }
     useEffect(() => {
       let cacheState = cacheStates[cacheId]
       console.log('cacheStates33', cacheStates)
-      if (cacheState && cacheState.doms && cacheState.status !== CacheTypes.DESTROY) {
+      if (
+        cacheState &&
+        cacheState.doms &&
+        cacheState.status !== CacheTypes.DESTROY
+      ) {
         let doms = cacheState.doms
-        doms.forEach(dom => {
+        doms.forEach((dom) => {
           divRef.current.appendChild(dom)
-        });
+        })
         if (scroll) {
-          doms.forEach(dom => {
+          doms.forEach((dom) => {
             if (cacheState.scrolls[dom]) {
               dom.scrollTop = cacheState.scrolls[dom]
             }
           })
         }
-
-
       } else {
-        const reactElement = <OldComponent {...props} dispatch={dispatch} anchorList={ anchorList }/>
+        const reactElement = (
+          <OldComponent
+            {...props}
+            dispatch={dispatch}
+            anchorList={anchorList}
+          />
+        )
         mount({ cacheId, reactElement })
       }
     }, [cacheStates])
 
-
     return (
-      <div id={`withKeepAlive-${cacheId}`} ref={divRef} style={{marginTop: '55px'}} className="withKeepAlive-wrapper">
-
-      </div>
+      <div
+        id={`withKeepAlive-${cacheId}`}
+        ref={divRef}
+        style={{
+          overflowY: 'auto',
+          height: window.__POWERED_BY_QIANKUN__
+            ? 'calc(100vh - 121px)'
+            : 'calc(100vh - 71px)',
+        }}
+        className="withKeepAlive-wrapper"
+      ></div>
     )
   }
 }
